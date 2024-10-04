@@ -1,6 +1,4 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
-
-## Getting Started
+## Getting Started with file sharing UI with Next.js
 
 First, run the development server:
 
@@ -34,3 +32,22 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Commit Message Format
+
+Commit messages need to follow [ESLint commit message format](https://eslint.org/docs/developer-guide/contributing/pull-requests#step-2-make-your-changes)
+
+```
+<Tag>: <Summary>
+```
+
+Following tags to be used for commit messages.
+
+- **Breaking** - For a backward-incompatible enhancement or feature.
+- **Build** - Changes applied to build process only.
+- **Chore** - For refactoring, adding test cases, etc.
+- **Docs** - Changes for documentation only.
+- **Fix** - For a bug fix.
+- **New** - For a new feature.
+- **Update** - Either for backwards-compatibility or for a rule change that adds reported problems.
+- **WIP** - For Work that is still in progress but needs to be committed.
