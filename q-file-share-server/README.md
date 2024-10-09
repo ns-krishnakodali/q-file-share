@@ -1,4 +1,7 @@
-# Getting Started with file sharing server using FastAPI
+# QFileShare Server
+Server for secure file sharing application, developed using Post-Quantum Cryptography techniques
+
+## Getting Started with QFileShare using FastAPI
 
 ## Setup:
 
