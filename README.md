@@ -1,2 +1,2 @@
-# file-sharing-pqc
-Secure file sharing application using Post-Quantum Cryptography techniques
+# QFileShare
+A secure file-sharing application utilizing Post-Quantum Cryptography techniques.
