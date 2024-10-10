@@ -1,9 +1,11 @@
 import styles from "./page.module.css";
 
-export default function Home() {
+const Home = () => {
   return (
     <div className={styles.page}>
-      File Sharing
+      Secure File Share using Post-Quantum Cryptography
     </div>
   );
-}
+};
+
+export default Home;
