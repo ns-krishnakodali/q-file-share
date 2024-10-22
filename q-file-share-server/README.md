@@ -17,11 +17,20 @@ venv\Scripts\activate
 
 # Install FastAPI
 pip install "fastapi[standard]"
+```
 
-# Start the server
+## Start the server:
+```bash
+# Unix Env
+source venv/bin/activate
+
+# Windows
+venv\Scripts\activate
+
 fastapi dev main.py
 ```
-**Note:** Use `python3` or `pip3` if the regular commands are not executing.
+
+**Note:** Use `python3` or `pip3` if the regular commands do not execute properly.
 
 ## Commit Message Format
 
