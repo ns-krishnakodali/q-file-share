@@ -1,11 +1,10 @@
-import styles from "./page.module.css";
+import { redirect } from 'next/navigation';
 
 const Home = () => {
-  return (
-    <div className={styles.page}>
-      Secure File Share using Post-Quantum Cryptography
-    </div>
-  );
+	const isAuthenticated = false;
+	const pageToLoad = (isAuthenticated) ? "/dashboard" : "/login";
+
+	redirect(pageToLoad);
 };
 
 export default Home;
