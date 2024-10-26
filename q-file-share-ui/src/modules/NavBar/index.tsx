@@ -1,13 +1,13 @@
 import styles from "./NavBar.module.css";
 
-export type Page = "dashboard" | "shared_files" | "received_files";
+export type Page = "dashboard" | "shared-files" | "received-files";
 
-interface INavBar {
+interface INavBarProps {
   currentPage: Page;
   showLogo: boolean;
 }
 
-export const NavBar = ({ currentPage, showLogo }: INavBar) => {
+export const NavBar = ({ currentPage, showLogo }: INavBarProps) => {
   return (
     <div className={styles.navbar}>
       {showLogo && (
@@ -15,12 +15,12 @@ export const NavBar = ({ currentPage, showLogo }: INavBar) => {
           Q-File Share
         </a>
       )}
-      {currentPage !== "shared_files" && (
-        <a href="/shared_files" className={styles.navbar_menu_item}>
+      {currentPage !== "shared-files" && (
+        <a href="/shared-files" className={styles.navbar_menu_item}>
           Shared files
         </a>
       )}
-      {currentPage !== "received_files" && (
+      {currentPage !== "received-files" && (
         <a href="/received_files" className={styles.navbar_menu_item}>
           Received files
         </a>
