@@ -1,7 +1,5 @@
 "use client";
 
-
-
 import { NavBar } from "@/modules";
 import receivedLogo from "../assets/received-logo.png"
 import sharedLogo from "../assets/shared-logo.png"
