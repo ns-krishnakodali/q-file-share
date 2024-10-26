@@ -1,9 +1,13 @@
+"use client";
+
 import styles from "./login.module.css";
+
+import { LoginForm } from "@/modules";
 
 
 const LoginPage = () => {
 	return (
-		<>Login Form</>
+		<LoginForm/>
 	);
 };
 
