@@ -1,28 +1,40 @@
 import styles from "./NavBar.module.css";
 
+import { redirect } from "next/navigation";
+
+import { Button } from "@/elements";
+import { LOG_OUT } from "@/constants";
+
 interface INavBarProps {
-  pages: { name: string; path: string }[];
-  showLogo: boolean;
+  pageName: string;
+  pageURL: string;
+  showLogo?: boolean;
 }
 
-export const NavBar = ({ pages, showLogo }: INavBarProps) => {
+export const NavBar = (props: INavBarProps): JSX.Element => {
+  const {pageName, pageURL, showLogo = true} = props;
+
   return (
     <div className={styles.navbar}>
       {showLogo && (
-        <a href="/dashboard" className={styles.navbar_logo}>
+        <a href="/dashboard" className={styles.navbarLogo}>
           Q-File Share
         </a>
       )}
-
-      {pages.map((page) => (
-        <a key={page.path} href={page.path} className={styles.navbar_menu_item}>
-          {page.name}
-        </a>
-      ))}
-
-      <a href="#" className={styles.navbar_menu_item}>
-        Log out
-      </a>
+      <Button
+        id="page-name"
+        className={styles.navbarMenuItem}
+        text={pageName}
+        variant="text"
+        onClickAction={() => redirect(pageURL)}
+      />
+      <Button
+        id="page-name"
+        className={styles.navbarMenuItem}
+        text={LOG_OUT}
+        variant="text"
+        onClickAction={() => redirect("#")}
+      />
     </div>
   );
 };

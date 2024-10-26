@@ -1,19 +1,21 @@
 import styles from "./LoginForm.module.css";
 
-import { Button } from "@/elements";
+import { Button, Input } from "@/elements";
 
 interface ILoginFormProps {}
 
-export const LoginForm = (props: ILoginFormProps) => {
+export const LoginForm = (props: ILoginFormProps): JSX.Element => {
+	const onClickFunction = (): void => {};
+
 	return (
 		<div>
 			<div>
-				<input id="email" type="email" />
+				<Input id="email" type="email" placeholder="Email"/>
 			</div>
 			<div>
-				<input id="password" type="password" />
+				<Input id="password" type="password" placeholder="Password"/>
 			</div>
-			<Button type="submit" text={"Login"} />
+			<Button id="login-button" type="submit" variant="primary" text={"Login"} onClickAction={onClickFunction}/>
 		</div>
 	);
 };

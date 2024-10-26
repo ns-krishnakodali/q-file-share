@@ -1,3 +1,5 @@
+"use client";
+
 import { NavBar } from "@/modules";
 
 const Dashboard = () => {
@@ -5,10 +7,8 @@ const Dashboard = () => {
     <>
       <NavBar
         showLogo={true}
-        pages={[
-          { name: "Shared Files", path: "/shared-files" },
-          { name: "Received Files", path: "/received-files" },
-        ]}
+        pageName="Shared Files"
+        pageURL="/shared-files"
       />
       <div>Secure File Share using Post-Quantum Cryptography</div>
     </>

@@ -1,14 +1,23 @@
 :root {
-  --background: #ffffff;
-  --foreground: #ffffff;
-  --font-color: #000000;
-}
+  /* Standard Colors */
+  --color-white: #ffffff;
+  --color-black: #000000;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #ffffff;
-    --foreground: #ffffff;
-  }
+  /* Generic Colors */
+  --color-border: #86868b;
+  --color-selected: #072537;
+
+  /* Button Colors */
+  --color-button-1: #133C55;
+  --color-button-2: #386FA4;
+  
+  /* Spacing */
+  --spacing-quarter: 2px;
+  --spacing-half: 4px;
+  --spacing-1: 8px;
+  --spacing-2: 16px;
+  --spacing-3: 24px;
+  --spacing-4: 32px;
 }
 
 html,
@@ -18,8 +27,8 @@ body {
 }
 
 body {
-  color: var(--font-color);
-  background: var(--background);
+  color: var(--color-black);
+  background: var(--color-white);
   font-family: Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
