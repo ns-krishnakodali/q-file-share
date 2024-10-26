@@ -15,21 +15,19 @@ export const NavBar = ({ currentPage, showLogo }: INavBar) => {
           Q-File Share
         </a>
       )}
-      <div className={styles.navbar_menu}>
-        {currentPage !== "shared_files" && (
-          <a href="/shared_files" className={styles.navbar_menu_item}>
-            Shared files
-          </a>
-        )}
-        {currentPage !== "received_files" && (
-          <a href="/received_files" className={styles.navbar_menu_item}>
-            Received files
-          </a>
-        )}
-        <a href="#" className={styles.navbar_menu_item}>
-          Log out
+      {currentPage !== "shared_files" && (
+        <a href="/shared_files" className={styles.navbar_menu_item}>
+          Shared files
         </a>
-      </div>
+      )}
+      {currentPage !== "received_files" && (
+        <a href="/received_files" className={styles.navbar_menu_item}>
+          Received files
+        </a>
+      )}
+      <a href="#" className={styles.navbar_menu_item}>
+        Log out
+      </a>
     </div>
   );
 };
