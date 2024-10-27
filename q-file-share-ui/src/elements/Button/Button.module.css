@@ -5,12 +5,17 @@
   width: fit-content;
   cursor: pointer;
   text-align: center;
-  font-size: medium;
+  font-family: "Inter",sans-serif;
+  font-size: 15px;
 }
 
 .primary {
   color: var(--color-white);
   background-color: var(--color-button-1);
+}
+
+.primary:hover {
+  background-color: var(--color-button-selected-1);
 }
 
 .secondary {
@@ -21,4 +26,8 @@
 .text {
   background: none;
   padding: var(--spacing-half);
+}
+
+.text:hover {
+  color: var(--color-button-2)
 }
