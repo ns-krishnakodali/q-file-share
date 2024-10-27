@@ -39,7 +39,7 @@ const Dashboard: React.FC = () => {
       <Routes>
         <Route path="/share-file" element={<ShareFile />} />
         <Route path="/received-files" element={<ReceivedFiles />} />
-        <Route path="/shared-files" element={<SharedFiles />} />
+        <Route path="/  " element={<SharedFiles />} />
       </Routes>
     </Router>
   );
