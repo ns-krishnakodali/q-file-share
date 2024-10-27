@@ -1,9 +1,12 @@
 import styles from "./NavBar.module.css";
 
-import { redirect } from "next/navigation";
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 import { Button } from "@/elements";
-import { LOG_OUT } from "@/constants";
+
+import qfsLogo from '@/assets/qfs-logo.svg';
+import logoutLogo from '@/assets/logout.svg';
 
 interface INavBarProps {
   pageName: string;
@@ -12,29 +15,39 @@ interface INavBarProps {
 }
 
 export const NavBar = (props: INavBarProps): JSX.Element => {
-  const {pageName, pageURL, showLogo = true} = props;
+  const { pageName, pageURL, showLogo = true } = props;
+
+  const router = useRouter();
 
   return (
     <div className={styles.navbar}>
       {showLogo && (
-        <a href="/dashboard" className={styles.navbarLogo}>
-          Q-File Share
-        </a>
+        <div className={styles.navbarLogo} onClick={() => { router.push("/dashboard") }}>
+          <Image
+            src={qfsLogo}
+            alt="QFS Logo"
+            width={50}
+            height={50}
+            priority
+          />
+        </div>
       )}
       <Button
-        id="page-name"
-        className={styles.navbarMenuItem}
+        id="navbar-button"
+        className={styles.navbarButton}
         text={pageName}
         variant="text"
-        onClickAction={() => redirect(pageURL)}
+        onClickAction={() => router.push(pageURL)}
       />
-      <Button
-        id="page-name"
-        className={styles.navbarMenuItem}
-        text={LOG_OUT}
-        variant="text"
-        onClickAction={() => redirect("#")}
-      />
+      <div className={styles.logout} onClick={() => { }}>
+        <Image
+          src={logoutLogo}
+          alt="QFS Logo"
+          width={30}
+          height={30}
+          priority
+        />
+      </div>
     </div>
   );
 };
