@@ -23,6 +23,9 @@
   --spacing-3: 24px;
   --spacing-4: 32px;
   --spacing-5: 40px;
+
+  /* Font Sizes */
+  --font-size-15: 15px;
 }
 
 html,
