@@ -1,0 +1,27 @@
+.tableContainer {
+  overflow-x: auto;
+  padding: 20px;
+  
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tableHeader {
+  padding: 12px;
+  
+  text-align: left;
+  background-color: #f0f0f0;
+  font-weight: bold;
+}
+
+.tableCell {
+  padding: 12px;
+  
+}
+
+tr:nth-child(even) .tableCell {
+  background-color: #fafafa;
+}
