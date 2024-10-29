@@ -2,21 +2,23 @@ import styles from "./Input.module.css";
 import cx from "classnames";
 
 interface IInputProps {
-  className?: string;
   id: string;
-  text?: string;
+  className?: string;
+  name?: string;
   type?: "text" | "email" | "password";
+  value?: string;
   placeholder?: string;
   isReadOnly?: boolean;
   onClickAction?: () => void;
 }
 
-export const Input = (props: IInputProps) => {
+export const Input = (props: IInputProps): JSX.Element => {
   const {
-    className,
     id,
-    text,
+    className,
+    name = "",
     type = "text",
+    value,
     placeholder = "",
     isReadOnly = false,
     onClickAction
@@ -25,8 +27,10 @@ export const Input = (props: IInputProps) => {
   return (
     <input
       id={id}
+      name={name}
       className={cx(styles.input, className)}
       type={type}
+      value={value}
       placeholder={placeholder}
       readOnly={isReadOnly}
       onClick={onClickAction}

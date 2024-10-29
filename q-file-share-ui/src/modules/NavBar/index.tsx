@@ -35,10 +35,11 @@ export const NavBar = (props: INavBarProps): JSX.Element => {
       <Button
         id="navbar-button"
         className={styles.navbarButton}
-        text={pageName}
         variant="text"
         onClickAction={() => router.push(pageURL)}
-      />
+      >
+        {pageName}
+      </Button>
       <div className={styles.logout} onClick={() => { }}>
         <Image
           src={logoutLogo}

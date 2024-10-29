@@ -1,27 +1,24 @@
 .tableContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   overflow-x: auto;
-  padding: 20px;
-  
+  padding: var(--spacing-1);
 }
 
 .table {
-  width: 100%;
-  border-collapse: collapse;
+  width: 80%;
 }
 
-.tableHeader {
-  padding: 12px;
-  
-  text-align: left;
-  background-color: #f0f0f0;
+.tableHeaderValue {
+  padding: var(--spacing-half) var(--spacing-1);
+  text-align: center;
   font-weight: bold;
 }
 
 .tableCell {
-  padding: 12px;
-  
-}
-
-tr:nth-child(even) .tableCell {
-  background-color: #fafafa;
+  text-align: center;
+  padding: var(--spacing-half);
+  width: fit-content;
+  white-space: nowrap;
 }
