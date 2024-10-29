@@ -1,15 +1,14 @@
 "use client";
 
 import { NavBar } from "@/modules";
-import receivedLogo from "../assets/received-logo.svg"
-import sharedLogo from "../assets/shared-logo.svg"
-import shareLogo from "../assets/share-logo.svg"
+import receivedLogo from "../assets/received-logo.svg";
+import sharedLogo from "../assets/shared-logo.svg";
+import shareLogo from "../assets/share-logo.svg";
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import type { StaticImageData } from 'next/image';
 import Activity from "./activity";
-
-import "./Dashboard.css"
+import styles from "./dashboard.module.css";
+import { useRouter } from 'next/navigation'; // Next.js router for the `app` directory
 
 interface CardProps {
   title: string;
@@ -18,51 +17,33 @@ interface CardProps {
   route: string;
 }
 
-const Dashboard: React.FC = () => {
-  return (
-    <Router>
-      <NavBar
-        showLogo={true}
-        pages={[]}
-      />
-      <div className="dashboardContainer">
-        {/* All cards in a single flex container */}
-        <div className="cardContainer">
-          <Card title="Share File" description="Securely share your files" logo={shareLogo} route="/share-file" />
-          <Card title="Received Files" description="View files you've received" logo={receivedLogo} route="/received-files" />
-          <Card title="Shared Files" description="Manage your shared files" logo={sharedLogo} route="/shared-files" />
-        </div>
-        <Activity />
-      </div>
-
-      {/* Define Routes */}
-      <Routes>
-        <Route path="/share-file" element={<ShareFile />} />
-        <Route path="/received-files" element={<ReceivedFiles />} />
-        <Route path="/  " element={<SharedFiles />} />
-      </Routes>
-    </Router>
-  );
-};
-
-
-// Card Component with Navigation
+// Mark Card component as client-side only
 const Card: React.FC<CardProps> = ({ title, description, logo, route }) => {
-  const navigate = useNavigate();
+  const router = useRouter();
 
   return (
-    <div className="card" onClick={() => navigate(route)}>
-      <img src={logo.src} alt={`${title} logo`} className="cardLogo" /> {/* Use logo.src */}
+    <div className={styles.card} onClick={() => router.push(route)}>
+      <img src={logo.src} alt={`${title} logo`} className={styles.cardLogo} />
       <h3>{title}</h3>
       <p>{description}</p>
     </div>
   );
 };
 
-
-// Dummy pages for each route
-const ShareFile: React.FC = () => <div><h2>Share File Page</h2></div>;
-const ReceivedFiles: React.FC = () => <div><h2>Received Files Page</h2></div>;
-const SharedFiles: React.FC = () => <div><h2>Shared Files Page</h2></div>;
+const Dashboard: React.FC = () => {
+  return (
+    <>
+      <NavBar showLogo={true} pages={[]} />
+      <div className={styles.dashboardContainer}>
+        <div className={styles.cardContainer}>
+          <Card title="Share File" description="Securely share your files" logo={shareLogo} route="/share-file" />
+          <Card title="Received Files" description="View files you've received" logo={receivedLogo} route="/received-files" />
+          <Card title="Shared Files" description="Manage your shared files" logo={sharedLogo} route="/shared-files" />
+        </div>
+        <Activity />
+      </div>
+    </>
+  );
+};
 
 export default Dashboard;

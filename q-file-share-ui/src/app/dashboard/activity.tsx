@@ -6,7 +6,7 @@ import shareLogo from "../assets/share-logo.png"
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import type { StaticImageData } from 'next/image';
-import "./Dashboard.css"
+import styles from "./dashboard.module.css"
 
 
 const Activity: React.FC = () => {
@@ -17,7 +17,7 @@ const Activity: React.FC = () => {
     ];
   
     return (
-      <div className="activity-card">
+      <div className={styles.activityCard}>
         <h3>Activity</h3>
         <ul>
           {notifications.map((note, index) => (
