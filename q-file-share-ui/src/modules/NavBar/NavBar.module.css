@@ -1,21 +1,28 @@
 .navbar {
-  background-color: aliceblue;
-  margin: 0;
-  padding: 20px;
+  background-color: var(--color-navbar);
+  padding: var(--spacing-2);
   display: flex;
   justify-content: space-between;
-  gap: 15px;
   align-items: center;
+  height: var(--spacing-2);
 }
 
-.navbar_logo {
+.navbar:hover {
+  cursor: pointer;
+}
+
+.navbarLogo {
   font-size: 1.5rem;
   font-weight: bold;
-  color: black;
-  text-decoration: none;
   margin-right: auto;
 }
 
-.navbar_menu_item {
-  text-decoration: none;
+.navbarButton {
+  margin-right: var(--spacing-3);
+}
+
+.logout {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
