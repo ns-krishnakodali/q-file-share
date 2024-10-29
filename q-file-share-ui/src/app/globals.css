@@ -9,11 +9,11 @@
   --color-navbar: #f0f8ff;
 
   /* Button Colors */
-  --color-button-1: #4383e2;
-  --color-button-2: #386FA4;
+  --color-button-1: #4681f4;
+  --color-button-2: #6c757d;
   --color-button-selected-1: #074fbb;
-  --color-button-selected-2: #1363ad;
-  
+  --color-button-selected-2: #636363;
+
   /* Spacing */
   --spacing-quarter: 2px;
   --spacing-half: 4px;
@@ -23,6 +23,8 @@
   --spacing-3: 24px;
   --spacing-4: 32px;
   --spacing-5: 40px;
+  --spacing-6: 48px;
+  --spacing-10: 80px;
 
   /* Font Sizes */
   --font-size-15: 15px;
@@ -35,10 +37,10 @@ body {
 }
 
 body {
+  margin: 0;
   color: var(--color-black);
   background: var(--color-white);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Nunito', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  margin: 0;
 }

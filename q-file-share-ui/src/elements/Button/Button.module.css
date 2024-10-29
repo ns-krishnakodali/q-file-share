@@ -23,11 +23,11 @@
   background-color: var(--color-button-2);
 }
 
+.secondary:hover {
+  background-color: var(--color-button-selected-2);
+}
+
 .text {
   background: none;
   padding: var(--spacing-half);
-}
-
-.text:hover {
-  color: var(--color-button-2)
 }

@@ -1,20 +1,22 @@
 import styles from "./Button.module.css";
 import cx from "classnames";
 
+import { ReactNode } from "react";
+
 interface IButtonProps {
 	id: string;
 	className?: string;
-	text: String;
+	children: ReactNode;
 	type?: "submit" | "reset" | "button" | undefined;
 	variant?: "primary" | "secondary" | "text";
-	onClickAction: () => void;
+	onClickAction?: () => void;
 }
 
-export const Button = (props: IButtonProps) => {
+export const Button = (props: IButtonProps): JSX.Element => {
 	const {
 		id,
 		className,
-		text,
+		children,
 		type = "button",
 		variant = "primary",
 		onClickAction
@@ -27,7 +29,7 @@ export const Button = (props: IButtonProps) => {
 			type={type}
 			onClick={onClickAction}
 		>
-			{text}
+			{children}
 		</button>
 	);
 };

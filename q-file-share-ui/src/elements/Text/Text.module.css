@@ -1,0 +1,16 @@
+.text {
+  font-family: 'Poppins', sans-serif;
+  margin: 0px;
+}
+
+.large {
+  font-size: large;
+}
+
+.medium {
+  font-size: medium;
+}
+
+.small {
+  font-size: small;
+}
