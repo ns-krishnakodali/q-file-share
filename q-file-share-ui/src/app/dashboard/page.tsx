@@ -1,49 +1,60 @@
 "use client";
 
-import { NavBar } from "@/modules";
-import receivedLogo from "../assets/received-logo.svg";
-import sharedLogo from "../assets/shared-logo.svg";
-import shareLogo from "../assets/share-logo.svg";
-import React from 'react';
-import type { StaticImageData } from 'next/image';
-import Activity from "./activity";
-import styles from "./dashboard.module.css";
-import { useRouter } from 'next/navigation'; // Next.js router for the `app` directory
+import styles from "./dashboard.module.css"
 
-interface CardProps {
-    title: string;
-    description: string;
-    logo: StaticImageData;
-    route: string;
-}
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
-// Mark Card component as client-side only
-const Card: React.FC<CardProps> = ({ title, description, logo, route }) => {
-    const router = useRouter();
+import { ActivityCard, Card, NavBar, INotification } from "@/modules";
+import { SEND_FILE, RECEIVED_FILES, SHARED_FILES } from "@/constants";
 
-    return (
-        <div className={styles.card} onClick={() => router.push(route)}>
-            <img src={logo.src} alt={`${title} logo`} className={styles.cardLogo} />
-            <h3>{title}</h3>
-            <p>{description}</p>
+import sendFileIcon from "@/assets/send-file-icon.svg";
+import receivedFilesIcon from "@/assets/received-files-icon.svg";
+import sharedFilesIcon from "@/assets/shared-files-icon.svg";
+
+
+const Dashboard: React.FC = (): JSX.Element => {
+
+  const router = useRouter();
+  const [notifications, setNotifications] = useState<INotification[]>([]);
+
+  return (
+    <>
+      <NavBar showLogo={true}/>
+      <div className={styles.dashboardContainer}>
+        <div className={styles.cardContainer}>
+          <Card
+            id="share-file-card"
+            className={styles.card}
+            src={sendFileIcon}
+            title={SEND_FILE}
+            description="Securely share your files"
+            onClickHandler={() => {}}
+          />
+          <Card
+            id="received-files-card"
+            className={styles.card}
+            src={receivedFilesIcon}
+            title={RECEIVED_FILES}
+            description="View files you've received"
+            onClickHandler={() => {}}
+          />
+          <Card
+            id="transferred-files-card"
+            className={styles.card}
+            src={sharedFilesIcon}
+            title={SHARED_FILES}
+            description="Manage your shared files"
+            onClickHandler={() => {}}
+          />
         </div>
-    );
-};
-
-const Dashboard: React.FC = () => {
-    return (
-        <>
-            <NavBar showLogo={true} pageName="Dashboard" pageURL="/dashboard" />
-            <div className={styles.dashboardContainer}>
-                <div className={styles.cardContainer}>
-                    <Card title="Share File" description="Securely share your files" logo={shareLogo} route="/share-file" />
-                    <Card title="Received Files" description="View files you've received" logo={receivedLogo} route="/received-files" />
-                    <Card title="Shared Files" description="Manage your shared files" logo={sharedLogo} route="/shared-files" />
-                </div>
-                <Activity />
-            </div>
-        </>
-    );
+        <div className={styles.activityContainer}>
+          <ActivityCard notifications={notifications}
+          />
+        </div>
+      </div>
+    </>
+  );
 };
 
 export default Dashboard;

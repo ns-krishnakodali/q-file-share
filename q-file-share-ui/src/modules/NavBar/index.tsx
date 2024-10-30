@@ -9,13 +9,14 @@ import qfsLogo from '@/assets/qfs-logo.svg';
 import logoutLogo from '@/assets/logout.svg';
 
 interface INavBarProps {
-  pageName: string;
-  pageURL: string;
+  pageName?: string;
+  pageURL?: string;
+  className?: string;
   showLogo?: boolean;
 }
 
 export const NavBar = (props: INavBarProps): JSX.Element => {
-  const { pageName, pageURL, showLogo = true } = props;
+  const { pageName, pageURL, className, showLogo = true } = props;
 
   const router = useRouter();
 
@@ -32,14 +33,16 @@ export const NavBar = (props: INavBarProps): JSX.Element => {
           />
         </div>
       )}
-      <Button
-        id="navbar-button"
-        className={styles.navbarButton}
-        variant="text"
-        onClickAction={() => router.push(pageURL)}
-      >
-        {pageName}
-      </Button>
+      {pageName &&
+        <Button
+          id="navbar-button"
+          className={styles.navbarButton}
+          variant="text"
+          onClickAction={() => router.push(pageURL || "")}
+        >
+          {pageName}
+        </Button>
+      }
       <div className={styles.logout} onClick={() => { }}>
         <Image
           src={logoutLogo}

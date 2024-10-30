@@ -1,5 +1,8 @@
-export const SHARE_FILES = "Share Files";
+// Generic Constants
+export const SEND_FILE = "Send File"
+export const SHARED_FILES = "Shared Files";
 export const RECEIVED_FILES = "Received Files";
+export const ACTIVITY = "Activity";
 
 // Login/SignUp Constants
 export const LOGIN = "Login";

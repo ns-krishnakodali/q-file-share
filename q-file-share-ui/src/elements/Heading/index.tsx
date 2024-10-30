@@ -4,9 +4,9 @@ import cx from "classnames";
 import { ReactNode } from "react";
 
 interface IHeaderProps {
-  children: ReactNode,
-  className?: string
-  size?: 1 | 2 | 3 | 4
+  children: ReactNode;
+  className?: string;
+  size?: 1 | 2 | 3 | 4;
 }
 
 export const Heading = (props: IHeaderProps): JSX.Element => {
