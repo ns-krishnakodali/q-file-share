@@ -17,4 +17,6 @@ export const SIZE = "Size";
 export const RECEIVED_FROM = "Received From";
 export const EXPIRY = "Expiry";
 export const DOWNLOADS_REMAINING = "Downloads Remaining";
+export const SENT_ON = "Sent On"
+export const RECEIVED_ON = "Received On"
 export const DOWNLOAD_COUNT = "Download Count";
