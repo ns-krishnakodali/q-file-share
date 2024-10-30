@@ -1,10 +1,11 @@
 .navbar {
-  background-color: var(--color-navbar);
-  padding: var(--spacing-2);
   display: flex;
   justify-content: space-between;
   align-items: center;
   height: var(--spacing-2);
+  padding: var(--spacing-2);
+  border-bottom: 1px solid var(--color-box-shadow-1);
+  background-color: var(--color-navbar);
 }
 
 .navbar:hover {
