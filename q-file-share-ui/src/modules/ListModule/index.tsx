@@ -1,8 +1,10 @@
+// modules/ListModule/index.tsx
+import { useState } from "react";
 import styles from "./ListModule.module.css";
-
 import { DOWNLOADS_REMAINING, EXPIRY, NAME, RECEIVED_FROM, SIZE } from "@/constants";
+import { sortItemsByColumn } from "@/utils/Sort/index";
 
-type ListItem = {
+export type ListItem = {
   name: string;
   size: number;
   receivedFrom: string;
@@ -15,28 +17,33 @@ interface IListModuleProps {
 }
 
 export const ListModule = (props: IListModuleProps): JSX.Element => {
-  const { items } = props;
+  const [sortedItems, setSortedItems] = useState(props.items);
+
+  const handleSort = (columnKey: keyof ListItem) => {
+    const sorted = sortItemsByColumn(sortedItems, columnKey);
+    setSortedItems(sorted);
+  };
 
   return (
     <div className={styles.tableContainer}>
       <table className={styles.table}>
         <thead className={styles.tableHeader}>
           <tr>
-            <th className={styles.tableHeaderValue}>{NAME}</th>
-            <th className={styles.tableHeaderValue}>{SIZE}</th>
-            <th className={styles.tableHeaderValue}>{RECEIVED_FROM}</th>
-            <th className={styles.tableHeaderValue}>{EXPIRY}</th>
-            <th className={styles.tableHeaderValue}>{DOWNLOADS_REMAINING}</th>
+            <th className={styles.tableHeaderValue} onClick={() => handleSort("name")}>{NAME}</th>
+            <th className={styles.tableHeaderValue} onClick={() => handleSort("size")}>{SIZE}</th>
+            <th className={styles.tableHeaderValue} onClick={() => handleSort("receivedFrom")}>{RECEIVED_FROM}</th>
+            <th className={styles.tableHeaderValue} onClick={() => handleSort("expiry")}>{EXPIRY}</th>
+            <th className={styles.tableHeaderValue} onClick={() => handleSort("downloadsRemaining")}>{DOWNLOADS_REMAINING}</th>
           </tr>
         </thead>
         <tbody>
-          {items.map((item: ListItem, index: number) => (
+          {sortedItems.map((item, index) => (
             <tr key={index}>
-              <td className={styles.tableCell}>{item?.name || ""}</td>
-              <td className={styles.tableCell}>{item?.size || 0}</td>
-              <td className={styles.tableCell}>{item?.receivedFrom || ""}</td>
-              <td className={styles.tableCell}>{item?.expiry || ""}</td>
-              <td className={styles.tableCell}>{item?.downloadsRemaining || ""}</td>
+              <td className={styles.tableCell}>{item.name}</td>
+              <td className={styles.tableCell}>{item.size}</td>
+              <td className={styles.tableCell}>{item.receivedFrom}</td>
+              <td className={styles.tableCell}>{item.expiry}</td>
+              <td className={styles.tableCell}>{item.downloadsRemaining}</td>
             </tr>
           ))}
         </tbody>
