@@ -12,7 +12,5 @@ interface ITextProps {
 export const Text = (props: ITextProps): JSX.Element => {
   const { children, size = "medium", className } = props;
 
-  return (
-    <p className={cx(styles.text, styles[size], className)}>{children}</p>
-  )
+  return <p className={cx(styles.text, styles[size], className)}>{children}</p>;
 };

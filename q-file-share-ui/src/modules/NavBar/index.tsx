@@ -1,12 +1,12 @@
 import styles from "./NavBar.module.css";
 
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 import { Button } from "@/elements";
 
-import qfsLogo from '@/assets/qfs-logo.svg';
-import logoutLogo from '@/assets/logout.svg';
+import qfsLogo from "@/assets/qfs-logo.svg";
+import logoutLogo from "@/assets/logout.svg";
 
 interface INavBarProps {
   pageName?: string;
@@ -22,17 +22,16 @@ export const NavBar = (props: INavBarProps): JSX.Element => {
   return (
     <div className={styles.navbarContainer}>
       {showLogo && (
-        <div className={styles.navbarLogo} onClick={() => { router.push("/dashboard") }}>
-          <Image
-            src={qfsLogo}
-            alt="qfs-logo"
-            width={55}
-            height={55}
-            priority
-          />
+        <div
+          className={styles.navbarLogo}
+          onClick={() => {
+            router.push("/dashboard");
+          }}
+        >
+          <Image src={qfsLogo} alt="qfs-logo" width={55} height={55} priority />
         </div>
       )}
-      {pageName &&
+      {pageName && (
         <Button
           id="navbar-button"
           className={styles.navbarButton}
@@ -41,8 +40,8 @@ export const NavBar = (props: INavBarProps): JSX.Element => {
         >
           {pageName}
         </Button>
-      }
-      <div className={styles.logout} onClick={() => { }}>
+      )}
+      <div className={styles.logout} onClick={() => {}}>
         <Image
           src={logoutLogo}
           alt="QFS Logo"

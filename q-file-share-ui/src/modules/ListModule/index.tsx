@@ -26,7 +26,7 @@ export interface ListElement {
   downloads: number;
   transactionDate: string;
   expiry: string;
-};
+}
 
 type SortedElementsOrder = {
   [K in keyof ListElement]: boolean;
@@ -38,10 +38,8 @@ interface IListModuleProps {
 }
 
 const getArrowDirection = (isAscending?: boolean): any => {
-  if (isAscending)
-    return upArrowIcon;
-  else
-    return downArrowIcon;
+  if (isAscending) return upArrowIcon;
+  else return downArrowIcon;
 };
 
 const initialElementsOrder: SortedElementsOrder = {
@@ -54,17 +52,25 @@ const initialElementsOrder: SortedElementsOrder = {
 };
 
 export const ListModule = (props: IListModuleProps): JSX.Element => {
-  const {elements, renderSendFilesLayout = true} = props;
+  const { elements, renderSendFilesLayout = true } = props;
 
-  const [listElements, setListElements] = useState<ListElement[]>(elements || []);
-  const [sortedElementsOrder, setSortedElementsOrder] = useState<SortedElementsOrder>(initialElementsOrder);
+  const [listElements, setListElements] = useState<ListElement[]>(
+    elements || [],
+  );
+  const [sortedElementsOrder, setSortedElementsOrder] =
+    useState<SortedElementsOrder>(initialElementsOrder);
 
   const handleSort = (columnKey: keyof ListElement): void => {
-    const sortedListElements: ListElement[] = sortListElementsByColumn(listElements, columnKey, !sortedElementsOrder[columnKey]);
+    const sortedListElements: ListElement[] = sortListElementsByColumn(
+      listElements,
+      columnKey,
+      !sortedElementsOrder[columnKey],
+    );
     setListElements(sortedListElements);
-    setSortedElementsOrder(pSortedElementsOrder => (
-      { ...initialElementsOrder, [columnKey]: !pSortedElementsOrder[columnKey] }
-    ));
+    setSortedElementsOrder((pSortedElementsOrder) => ({
+      ...initialElementsOrder,
+      [columnKey]: !pSortedElementsOrder[columnKey],
+    }));
   };
 
   return (
@@ -72,33 +78,81 @@ export const ListModule = (props: IListModuleProps): JSX.Element => {
       <table className={styles.table}>
         <thead className={styles.tableHeader}>
           <tr>
-            <th className={styles.tableHeaderValue} onClick={() => handleSort("name")}>
+            <th
+              className={styles.tableHeaderValue}
+              onClick={() => handleSort("name")}
+            >
               <div className={styles.headerDiv}>
                 {NAME}
-                <Image src={getArrowDirection(sortedElementsOrder["name"])} alt="arrow-icon" width={12} height={12} />
+                <Image
+                  src={getArrowDirection(sortedElementsOrder["name"])}
+                  alt="arrow-icon"
+                  width={12}
+                  height={12}
+                />
               </div>
             </th>
-            <th className={styles.tableHeaderValue} onClick={() => handleSort("size")}>
+            <th
+              className={styles.tableHeaderValue}
+              onClick={() => handleSort("size")}
+            >
               <div className={styles.headerDiv}>
                 {SIZE}
-                <Image src={getArrowDirection(sortedElementsOrder["size"])} alt="arrow-icon" width={12} height={12} />
+                <Image
+                  src={getArrowDirection(sortedElementsOrder["size"])}
+                  alt="arrow-icon"
+                  width={12}
+                  height={12}
+                />
               </div>
             </th>
-            <th className={styles.tableHeaderValue} onClick={() => handleSort("transceive")}>
-              {(renderSendFilesLayout)? SENT_TO : RECEIVED_FROM}
-              <Image src={getArrowDirection(sortedElementsOrder["transceive"])} alt="arrow-icon" width={12} height={12} />
+            <th
+              className={styles.tableHeaderValue}
+              onClick={() => handleSort("transceive")}
+            >
+              {renderSendFilesLayout ? SENT_TO : RECEIVED_FROM}
+              <Image
+                src={getArrowDirection(sortedElementsOrder["transceive"])}
+                alt="arrow-icon"
+                width={12}
+                height={12}
+              />
             </th>
-            <th className={styles.tableHeaderValue} onClick={() => handleSort("downloads")}>
-              {(renderSendFilesLayout)? DOWNLOAD_COUNT : DOWNLOADS_REMAINING}
-              <Image src={getArrowDirection(sortedElementsOrder["downloads"])} alt="arrow-icon" width={12} height={12} />
+            <th
+              className={styles.tableHeaderValue}
+              onClick={() => handleSort("downloads")}
+            >
+              {renderSendFilesLayout ? DOWNLOAD_COUNT : DOWNLOADS_REMAINING}
+              <Image
+                src={getArrowDirection(sortedElementsOrder["downloads"])}
+                alt="arrow-icon"
+                width={12}
+                height={12}
+              />
             </th>
-            <th className={styles.tableHeaderValue} onClick={() => handleSort("transactionDate")}>
-              {(renderSendFilesLayout)? SENT_ON : RECEIVED_ON}
-              <Image src={getArrowDirection(sortedElementsOrder["transactionDate"])} alt="arrow-icon" width={12} height={12} />
+            <th
+              className={styles.tableHeaderValue}
+              onClick={() => handleSort("transactionDate")}
+            >
+              {renderSendFilesLayout ? SENT_ON : RECEIVED_ON}
+              <Image
+                src={getArrowDirection(sortedElementsOrder["transactionDate"])}
+                alt="arrow-icon"
+                width={12}
+                height={12}
+              />
             </th>
-            <th className={styles.tableHeaderValue} onClick={() => handleSort("expiry")}>
+            <th
+              className={styles.tableHeaderValue}
+              onClick={() => handleSort("expiry")}
+            >
               {EXPIRY}
-              <Image src={getArrowDirection(sortedElementsOrder["expiry"])} alt="arrow-icon" width={12} height={12} />
+              <Image
+                src={getArrowDirection(sortedElementsOrder["expiry"])}
+                alt="arrow-icon"
+                width={12}
+                height={12}
+              />
             </th>
           </tr>
         </thead>

@@ -1,6 +1,6 @@
 "use client";
 
-import styles from "./dashboard.module.css"
+import styles from "./dashboard.module.css";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -12,13 +12,12 @@ import {
   RECEIVED_FILES,
   RECEIVED_FILES_TEXT,
   SHARED_FILES,
-  SHARED_FILES_TEXT
+  SHARED_FILES_TEXT,
 } from "@/constants";
 
 import sendFileIcon from "@/assets/send-file-icon.svg";
 import receivedFilesIcon from "@/assets/received-files-icon.svg";
 import sharedFilesIcon from "@/assets/shared-files-icon.svg";
-
 
 const Dashboard = (): JSX.Element => {
   const router = useRouter();
@@ -26,7 +25,7 @@ const Dashboard = (): JSX.Element => {
 
   return (
     <>
-      <NavBar showLogo={true}/>
+      <NavBar showLogo={true} />
       <div className={styles.dashboardContainer}>
         <div className={styles.cardContainer}>
           <Card
@@ -55,8 +54,7 @@ const Dashboard = (): JSX.Element => {
           />
         </div>
         <div className={styles.activityContainer}>
-          <ActivityCard notifications={notifications}
-          />
+          <ActivityCard notifications={notifications} />
         </div>
       </div>
     </>

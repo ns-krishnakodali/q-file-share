@@ -21,7 +21,7 @@ export const Input = (props: IInputProps): JSX.Element => {
     value,
     placeholder = "",
     isReadOnly = false,
-    onClickAction
+    onClickAction,
   } = props;
 
   return (
