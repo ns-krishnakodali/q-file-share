@@ -33,22 +33,24 @@ const getArrowDirection = (isAscending?: boolean): any => {
     return downArrowIcon;
 };
 
+const initialElementsOrder: SortedElementsOrder = {
+  name: true,
+  size: true,
+  receivedFrom: true,
+  downloadsRemaining: true,
+  receivedOn: false,
+  expiry: true,
+};
+
 export const ListModule = (props: IListModuleProps): JSX.Element => {
   const [listElements, setListElements] = useState<ListElement[]>(props?.elements || []);
-  const [sortedElementsOrder, setSortedElementsOrder] = useState<SortedElementsOrder>({
-    name: true,
-    size: true,
-    receivedFrom: true,
-    downloadsRemaining: true,
-    receivedOn: false,
-    expiry: true,
-  });
+  const [sortedElementsOrder, setSortedElementsOrder] = useState<SortedElementsOrder>(initialElementsOrder);
 
   const handleSort = (columnKey: keyof ListElement): void => {
     const sortedListElements: ListElement[] = sortListElementsByColumn(listElements, columnKey, !sortedElementsOrder[columnKey]);
     setListElements(sortedListElements);
     setSortedElementsOrder(pSortedElementsOrder => (
-      { ...pSortedElementsOrder, [columnKey]: !pSortedElementsOrder[columnKey] }
+      { ...initialElementsOrder, [columnKey]: !pSortedElementsOrder[columnKey] }
     ));
   };
 

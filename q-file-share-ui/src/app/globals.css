@@ -9,13 +9,14 @@
   --color-selected: #072537;
   --color-navbar: #f0f8ff;
   --color-box-shadow-1: rgba(0, 0, 0, 0.1);
+  --color-box-shadow-2: rgba(0, 0, 0, 0.2);
   --color-box-shadow-selected-1: rgba(0, 0, 0, 0.4);
   --color-heading-1: #4863A0;
 
   /* Button Colors */
-  --color-button-1: #4681f4;
+  --color-button-1: #3f5b9e;
   --color-button-2: #6c757d;
-  --color-button-selected-1: #074fbb;
+  --color-button-selected-1: #224085;
   --color-button-selected-2: #636363;
 
   /* Spacing */

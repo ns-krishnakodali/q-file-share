@@ -13,7 +13,7 @@ import receivedFilesIcon from "@/assets/received-files-icon.svg";
 import sharedFilesIcon from "@/assets/shared-files-icon.svg";
 
 
-const Dashboard: React.FC = (): JSX.Element => {
+const Dashboard = (): JSX.Element => {
 
   const router = useRouter();
   const [notifications, setNotifications] = useState<INotification[]>([]);
