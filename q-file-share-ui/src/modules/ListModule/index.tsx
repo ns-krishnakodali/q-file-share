@@ -4,7 +4,14 @@ import Image from "next/image";
 import { useState } from "react";
 
 import { sortListElementsByColumn } from "@/utils";
-import { DOWNLOADS_REMAINING, EXPIRY, NAME, RECEIVED_FROM, RECEIVED_ON, SIZE } from "@/constants";
+import {
+  DOWNLOADS_REMAINING,
+  EXPIRY,
+  NAME,
+  RECEIVED_FROM,
+  RECEIVED_ON,
+  SIZE,
+} from "@/constants";
 
 import upArrowIcon from "@/assets/up-arrow.svg";
 import downArrowIcon from "@/assets/down-arrow.svg";
@@ -16,7 +23,7 @@ export interface ListElement {
   downloadsRemaining: number;
   receivedOn: string;
   expiry: string;
-};
+}
 
 type SortedElementsOrder = {
   [K in keyof ListElement]: boolean;
@@ -27,10 +34,8 @@ interface IListModuleProps {
 }
 
 const getArrowDirection = (isAscending?: boolean): any => {
-  if (isAscending)
-    return upArrowIcon;
-  else
-    return downArrowIcon;
+  if (isAscending) return upArrowIcon;
+  else return downArrowIcon;
 };
 
 const initialElementsOrder: SortedElementsOrder = {
@@ -43,15 +48,23 @@ const initialElementsOrder: SortedElementsOrder = {
 };
 
 export const ListModule = (props: IListModuleProps): JSX.Element => {
-  const [listElements, setListElements] = useState<ListElement[]>(props?.elements || []);
-  const [sortedElementsOrder, setSortedElementsOrder] = useState<SortedElementsOrder>(initialElementsOrder);
+  const [listElements, setListElements] = useState<ListElement[]>(
+    props?.elements || [],
+  );
+  const [sortedElementsOrder, setSortedElementsOrder] =
+    useState<SortedElementsOrder>(initialElementsOrder);
 
   const handleSort = (columnKey: keyof ListElement): void => {
-    const sortedListElements: ListElement[] = sortListElementsByColumn(listElements, columnKey, !sortedElementsOrder[columnKey]);
+    const sortedListElements: ListElement[] = sortListElementsByColumn(
+      listElements,
+      columnKey,
+      !sortedElementsOrder[columnKey],
+    );
     setListElements(sortedListElements);
-    setSortedElementsOrder(pSortedElementsOrder => (
-      { ...initialElementsOrder, [columnKey]: !pSortedElementsOrder[columnKey] }
-    ));
+    setSortedElementsOrder((pSortedElementsOrder) => ({
+      ...initialElementsOrder,
+      [columnKey]: !pSortedElementsOrder[columnKey],
+    }));
   };
 
   return (
@@ -59,33 +72,83 @@ export const ListModule = (props: IListModuleProps): JSX.Element => {
       <table className={styles.table}>
         <thead className={styles.tableHeader}>
           <tr>
-            <th className={styles.tableHeaderValue} onClick={() => handleSort("name")}>
+            <th
+              className={styles.tableHeaderValue}
+              onClick={() => handleSort("name")}
+            >
               <div className={styles.headerDiv}>
                 {NAME}
-                <Image src={getArrowDirection(sortedElementsOrder["name"])} alt="arrow-icon" width={12} height={12} />
+                <Image
+                  src={getArrowDirection(sortedElementsOrder["name"])}
+                  alt="arrow-icon"
+                  width={12}
+                  height={12}
+                />
               </div>
             </th>
-            <th className={styles.tableHeaderValue} onClick={() => handleSort("size")}>
+            <th
+              className={styles.tableHeaderValue}
+              onClick={() => handleSort("size")}
+            >
               <div className={styles.headerDiv}>
                 {SIZE}
-                <Image src={getArrowDirection(sortedElementsOrder["size"])} alt="arrow-icon" width={12} height={12} />
+                <Image
+                  src={getArrowDirection(sortedElementsOrder["size"])}
+                  alt="arrow-icon"
+                  width={12}
+                  height={12}
+                />
               </div>
             </th>
-            <th className={styles.tableHeaderValue} onClick={() => handleSort("receivedFrom")}>
+            <th
+              className={styles.tableHeaderValue}
+              onClick={() => handleSort("receivedFrom")}
+            >
               {RECEIVED_FROM}
-              <Image src={getArrowDirection(sortedElementsOrder["receivedFrom"])} alt="arrow-icon" width={12} height={12} />
+              <Image
+                src={getArrowDirection(sortedElementsOrder["receivedFrom"])}
+                alt="arrow-icon"
+                width={12}
+                height={12}
+              />
             </th>
-            <th className={styles.tableHeaderValue} onClick={() => handleSort("downloadsRemaining")}>
+            <th
+              className={styles.tableHeaderValue}
+              onClick={() => handleSort("downloadsRemaining")}
+            >
               {DOWNLOADS_REMAINING}
-              <Image src={getArrowDirection(sortedElementsOrder["downloadsRemaining"])} alt="arrow-icon" width={12} height={12} />
+              <Image
+                src={getArrowDirection(
+                  sortedElementsOrder["downloadsRemaining"],
+                )}
+                alt="arrow-icon"
+                width={12}
+                height={12}
+              />
             </th>
-            <th className={styles.tableHeaderValue} onClick={() => handleSort("receivedOn")}>
+            <th
+              className={styles.tableHeaderValue}
+              onClick={() => handleSort("receivedOn")}
+            >
               {RECEIVED_ON}
-              <Image src={getArrowDirection(sortedElementsOrder["receivedOn"])} alt="arrow-icon" width={12} height={12} />
+              <Image
+                src={getArrowDirection(sortedElementsOrder["receivedOn"])}
+                alt="arrow-icon"
+                width={12}
+                height={12}
+              />
             </th>
-            <th className={styles.tableHeaderValue} onClick={() => handleSort("expiry")}>
+            <th
+              className={styles.tableHeaderValue}
+              onClick={() => handleSort("expiry")}
+            >
               {EXPIRY}
-              <Image src={getArrowDirection(sortedElementsOrder["expiry"])} alt="arrow-icon" width={12} height={12} />
+              <Image
+                src={getArrowDirection(sortedElementsOrder["expiry"])}
+                alt="arrow-icon"
+                width={12}
+                height={12}
+              />
             </th>
           </tr>
         </thead>
@@ -94,8 +157,12 @@ export const ListModule = (props: IListModuleProps): JSX.Element => {
             <tr key={index}>
               <td className={styles.tableCell}>{element?.name || ""}</td>
               <td className={styles.tableCell}>{element?.size || 0}</td>
-              <td className={styles.tableCell}>{element?.receivedFrom || ""}</td>
-              <td className={styles.tableCell}>{element?.downloadsRemaining || 0}</td>
+              <td className={styles.tableCell}>
+                {element?.receivedFrom || ""}
+              </td>
+              <td className={styles.tableCell}>
+                {element?.downloadsRemaining || 0}
+              </td>
               <td className={styles.tableCell}>{element?.receivedOn}</td>
               <td className={styles.tableCell}>{element?.expiry || ""}</td>
             </tr>

@@ -7,8 +7,8 @@ export const ACTIVITY = "Activity";
 // Login/SignUp Constants
 export const LOGIN = "Login";
 export const SIGN_UP = "Sign  Up";
-export const EMAIL = "Email"
-export const PASSWORD = "Password"
+export const EMAIL = "Email";
+export const PASSWORD = "Password";
 export const CONFIRM_PASSWORD = "Confirm Password";
 export const NEW_USER = "New User?";
 export const ALREADY_JOINED = "Already Joined?";

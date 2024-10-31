@@ -35,7 +35,7 @@
 }
 
 .activityElementContainer::-webkit-scrollbar-thumb {
-  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .2);
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.2);
   border-radius: var(--spacing-1-5);
   background-color: var(--color-light-gray);
 }

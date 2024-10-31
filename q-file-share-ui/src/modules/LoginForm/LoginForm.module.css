@@ -24,7 +24,6 @@
   cursor: pointer;
 }
 
-
 .loginButton {
   margin-top: var(--spacing-6);
 }
@@ -38,7 +37,7 @@
 
 .signUpButton {
   font-size: small;
-  font-family: 'Poppins' sans-serif;
+  font-family: "Poppins" sans-serif;
   margin-left: var(--spacing-quarter);
   color: var(--color-button-1);
 }

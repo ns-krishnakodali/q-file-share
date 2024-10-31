@@ -3,8 +3,8 @@ import cx from "classnames";
 
 import Image from "next/image";
 
-import { ACTIVITY } from '@/constants';
-import { Heading, Text } from '@/elements';
+import { ACTIVITY } from "@/constants";
+import { Heading, Text } from "@/elements";
 
 import closeIcon from "@/assets/close-icon.svg";
 import sentIcon from "@/assets/sent-icon.svg";
@@ -23,9 +23,9 @@ interface IActivityProps {
 export const ActivityCard = (props: IActivityProps): JSX.Element => {
   const { className = "", notifications } = props;
 
-  const handleCloseActivity = (): void => { };
+  const handleCloseActivity = (): void => {};
 
-  const openActivityHandler = (index: number): void => { };
+  const openActivityHandler = (index: number): void => {};
 
   return (
     <div className={cx(styles.activityCard, className)}>
@@ -35,9 +35,13 @@ export const ActivityCard = (props: IActivityProps): JSX.Element => {
       <div className={styles.activityElementContainer}>
         <ul className={styles.activityElementList}>
           {notifications.map((notification: INotification, index: number) => (
-            <li className={styles.activityElement} key={index} onClick={() => openActivityHandler(index)}>
+            <li
+              className={styles.activityElement}
+              key={index}
+              onClick={() => openActivityHandler(index)}
+            >
               <Image
-                src={(notification.type === "send") ? sentIcon: receivedIcon}
+                src={notification.type === "send" ? sentIcon : receivedIcon}
                 className={styles.notificationIcon}
                 alt={`${notification?.type}-icon`}
                 width={20}
