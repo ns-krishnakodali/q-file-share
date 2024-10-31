@@ -1,8 +1,12 @@
 // Generic Constants
-export const SEND_FILE = "Send File";
-export const SHARED_FILES = "Shared Files";
-export const RECEIVED_FILES = "Received Files";
 export const ACTIVITY = "Activity";
+export const SEND_FILE = "Send File";
+export const SEND_FILES_TEXT = "Securely share your files";
+export const SHARED_FILES = "Shared Files";
+export const SHARED_FILES_TEXT = "Check your shared files";
+export const RECEIVED_FILES = "Received Files";
+export const RECEIVED_FILES_TEXT = "View files you've received";
+
 
 // Login/SignUp Constants
 export const LOGIN = "Login";
