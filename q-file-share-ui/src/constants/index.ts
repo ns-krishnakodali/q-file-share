@@ -16,9 +16,10 @@ export const ALREADY_JOINED = "Already Joined?";
 // List Module Constants
 export const NAME = "Name";
 export const SIZE = "Size";
+export const SENT_TO = "Sent To";
 export const RECEIVED_FROM = "Received From";
-export const EXPIRY = "Expiry";
+export const DOWNLOAD_COUNT = "Download Count";
 export const DOWNLOADS_REMAINING = "Downloads Remaining";
+export const EXPIRY = "Expiry";
 export const SENT_ON = "Sent On";
 export const RECEIVED_ON = "Received On";
-export const DOWNLOAD_COUNT = "Download Count";

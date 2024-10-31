@@ -4,7 +4,17 @@ import Image from "next/image";
 import { useState } from "react";
 
 import { sortListElementsByColumn } from "@/utils";
-import { DOWNLOADS_REMAINING, EXPIRY, NAME, RECEIVED_FROM, RECEIVED_ON, SIZE } from "@/constants";
+import {
+  NAME,
+  SIZE,
+  SENT_TO,
+  RECEIVED_FROM,
+  DOWNLOAD_COUNT,
+  DOWNLOADS_REMAINING,
+  EXPIRY,
+  SENT_ON,
+  RECEIVED_ON,
+} from "@/constants";
 
 import upArrowIcon from "@/assets/up-arrow.svg";
 import downArrowIcon from "@/assets/down-arrow.svg";
@@ -12,9 +22,9 @@ import downArrowIcon from "@/assets/down-arrow.svg";
 export interface ListElement {
   name: string;
   size: number;
-  receivedFrom: string;
-  downloadsRemaining: number;
-  receivedOn: string;
+  transceive: string;
+  downloads: number;
+  transactionDate: string;
   expiry: string;
 };
 
@@ -24,6 +34,7 @@ type SortedElementsOrder = {
 
 interface IListModuleProps {
   elements: ListElement[];
+  renderSendFilesLayout?: boolean;
 }
 
 const getArrowDirection = (isAscending?: boolean): any => {
@@ -36,14 +47,16 @@ const getArrowDirection = (isAscending?: boolean): any => {
 const initialElementsOrder: SortedElementsOrder = {
   name: true,
   size: true,
-  receivedFrom: true,
-  downloadsRemaining: true,
-  receivedOn: false,
+  transceive: true,
+  downloads: true,
+  transactionDate: false,
   expiry: true,
 };
 
 export const ListModule = (props: IListModuleProps): JSX.Element => {
-  const [listElements, setListElements] = useState<ListElement[]>(props?.elements || []);
+  const {elements, renderSendFilesLayout = true} = props;
+
+  const [listElements, setListElements] = useState<ListElement[]>(elements || []);
   const [sortedElementsOrder, setSortedElementsOrder] = useState<SortedElementsOrder>(initialElementsOrder);
 
   const handleSort = (columnKey: keyof ListElement): void => {
@@ -71,17 +84,17 @@ export const ListModule = (props: IListModuleProps): JSX.Element => {
                 <Image src={getArrowDirection(sortedElementsOrder["size"])} alt="arrow-icon" width={12} height={12} />
               </div>
             </th>
-            <th className={styles.tableHeaderValue} onClick={() => handleSort("receivedFrom")}>
-              {RECEIVED_FROM}
-              <Image src={getArrowDirection(sortedElementsOrder["receivedFrom"])} alt="arrow-icon" width={12} height={12} />
+            <th className={styles.tableHeaderValue} onClick={() => handleSort("transceive")}>
+              {(renderSendFilesLayout)? SENT_TO : RECEIVED_FROM}
+              <Image src={getArrowDirection(sortedElementsOrder["transceive"])} alt="arrow-icon" width={12} height={12} />
             </th>
-            <th className={styles.tableHeaderValue} onClick={() => handleSort("downloadsRemaining")}>
-              {DOWNLOADS_REMAINING}
-              <Image src={getArrowDirection(sortedElementsOrder["downloadsRemaining"])} alt="arrow-icon" width={12} height={12} />
+            <th className={styles.tableHeaderValue} onClick={() => handleSort("downloads")}>
+              {(renderSendFilesLayout)? DOWNLOAD_COUNT : DOWNLOADS_REMAINING}
+              <Image src={getArrowDirection(sortedElementsOrder["downloads"])} alt="arrow-icon" width={12} height={12} />
             </th>
-            <th className={styles.tableHeaderValue} onClick={() => handleSort("receivedOn")}>
-              {RECEIVED_ON}
-              <Image src={getArrowDirection(sortedElementsOrder["receivedOn"])} alt="arrow-icon" width={12} height={12} />
+            <th className={styles.tableHeaderValue} onClick={() => handleSort("transactionDate")}>
+              {(renderSendFilesLayout)? SENT_ON : RECEIVED_ON}
+              <Image src={getArrowDirection(sortedElementsOrder["transactionDate"])} alt="arrow-icon" width={12} height={12} />
             </th>
             <th className={styles.tableHeaderValue} onClick={() => handleSort("expiry")}>
               {EXPIRY}
@@ -94,9 +107,9 @@ export const ListModule = (props: IListModuleProps): JSX.Element => {
             <tr key={index}>
               <td className={styles.tableCell}>{element?.name || ""}</td>
               <td className={styles.tableCell}>{element?.size || 0}</td>
-              <td className={styles.tableCell}>{element?.receivedFrom || ""}</td>
-              <td className={styles.tableCell}>{element?.downloadsRemaining || 0}</td>
-              <td className={styles.tableCell}>{element?.receivedOn}</td>
+              <td className={styles.tableCell}>{element?.transceive || ""}</td>
+              <td className={styles.tableCell}>{element?.downloads || 0}</td>
+              <td className={styles.tableCell}>{element?.transactionDate}</td>
               <td className={styles.tableCell}>{element?.expiry || ""}</td>
             </tr>
           ))}

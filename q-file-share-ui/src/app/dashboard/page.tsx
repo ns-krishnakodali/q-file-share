@@ -14,9 +14,8 @@ import sharedFilesIcon from "@/assets/shared-files-icon.svg";
 
 
 const Dashboard = (): JSX.Element => {
-
   const router = useRouter();
-  const [notifications, setNotifications] = useState<INotification[]>([]);
+  const [notifications, setNotifications] = useState<INotification[]>([{message:"Sent file", type:"send"}]);
 
   return (
     <>
