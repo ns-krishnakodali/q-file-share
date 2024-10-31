@@ -16,7 +16,7 @@ const LoginPage = (): JSX.Element => {
 			<div className={styles.logo}>
 				<Image
 					src={qfsLogo}
-					alt="QFS Logo"
+					alt="qfs-logo"
 					width={120}
 					height={120}
 					priority

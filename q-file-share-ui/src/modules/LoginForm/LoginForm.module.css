@@ -11,6 +11,20 @@
   margin: var(--spacing-2) 0px;
 }
 
+.passwordContainer {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.showPasswordIcon {
+  position: absolute;
+  right: 1%;
+  cursor: pointer;
+}
+
+
 .loginButton {
   margin-top: var(--spacing-6);
 }
