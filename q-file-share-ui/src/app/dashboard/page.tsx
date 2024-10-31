@@ -6,7 +6,14 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { ActivityCard, Card, NavBar, INotification } from "@/modules";
-import { SEND_FILE, RECEIVED_FILES, SHARED_FILES } from "@/constants";
+import {
+  SEND_FILE,
+  SEND_FILES_TEXT,
+  RECEIVED_FILES,
+  RECEIVED_FILES_TEXT,
+  SHARED_FILES,
+  SHARED_FILES_TEXT
+} from "@/constants";
 
 import sendFileIcon from "@/assets/send-file-icon.svg";
 import receivedFilesIcon from "@/assets/received-files-icon.svg";
@@ -14,7 +21,6 @@ import sharedFilesIcon from "@/assets/shared-files-icon.svg";
 
 
 const Dashboard = (): JSX.Element => {
-
   const router = useRouter();
   const [notifications, setNotifications] = useState<INotification[]>([]);
 
@@ -28,7 +34,7 @@ const Dashboard = (): JSX.Element => {
             className={styles.card}
             src={sendFileIcon}
             title={SEND_FILE}
-            description="Securely share your files"
+            description={SEND_FILES_TEXT}
             onClickHandler={() => {}}
           />
           <Card
@@ -36,7 +42,7 @@ const Dashboard = (): JSX.Element => {
             className={styles.card}
             src={receivedFilesIcon}
             title={RECEIVED_FILES}
-            description="View files you've received"
+            description={RECEIVED_FILES_TEXT}
             onClickHandler={() => {}}
           />
           <Card
@@ -44,7 +50,7 @@ const Dashboard = (): JSX.Element => {
             className={styles.card}
             src={sharedFilesIcon}
             title={SHARED_FILES}
-            description="Manage your shared files"
+            description={SHARED_FILES_TEXT}
             onClickHandler={() => {}}
           />
         </div>
