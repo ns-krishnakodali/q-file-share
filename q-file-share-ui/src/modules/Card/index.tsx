@@ -8,14 +8,14 @@ import { Heading, Text } from "@/elements";
 interface ICardProps {
   id?: string;
   className?: string;
-  title: string,
-  description: string,
-  src: StaticImport,
-  onClickHandler?: () => void
+  title: string;
+  description: string;
+  src: StaticImport;
+  onClickHandler?: () => void;
 }
 
 export const Card = (props: ICardProps): JSX.Element => {
-  const { title, description, src, onClickHandler } = props;;
+  const { title, description, src, onClickHandler } = props;
 
   return (
     <div className={styles.card} onClick={onClickHandler}>

@@ -11,7 +11,7 @@
   --color-box-shadow-1: rgba(0, 0, 0, 0.1);
   --color-box-shadow-2: rgba(0, 0, 0, 0.2);
   --color-box-shadow-selected-1: rgba(0, 0, 0, 0.4);
-  --color-heading-1: #4863A0;
+  --color-heading-1: #4863a0;
 
   /* Button Colors */
   --color-button-1: #3f5b9e;
@@ -45,7 +45,7 @@ body {
   margin: 0;
   color: var(--color-black);
   background: var(--color-white);
-  font-family: 'Nunito', sans-serif;
+  font-family: "Nunito", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
