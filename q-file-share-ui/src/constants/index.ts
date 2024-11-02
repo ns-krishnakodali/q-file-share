@@ -26,3 +26,4 @@ export const DOWNLOADS_REMAINING = "Downloads Remaining";
 export const EXPIRY = "Expiry";
 export const SENT_ON = "Sent On";
 export const RECEIVED_ON = "Received On";
+export const FILTER = "Filter";
