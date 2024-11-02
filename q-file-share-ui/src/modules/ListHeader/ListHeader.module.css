@@ -7,23 +7,21 @@
 }
 
 .title {
-    font-size: 1.5em;
+    font-size: var(--font-size-15);
     font-weight: bold;
 }
-
-
-
 
 .logo {
     width: 27px; /* Adjust the size of the logo */
     height: 27px;
     margin-right: 5px;
 }
+
 .filter {
     display: flex;
     align-items: center;
-    background-color: #ffffff;
-    color: #0d0d0d; 
+    background-color: var(--color-white);
+    color: var(--color-black); 
     border: none;
     padding: 10px 20px; 
     
@@ -35,7 +33,6 @@
     transition: background-color 0.3s; 
 }
 
-
 .filter:hover {
-    background-color: #c9cdc9; 
+    background-color:var(--color-light-gray); 
 }
