@@ -1,0 +1,26 @@
+.navbarContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: var(--spacing-2);
+  padding: var(--spacing-2) var(--spacing-3);
+  border-bottom: 1px solid var(--color-box-shadow-1);
+  background-color: var(--color-navbar);
+}
+
+.navbarLogo {
+  margin-top: var(--spacing-half);
+  cursor: pointer;
+}
+
+.navbarButton {
+  margin-right: var(--spacing-3);
+  cursor: pointer;
+}
+
+.logout {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}

@@ -1,0 +1,31 @@
+.tableContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-x: auto;
+  padding: var(--spacing-1);
+}
+
+.table {
+  width: 80%;
+}
+
+.tableHeaderValue {
+  font-weight: bold;
+  padding: var(--spacing-half) var(--spacing-1);
+  cursor: pointer;
+}
+
+.headerDiv {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.tableCell {
+  text-align: center;
+  padding: var(--spacing-half);
+  width: fit-content;
+  white-space: nowrap;
+}
