@@ -15,8 +15,8 @@ source venv/bin/activate
 # Windows
 venv\Scripts\activate
 
-# Install FastAPI
-pip install "fastapi[standard]"
+# Install FastAPI, SQLAlchemy and other packages
+pip install "fastapi[standard]" sqlalchemy psycopg2 python-dotenv
 ```
 
 ## Database Setup:
