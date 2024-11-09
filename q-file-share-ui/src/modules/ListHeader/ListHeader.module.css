@@ -3,7 +3,7 @@
   align-items: center;
   justify-content: space-between;
   flex: 1;
-  padding: var(--spacing-1);
+  padding: var(--spacing-1) var(--spacing-2);
 }
 
 .logo {
