@@ -11,6 +11,9 @@ ENV/
 .pipenv/
 .venv.bak/
 
+# Environment File
+.env
+
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
