@@ -20,7 +20,7 @@ export const NavBar = (props: INavBarProps): JSX.Element => {
   const router = useRouter();
 
   return (
-    <div className={styles.navbarContainer}>
+    <div className={styles.container}>
       {showLogo && (
         <div
           className={styles.navbarLogo}
@@ -31,24 +31,26 @@ export const NavBar = (props: INavBarProps): JSX.Element => {
           <Image src={qfsLogo} alt="qfs-logo" width={55} height={55} priority />
         </div>
       )}
-      {pageName && (
-        <Button
-          id="navbar-button"
-          className={styles.navbarButton}
-          variant="text"
-          onClickAction={() => router.push(pageURL || "")}
-        >
-          {pageName}
-        </Button>
-      )}
-      <div className={styles.logout} onClick={() => {}}>
-        <Image
-          src={logoutLogo}
-          alt="QFS Logo"
-          width={30}
-          height={30}
-          priority
-        />
+      <div className={styles.navbarText}>
+        {pageName && (
+          <Button
+            id="navbar-button"
+            className={styles.navbarButton}
+            variant="text"
+            onClickAction={() => router.push(pageURL || "")}
+          >
+            {pageName}
+          </Button>
+        )}
+        <div className={styles.logout} onClick={() => {}}>
+          <Image
+            src={logoutLogo}
+            alt="QFS Logo"
+            width={30}
+            height={30}
+            priority
+          />
+        </div>
       </div>
     </div>
   );

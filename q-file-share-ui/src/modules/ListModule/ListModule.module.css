@@ -3,11 +3,11 @@
   align-items: center;
   justify-content: center;
   overflow-x: auto;
-  padding: var(--spacing-1);
+  padding: 0px var(--spacing-2);
 }
 
 .table {
-  width: 80%;
+  width: 100%;
 }
 
 .tableHeaderValue {

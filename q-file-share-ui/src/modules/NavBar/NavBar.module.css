@@ -1,4 +1,4 @@
-.navbarContainer {
+.container {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -16,6 +16,10 @@
 .navbarButton {
   margin-right: var(--spacing-3);
   cursor: pointer;
+}
+
+.navbarText {
+  display: flex;
 }
 
 .logout {
