@@ -211,11 +211,26 @@ function computeTr(rho: Uint8Array, t1: number[][], coefficientBits: number): Ui
 function computeY(K: any,M:any,keta:any,number:any ,gamma1:any): any{ 
     const y:any=[];
     
-    
     for(let i=0;i<number;i++){
         const concatenation:any = K+M+keta+(keta*number)+i;
         const concat_hash=shake128(concatenation,48);
-        for(let f_block=0;f_block)
+        let f_block=0;
+        while(f_block<concat_hash.length){
+           if(concat_hash.length-f_block>=0){
+            let t=1;
+            let res:number=0;
+            for(let j=0;j<5;j++){
+               res+=(Number(concat_hash[j])*t);
+               t*=16;
+               
+            }
+            if(res<2*gamma1-2){
+                y.push(res-gamma1-1);
+                break;
+            }
+           }
+           f_block+=5;
+        }
     }
     return y;
 }
