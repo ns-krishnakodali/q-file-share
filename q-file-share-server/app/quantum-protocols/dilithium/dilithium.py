@@ -1,11 +1,9 @@
-from flask import Flask, request, jsonify
 import hashlib
 
 n=256
 q = 8380417
 gamma2 = (q - 1) / 32
 
-app = Flask(__name__)
 
 # Polynomial multiplication in R_q
 def poly_mult(a, b, q):
@@ -14,14 +12,7 @@ def poly_mult(a, b, q):
 def high_bits(value, gamma2):
     return value // (2 * gamma2)
 
-# Verify the signature
-@app.route('/api/verify', methods=['POST'])
-def verify():
-    data = request.json
-    message = data['message']
-    signature = data['signature']
-    public_key = data['publicKey']
-    
+def verify(message: str, signature: dict, public_key: dict):
     A = public_key['A']
     t = public_key['t']
     z = signature['z']
@@ -35,9 +26,4 @@ def verify():
     # Recompute the hash
     hash_input = message + ''.join(map(str, w1_prime))
     c_prime = int(hashlib.sha256(hash_input.encode()).hexdigest(), 16) % q
-
-    # Verify that c' == c
-    if c == c_prime:
-        return jsonify({"status": "Signature is valid"})
-    return jsonify({"status": "Signature is invalid"})
 
