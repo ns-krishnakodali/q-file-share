@@ -12,7 +12,7 @@ const SharedFiles = (): JSX.Element => {
 
   return (
     <div className={styles.container}>
-      <NavBar pageName={RECEIVED_FILES} pageURL="/received-files" />
+      <NavBar pageName1={RECEIVED_FILES} pageURL1="/received-files" />
       <div className={styles.listContainer}>
         <ListHeader title={SHARED_FILES} />
         <ListModule elements={sharedFiles} renderSendFilesLayout />

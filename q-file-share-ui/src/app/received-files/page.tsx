@@ -12,7 +12,7 @@ const ReceivedFiles = (): JSX.Element => {
 
   return (
     <div className={styles.container}>
-      <NavBar pageName={SHARED_FILES} pageURL="/shared-files" />
+      <NavBar pageName1={SHARED_FILES} pageURL1="/shared-files" />
       <div className={styles.listContainer}>
         <ListHeader title={RECEIVED_FILES} />
         <ListModule elements={receivedFiles} />

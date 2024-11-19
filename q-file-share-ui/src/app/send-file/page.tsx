@@ -1,0 +1,38 @@
+"use client";
+
+import styles from "./SendFile.module.css";
+
+import { NavBar, SendFileOptions, UploadFile } from "@/modules";
+import { RECEIVED_FILES, SHARED_FILES } from "@/constants";
+import { Input } from "@/elements";
+
+const SendFile = (): JSX.Element => {
+  const handleFilesUpload = (files: File[]) => {};
+
+  const handleFileSubmission = (
+    expiration: string,
+    downloadCount: string,
+    checkAnonymous: boolean,
+  ) => {};
+
+  return (
+    <>
+      <NavBar
+        pageName1={SHARED_FILES}
+        pageURL1="/shared-files"
+        pageName2={RECEIVED_FILES}
+        pageURL2="/received-files"
+      />
+      <div className={styles.container}>
+        <div className={styles.uploadFile}>
+          <UploadFile onUpload={handleFilesUpload} />
+        </div>
+        <div className={styles.sendFileOptions}>
+          <SendFileOptions handleFileSubmission={handleFileSubmission} />
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default SendFile;
