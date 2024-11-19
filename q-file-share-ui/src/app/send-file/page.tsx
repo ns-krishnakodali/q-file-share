@@ -4,7 +4,6 @@ import styles from "./SendFile.module.css";
 
 import { NavBar, SendFileOptions, UploadFile } from "@/modules";
 import { RECEIVED_FILES, SHARED_FILES } from "@/constants";
-import { Input } from "@/elements";
 
 const SendFile = (): JSX.Element => {
   const handleFilesUpload = (files: File[]) => {};

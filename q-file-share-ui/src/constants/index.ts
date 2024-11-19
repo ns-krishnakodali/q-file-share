@@ -6,7 +6,7 @@ export const SHARED_FILES = "Shared Files";
 export const SHARED_FILES_TEXT = "Check your shared files";
 export const RECEIVED_FILES = "Received Files";
 export const RECEIVED_FILES_TEXT = "View files you've received";
-export const UPLOAD_FILES_TEXT = "Drag & drop files here or click to upload";
+export const UPLOAD_FILES_TEXT = "Drag & drop files here or Click to select";
 
 // Login/SignUp Constants
 export const LOGIN = "Login";
