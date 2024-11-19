@@ -6,6 +6,7 @@ export const SHARED_FILES = "Shared Files";
 export const SHARED_FILES_TEXT = "Check your shared files";
 export const RECEIVED_FILES = "Received Files";
 export const RECEIVED_FILES_TEXT = "View files you've received";
+export const UPLOAD_FILES_TEXT = "Drag & drop files here or Click to select";
 
 // Login/SignUp Constants
 export const LOGIN = "Login";
@@ -27,3 +28,8 @@ export const EXPIRY = "Expiry";
 export const SENT_ON = "Sent On";
 export const RECEIVED_ON = "Received On";
 export const FILTER = "Filter";
+
+// Send File Constants
+export const EXPIRATION = "Expiration (in days)";
+export const SEND_ANONYMOUSLY = "Send Anonymously";
+export const SHARE = "Share";

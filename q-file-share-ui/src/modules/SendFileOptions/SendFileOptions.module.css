@@ -1,0 +1,19 @@
+.formContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.inputContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: var(--spacing-2);
+  /* width: 50%; */
+}
+
+.inputElement {
+  margin: var(--spacing-2);
+}

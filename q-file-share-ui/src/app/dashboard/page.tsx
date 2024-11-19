@@ -34,7 +34,9 @@ const Dashboard = (): JSX.Element => {
             src={sendFileIcon}
             title={SEND_FILE}
             description={SEND_FILES_TEXT}
-            onClickHandler={() => {}}
+            onClickHandler={() => {
+              router.push("/send-file");
+            }}
           />
           <Card
             id="received-files-card"

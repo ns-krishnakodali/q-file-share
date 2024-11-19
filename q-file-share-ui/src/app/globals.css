@@ -5,13 +5,16 @@
   --color-light-gray: #e9e7e7;
 
   /* Generic Colors */
-  --color-border: #86868b;
+  --color-border-1: #86868b;
+  --color-border-2: #dbdbe0;
+  --color-border-3: #1e90ff;
   --color-selected: #072537;
   --color-navbar: #f0f8ff;
   --color-box-shadow-1: rgba(0, 0, 0, 0.1);
   --color-box-shadow-2: rgba(0, 0, 0, 0.2);
   --color-box-shadow-selected-1: rgba(0, 0, 0, 0.4);
   --color-heading-1: #4863a0;
+  --color-background-1: #f0f8ff;
 
   /* Button Colors */
   --color-button-1: #3f5b9e;
