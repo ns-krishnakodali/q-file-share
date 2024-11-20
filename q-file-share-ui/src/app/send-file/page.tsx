@@ -9,6 +9,7 @@ const SendFile = (): JSX.Element => {
   const handleFilesUpload = (files: File[]) => {};
 
   const handleFileSubmission = (
+    recipientEmail: string,
     expiration: string,
     downloadCount: string,
     checkAnonymous: boolean,
