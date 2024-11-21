@@ -10,7 +10,8 @@ interface IInputProps {
   type?: "text" | "email" | "password" | "checkbox";
   value?: string;
   placeholder?: string;
-  isReadOnly?: boolean;
+  required?: boolean;
+  readOnly?: boolean;
   onClickAction?: () => void;
 }
 
@@ -24,7 +25,8 @@ export const Input = forwardRef<HTMLInputElement, IInputProps>((props, ref) => {
     type = "text",
     value,
     placeholder = "",
-    isReadOnly = false,
+    required = false,
+    readOnly = false,
     onClickAction,
   } = props;
 
@@ -38,7 +40,8 @@ export const Input = forwardRef<HTMLInputElement, IInputProps>((props, ref) => {
         type={type}
         value={value}
         placeholder={type !== "checkbox" ? placeholder : ""}
-        readOnly={isReadOnly}
+        required={required}
+        readOnly={readOnly}
         onClick={onClickAction}
       />
       {type === "checkbox" && <label htmlFor={id}>{placeholder}</label>}

@@ -16,7 +16,7 @@ source venv/bin/activate
 venv\Scripts\activate
 
 # Install FastAPI, SQLAlchemy and other packages
-pip install "fastapi[standard]" sqlalchemy psycopg2 python-dotenv
+pip install "fastapi[standard]" sqlalchemy psycopg2 python-dotenv pyjwt passlib[bcrypt]
 ```
 
 ## Database Setup:
