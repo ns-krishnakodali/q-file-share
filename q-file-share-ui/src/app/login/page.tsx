@@ -11,9 +11,10 @@ import { LoginForm, Notification } from "@/modules";
 import qfsLogo from "@/assets/qfs-logo.svg";
 
 const LoginPage = (): JSX.Element => {
-  const handleLoginDetails = (email: string | undefined, password: string | undefined): void => {
-    
-  }
+  const handleLoginDetails = (
+    email: string | undefined,
+    password: string | undefined,
+  ): void => {};
 
   return (
     <div className={styles.container}>
@@ -22,7 +23,7 @@ const LoginPage = (): JSX.Element => {
       </div>
       <div className={styles.loginForm}>
         <Heading size={3}>{LOGIN}</Heading>
-        <LoginForm handleLoginDetails={handleLoginDetails}/>
+        <LoginForm handleLoginDetails={handleLoginDetails} />
       </div>
     </div>
   );

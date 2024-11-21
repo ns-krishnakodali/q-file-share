@@ -16,7 +16,7 @@ interface ILoginFormProps {
 }
 
 export const LoginForm = (props: ILoginFormProps): JSX.Element => {
-  const {handleLoginDetails} = props;
+  const { handleLoginDetails } = props;
 
   const router = useRouter();
 
@@ -31,7 +31,7 @@ export const LoginForm = (props: ILoginFormProps): JSX.Element => {
     const email: string | undefined = emailRef.current?.value;
     const password: string | undefined = passwordRef.current?.value;
 
-    handleLoginDetails(email, password)
+    handleLoginDetails(email, password);
   };
 
   return (

@@ -10,7 +10,7 @@ interface IInputProps {
   type?: "text" | "email" | "password" | "checkbox";
   value?: string;
   placeholder?: string;
-  required?: boolean
+  required?: boolean;
   readOnly?: boolean;
   onClickAction?: () => void;
 }

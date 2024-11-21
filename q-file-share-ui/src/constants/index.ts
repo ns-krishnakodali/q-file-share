@@ -30,7 +30,7 @@ export const RECEIVED_ON = "Received On";
 export const FILTER = "Filter";
 
 // Send File Constants
-export const RECIPIENT_EMAIL = "Recipient Email"
+export const RECIPIENT_EMAIL = "Recipient Email";
 export const EXPIRATION = "Expiration (in days)";
 export const SEND_ANONYMOUSLY = "Send Anonymously";
 export const SHARE = "Share";

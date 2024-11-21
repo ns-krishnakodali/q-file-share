@@ -12,7 +12,7 @@ export interface INotificationProps {
 
 export const Notification = (props: INotificationProps) => {
   const { message, type = "info", onCloseHandler } = props;
-  
+
   return (
     <div className={cx(styles.notification, styles[type])}>
       <div className={styles.message}>{message}</div>
