@@ -1,4 +1,4 @@
-.navbarContainer {
+.container {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -6,6 +6,7 @@
   padding: var(--spacing-2) var(--spacing-3);
   border-bottom: 1px solid var(--color-box-shadow-1);
   background-color: var(--color-navbar);
+  overflow: hidden;
 }
 
 .navbarLogo {
@@ -16,6 +17,10 @@
 .navbarButton {
   margin-right: var(--spacing-3);
   cursor: pointer;
+}
+
+.navbarText {
+  display: flex;
 }
 
 .logout {

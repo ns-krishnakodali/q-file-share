@@ -23,9 +23,9 @@ export interface ListElement {
   name: string;
   size: number;
   transceive: string;
-  downloads: number;
   transactionDate: string;
   expiry: string;
+  downloads: number;
 }
 
 type SortedElementsOrder = {
@@ -52,7 +52,7 @@ const initialElementsOrder: SortedElementsOrder = {
 };
 
 export const ListModule = (props: IListModuleProps): JSX.Element => {
-  const { elements, renderSendFilesLayout = true } = props;
+  const { elements, renderSendFilesLayout = false } = props;
 
   const [listElements, setListElements] = useState<ListElement[]>(
     elements || [],
@@ -120,18 +120,6 @@ export const ListModule = (props: IListModuleProps): JSX.Element => {
             </th>
             <th
               className={styles.tableHeaderValue}
-              onClick={() => handleSort("downloads")}
-            >
-              {renderSendFilesLayout ? DOWNLOAD_COUNT : DOWNLOADS_REMAINING}
-              <Image
-                src={getArrowDirection(sortedElementsOrder["downloads"])}
-                alt="arrow-icon"
-                width={12}
-                height={12}
-              />
-            </th>
-            <th
-              className={styles.tableHeaderValue}
               onClick={() => handleSort("transactionDate")}
             >
               {renderSendFilesLayout ? SENT_ON : RECEIVED_ON}
@@ -154,6 +142,18 @@ export const ListModule = (props: IListModuleProps): JSX.Element => {
                 height={12}
               />
             </th>
+            <th
+              className={styles.tableHeaderValue}
+              onClick={() => handleSort("downloads")}
+            >
+              {renderSendFilesLayout ? DOWNLOAD_COUNT : DOWNLOADS_REMAINING}
+              <Image
+                src={getArrowDirection(sortedElementsOrder["downloads"])}
+                alt="arrow-icon"
+                width={12}
+                height={12}
+              />
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -162,9 +162,9 @@ export const ListModule = (props: IListModuleProps): JSX.Element => {
               <td className={styles.tableCell}>{element?.name || ""}</td>
               <td className={styles.tableCell}>{element?.size || 0}</td>
               <td className={styles.tableCell}>{element?.transceive || ""}</td>
-              <td className={styles.tableCell}>{element?.downloads || 0}</td>
               <td className={styles.tableCell}>{element?.transactionDate}</td>
               <td className={styles.tableCell}>{element?.expiry || ""}</td>
+              <td className={styles.tableCell}>{element?.downloads || 0}</td>
             </tr>
           ))}
         </tbody>

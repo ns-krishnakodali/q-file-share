@@ -8,19 +8,31 @@ import { Button } from "@/elements";
 import qfsLogo from "@/assets/qfs-logo.svg";
 import logoutLogo from "@/assets/logout.svg";
 
-interface INavBarProps {
+interface PageDetail {
   pageName?: string;
   pageURL?: string;
+}
+
+interface INavBarProps {
+  pageName1?: string;
+  pageURL1?: string;
+  pageName2?: string;
+  pageURL2?: string;
   showLogo?: boolean;
 }
 
 export const NavBar = (props: INavBarProps): JSX.Element => {
-  const { pageName, pageURL, showLogo = true } = props;
+  const { pageName1, pageURL1, pageName2, pageURL2, showLogo = true } = props;
+
+  const pageDetails: PageDetail[] = [
+    { pageName: pageName1, pageURL: pageURL1 },
+    { pageName: pageName2, pageURL: pageURL2 },
+  ];
 
   const router = useRouter();
 
   return (
-    <div className={styles.navbarContainer}>
+    <div className={styles.container}>
       {showLogo && (
         <div
           className={styles.navbarLogo}
@@ -31,24 +43,27 @@ export const NavBar = (props: INavBarProps): JSX.Element => {
           <Image src={qfsLogo} alt="qfs-logo" width={55} height={55} priority />
         </div>
       )}
-      {pageName && (
-        <Button
-          id="navbar-button"
-          className={styles.navbarButton}
-          variant="text"
-          onClickAction={() => router.push(pageURL || "")}
-        >
-          {pageName}
-        </Button>
-      )}
-      <div className={styles.logout} onClick={() => {}}>
-        <Image
-          src={logoutLogo}
-          alt="QFS Logo"
-          width={30}
-          height={30}
-          priority
-        />
+      <div className={styles.navbarText}>
+        {pageDetails.map(({ pageName, pageURL }: PageDetail, index: number) => (
+          <Button
+            key={index}
+            id="navbar-button"
+            className={styles.navbarButton}
+            variant="text"
+            onClickAction={() => router.push(pageURL || "")}
+          >
+            {pageName}
+          </Button>
+        ))}
+        <div className={styles.logout} onClick={() => {}}>
+          <Image
+            src={logoutLogo}
+            alt="QFS Logo"
+            width={30}
+            height={30}
+            priority
+          />
+        </div>
       </div>
     </div>
   );

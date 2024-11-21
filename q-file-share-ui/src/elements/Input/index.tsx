@@ -1,18 +1,22 @@
 import styles from "./Input.module.css";
-import cx from "classnames";
+
+import { RefObject } from "react";
 
 interface IInputProps {
   id: string;
   className?: string;
   name?: string;
-  type?: "text" | "email" | "password";
+  ref?: RefObject<HTMLInputElement>;
+  type?: "text" | "email" | "password" | "checkbox";
   value?: string;
   placeholder?: string;
   isReadOnly?: boolean;
   onClickAction?: () => void;
 }
 
-export const Input = (props: IInputProps): JSX.Element => {
+import React, { forwardRef } from "react";
+
+export const Input = forwardRef<HTMLInputElement, IInputProps>((props, ref) => {
   const {
     id,
     className,
@@ -25,15 +29,19 @@ export const Input = (props: IInputProps): JSX.Element => {
   } = props;
 
   return (
-    <input
-      id={id}
-      name={name}
-      className={cx(styles.input, className)}
-      type={type}
-      value={value}
-      placeholder={placeholder}
-      readOnly={isReadOnly}
-      onClick={onClickAction}
-    />
+    <div className={className}>
+      <input
+        id={id}
+        name={name}
+        className={styles.input}
+        ref={ref}
+        type={type}
+        value={value}
+        placeholder={type !== "checkbox" ? placeholder : ""}
+        readOnly={isReadOnly}
+        onClick={onClickAction}
+      />
+      {type === "checkbox" && <label htmlFor={id}>{placeholder}</label>}
+    </div>
   );
-};
+});

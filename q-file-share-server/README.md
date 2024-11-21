@@ -3,7 +3,7 @@ Server for secure file sharing application, developed using Post-Quantum Cryptog
 
 ## Getting Started with QFileShare using FastAPI
 
-## Setup:
+## Server Setup:
 
 ```bash
 # Setup virtual environment
@@ -15,9 +15,30 @@ source venv/bin/activate
 # Windows
 venv\Scripts\activate
 
-# Install FastAPI
-pip install "fastapi[standard]"
+# Install FastAPI, SQLAlchemy and other packages
+pip install "fastapi[standard]" sqlalchemy psycopg2 python-dotenv
 ```
+
+## Database Setup:
+```sql
+-- Replace the placeholders i.e. USER and PASSWORD enclosed in <> with the appropriate values.
+CREATE USER <USER> WITH PASSWORD '<PASSWORD>';
+ALTER ROLE <USER> SET client_encoding TO 'utf8';
+ALTER ROLE <USER> SET default_transaction_isolation TO 'read committed';
+ALTER ROLE <USER> SET timezone TO 'UTC';
+CREATE DATABASE <DB>;
+GRANT ALL PRIVILEGES ON DATABASE <DB> TO <USER>;
+\c EXAMPLE_DB postgres
+GRANT ALL ON SCHEMA public TO <USER>;
+```
+
+- Create a `.env` file in the local environment and add the following variables:
+    - DATABASE_USER=USER<br>
+    - DATABASE_PASSWORD=PASSWORD<br>
+    - DATABASE_NAME=DB<br>
+    - DATABASE_PORT=5432<br>
+    - DATABASE_HOST=localhost
+- Replace `USER`, `PASSWORD` and `DB` with the variables used during the PostgreSQL database setup.
 
 ## Start the server:
 ```bash

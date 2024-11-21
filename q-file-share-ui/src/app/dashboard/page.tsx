@@ -5,7 +5,6 @@ import styles from "./dashboard.module.css";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { ActivityCard, Card, NavBar, INotification } from "@/modules";
 import {
   SEND_FILE,
   SEND_FILES_TEXT,
@@ -14,6 +13,7 @@ import {
   SHARED_FILES,
   SHARED_FILES_TEXT,
 } from "@/constants";
+import { ActivityCard, Card, NavBar, INotification } from "@/modules";
 
 import sendFileIcon from "@/assets/send-file-icon.svg";
 import receivedFilesIcon from "@/assets/received-files-icon.svg";
@@ -29,12 +29,14 @@ const Dashboard = (): JSX.Element => {
       <div className={styles.dashboardContainer}>
         <div className={styles.cardContainer}>
           <Card
-            id="share-file-card"
+            id="send-file-card"
             className={styles.card}
             src={sendFileIcon}
             title={SEND_FILE}
             description={SEND_FILES_TEXT}
-            onClickHandler={() => {}}
+            onClickHandler={() => {
+              router.push("/send-file");
+            }}
           />
           <Card
             id="received-files-card"
@@ -42,15 +44,19 @@ const Dashboard = (): JSX.Element => {
             src={receivedFilesIcon}
             title={RECEIVED_FILES}
             description={RECEIVED_FILES_TEXT}
-            onClickHandler={() => {}}
+            onClickHandler={() => {
+              router.push("/received-files");
+            }}
           />
           <Card
-            id="transferred-files-card"
+            id="shared-files-card"
             className={styles.card}
             src={sharedFilesIcon}
             title={SHARED_FILES}
             description={SHARED_FILES_TEXT}
-            onClickHandler={() => {}}
+            onClickHandler={() => {
+              router.push("/shared-files");
+            }}
           />
         </div>
         <div className={styles.activityContainer}>
