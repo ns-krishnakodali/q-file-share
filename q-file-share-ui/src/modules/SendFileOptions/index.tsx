@@ -12,12 +12,7 @@ import {
 } from "@/constants";
 
 interface ISendFileOptionsProps {
-  handleFileSubmission: (
-    recipientEmail: string,
-    expiration: string,
-    downloadCount: string,
-    checkAnonymous: boolean,
-  ) => void;
+  handleFileSubmission: (r: string, e: string, d: string, c: boolean) => void;
 }
 
 export const SendFileOptions = (props: ISendFileOptionsProps): JSX.Element => {
@@ -36,34 +31,39 @@ export const SendFileOptions = (props: ISendFileOptionsProps): JSX.Element => {
     const downloadCount: string = downloadCountRef.current?.value || "";
     const checkAnonymous: boolean = checkAnonymousRef.current?.checked || false;
 
-    handleFileSubmission(recipientEmail, expiration, downloadCount, checkAnonymous);
+    handleFileSubmission(
+      recipientEmail,
+      expiration,
+      downloadCount,
+      checkAnonymous,
+    );
   };
 
   return (
     <form className={styles.formContainer} onSubmit={handleSubmission}>
       <div className={styles.inputContainer}>
         <div className={styles.inputFieldContainer}>
-        <Input
-          id="recipient-email"
-          className={styles.inputElement}
-          ref={expirationRef}
-          type="email"
-          placeholder={RECIPIENT_EMAIL}
-        />
-        <Input
-          id="expiration-days"
-          className={styles.inputElement}
-          ref={expirationRef}
-          type="text"
-          placeholder={EXPIRATION}
-        />
-        <Input
-          id="download-count"
-          className={styles.inputElement}
-          ref={downloadCountRef}
-          type="text"
-          placeholder={DOWNLOAD_COUNT}
-        />
+          <Input
+            id="recipient-email"
+            className={styles.inputElement}
+            ref={expirationRef}
+            type="email"
+            placeholder={RECIPIENT_EMAIL}
+          />
+          <Input
+            id="expiration-days"
+            className={styles.inputElement}
+            ref={expirationRef}
+            type="text"
+            placeholder={EXPIRATION}
+          />
+          <Input
+            id="download-count"
+            className={styles.inputElement}
+            ref={downloadCountRef}
+            type="text"
+            placeholder={DOWNLOAD_COUNT}
+          />
         </div>
         <Input
           id="check-anonymous"
@@ -73,7 +73,7 @@ export const SendFileOptions = (props: ISendFileOptionsProps): JSX.Element => {
           placeholder={SEND_ANONYMOUSLY}
         />
       </div>
-      
+
       <Button id="share-button" type="submit">
         {SHARE}
       </Button>

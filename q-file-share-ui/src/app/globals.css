@@ -22,6 +22,12 @@
   --color-button-selected-1: #224085;
   --color-button-selected-2: #636363;
 
+  /* Notification Colors */
+  --color-notification-success: #28a745;
+  --color-notification-error: #ff5555;
+  --color-notification-warn: #ffc107;
+  --color-notification-info: #17a2b8;
+
   /* Spacing */
   --spacing-quarter: 2px;
   --spacing-half: 4px;
