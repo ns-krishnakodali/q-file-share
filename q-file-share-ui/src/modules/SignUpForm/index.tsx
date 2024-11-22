@@ -3,7 +3,7 @@ import cx from "classnames";
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { FormEvent, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 
 import { Button, Input, Text } from "@/elements";
 import {
@@ -19,30 +19,66 @@ import {
 import eyeShow from "@/assets/eye-show.svg";
 import eyeHide from "@/assets/eye-hide.svg";
 
-interface ISignUpFormProps {}
+interface ISignUpFormProps {
+  handleSignUpSubmission: (
+    n: string | undefined,
+    e: string | undefined,
+    p: string | undefined,
+    cp: string | undefined,
+  ) => void;
+}
 
 export const SignUpForm = (props: ISignUpFormProps): JSX.Element => {
+  const { handleSignUpSubmission } = props;
+
   const router = useRouter();
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showConfirmPassword, setShowConfirmPassword] =
     useState<boolean>(false);
 
-  const handleSignUpSubmission = (event: FormEvent): void => {
+  const nameRef = useRef<HTMLInputElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+  const confirmPasswordRef = useRef<HTMLInputElement>(null);
+
+  const handleSignUpFormSubmission = (event: FormEvent): void => {
     event.preventDefault();
+
+    const name: string | undefined = nameRef.current?.value;
+    const email: string | undefined = emailRef.current?.value;
+    const password: string | undefined = passwordRef.current?.value;
+    const confirmPassword: string | undefined =
+      confirmPasswordRef.current?.value;
+
+    handleSignUpSubmission(name, email, password, confirmPassword);
   };
 
   return (
-    <form className={styles.signUpForm} onSubmit={handleSignUpSubmission}>
+    <form className={styles.signUpForm} onSubmit={handleSignUpFormSubmission}>
       <div className={cx(styles.name, styles.signUpFormElement)}>
-        <Input id="first-name" type="text" placeholder={NAME} />
+        <Input
+          id="first-name"
+          ref={nameRef}
+          type="text"
+          required
+          placeholder={NAME}
+        />
       </div>
       <div className={styles.signUpFormElement}>
-        <Input id="email" type="email" placeholder={EMAIL} />
+        <Input
+          id="email"
+          ref={emailRef}
+          type="email"
+          required
+          placeholder={EMAIL}
+        />
       </div>
       <div className={cx(styles.signUpFormElement, styles.passwordContainer)}>
         <Input
           id="password"
+          ref={passwordRef}
+          required
           type={showPassword ? "text" : "password"}
           placeholder={PASSWORD}
         />
@@ -58,6 +94,8 @@ export const SignUpForm = (props: ISignUpFormProps): JSX.Element => {
       <div className={cx(styles.signUpFormElement, styles.passwordContainer)}>
         <Input
           id="confirm-password"
+          required
+          ref={confirmPasswordRef}
           type={showConfirmPassword ? "text" : "password"}
           placeholder={CONFIRM_PASSWORD}
         />

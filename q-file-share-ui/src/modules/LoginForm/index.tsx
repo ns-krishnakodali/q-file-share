@@ -12,11 +12,11 @@ import eyeShow from "@/assets/eye-show.svg";
 import eyeHide from "@/assets/eye-hide.svg";
 
 interface ILoginFormProps {
-  handleLoginDetails: (e: string | undefined, p: string | undefined) => void;
+  handleLoginSubmission: (e: string | undefined, p: string | undefined) => void;
 }
 
 export const LoginForm = (props: ILoginFormProps): JSX.Element => {
-  const { handleLoginDetails } = props;
+  const { handleLoginSubmission } = props;
 
   const router = useRouter();
 
@@ -25,17 +25,17 @@ export const LoginForm = (props: ILoginFormProps): JSX.Element => {
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
-  const handleLoginSubmission = (event: FormEvent): void => {
+  const handleLoginFormSubmission = (event: FormEvent): void => {
     event.preventDefault();
 
     const email: string | undefined = emailRef.current?.value;
     const password: string | undefined = passwordRef.current?.value;
 
-    handleLoginDetails(email, password);
+    handleLoginSubmission(email, password);
   };
 
   return (
-    <form className={styles.loginForm} onSubmit={handleLoginSubmission}>
+    <form className={styles.loginForm} onSubmit={handleLoginFormSubmission}>
       <div className={styles.loginFormElement}>
         <Input
           id="email"

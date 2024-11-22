@@ -48,7 +48,7 @@
 
 .activityElement {
   display: flex;
-  justify-content: start;
+  justify-content: flex-start;
   align-items: center;
   list-style-type: none;
   border: 1px solid var(--color-box-shadow-1);

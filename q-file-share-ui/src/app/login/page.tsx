@@ -6,15 +6,17 @@ import Image from "next/image";
 
 import { LOGIN } from "@/constants";
 import { Heading } from "@/elements";
-import { LoginForm, Notification } from "@/modules";
+import { LoginForm } from "@/modules";
+import { useNotification } from "@/context";
 
 import qfsLogo from "@/assets/qfs-logo.svg";
 
 const LoginPage = (): JSX.Element => {
-  const handleLoginDetails = (
+  const handleLoginSubmission = (
     email: string | undefined,
     password: string | undefined,
   ): void => {};
+  const { addNotification } = useNotification();
 
   return (
     <div className={styles.container}>
@@ -23,7 +25,7 @@ const LoginPage = (): JSX.Element => {
       </div>
       <div className={styles.loginForm}>
         <Heading size={3}>{LOGIN}</Heading>
-        <LoginForm handleLoginDetails={handleLoginDetails} />
+        <LoginForm handleLoginSubmission={handleLoginSubmission} />
       </div>
     </div>
   );

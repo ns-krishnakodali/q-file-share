@@ -13,6 +13,7 @@ def create_access_token(data: dict) -> str:
     expiration_time = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode.update({"expiry": expiration_time})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+
     return encoded_jwt
 
 def verify_access_token(token: str) -> dict:

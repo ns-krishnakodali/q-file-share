@@ -3,6 +3,7 @@ import "./globals.css";
 import React from "react";
 
 import type { Metadata } from "next";
+import { NotificationProvider } from "@/context";
 
 export const metadata: Metadata = {
   title: "QFileShare",
@@ -22,7 +23,9 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body>{children}</body>
+      <body>
+        <NotificationProvider>{children}</NotificationProvider>
+      </body>
     </html>
   );
 }
