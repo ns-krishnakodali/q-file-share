@@ -4,9 +4,11 @@ import cx from "classnames";
 import closeIcon from "@/assets/close-icon.svg";
 import Image from "next/image";
 
+export type NotificationType = "success" | "error" | "warn" | "info";
+
 export interface INotificationProps {
   message: string;
-  type?: "success" | "error" | "warn" | "info";
+  type?: NotificationType;
   onCloseHandler?: () => void;
 }
 
