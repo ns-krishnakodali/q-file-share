@@ -1,0 +1,19 @@
+.loader {
+  display: inline-block;
+  width: var(--spacing-7);
+  height: var(--spacing-7);
+  border: var(--spacing-half) solid var(--color-loader);
+  border-radius: 50%;
+  border-bottom-color: transparent;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

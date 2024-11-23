@@ -12,7 +12,7 @@ export interface INotificationProps {
   onCloseHandler?: () => void;
 }
 
-export const Notification = (props: INotificationProps) => {
+export const Notification = (props: INotificationProps): JSX.Element => {
   const { message, type = "info", onCloseHandler } = props;
 
   return (

@@ -17,7 +17,7 @@ interface IInputProps {
 
 import React, { forwardRef } from "react";
 
-export const Input = forwardRef<HTMLInputElement, IInputProps>((props, ref) => {
+export const Input = forwardRef<HTMLInputElement, IInputProps>((props, ref): JSX.Element => {
   const {
     id,
     className,

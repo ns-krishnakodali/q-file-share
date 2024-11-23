@@ -15,6 +15,7 @@
   --color-box-shadow-selected-1: rgba(0, 0, 0, 0.4);
   --color-heading-1: #4863a0;
   --color-background-1: #f0f8ff;
+  --color-loader: #5c7f9f;
 
   /* Button Colors */
   --color-button-1: #3f5b9e;
@@ -38,6 +39,7 @@
   --spacing-4: 32px;
   --spacing-5: 40px;
   --spacing-6: 48px;
+  --spacing-7: 56px;
   --spacing-10: 80px;
 
   /* Font Sizes */
