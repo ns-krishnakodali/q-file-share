@@ -24,6 +24,7 @@
 
 .signUpButton {
   margin-top: var(--spacing-4);
+  width: 60%;
 }
 
 .loginActions {
