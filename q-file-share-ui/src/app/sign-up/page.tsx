@@ -2,16 +2,15 @@
 
 import styles from "./signup.module.css";
 
-import axios from "axios";
 import Image from "next/image";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { Heading } from "@/elements";
 import { SignUpForm } from "@/modules";
-import { hashPassword } from "@/utils";
+import { axiosInstance } from "@/utils";
 import { useNotification } from "@/context";
 import {
-  PASSWORD_HASH_ERROR,
   PASSWORD_MATCH_ERROR,
   SIGN_UP,
   SIGNUP_FAILURE,
@@ -21,36 +20,17 @@ import {
 import qfsLogo from "@/assets/qfs-logo.svg";
 
 const SignUpPage = (): JSX.Element => {
-  const { addNotification } = useNotification();
+  const [displayLoader, setDisplayLoader] = useState<boolean>(false);
 
   const router = useRouter();
-
-  const sendPostRequest = async (
-    username?: string,
-    email?: string,
-    password?: string,
-  ) => {
-    try {
-      const response = await axios.post("http://127.0.0.1:8000/auth/sign-up", {
-        username,
-        email,
-        password,
-      });
-      if (response?.status === 201) {
-        addNotification({ type: "success", message: SIGNUP_SUCCESSFUL });
-        router.push("/login");
-      }
-    } catch (err) {
-      addNotification({ type: "error", message: SIGNUP_FAILURE });
-    }
-  };
+  const { addNotification } = useNotification();
 
   const handleSignUpSubmission = async (
     name?: string,
     email?: string,
     password?: string,
     confirmPassword?: string,
-  ) => {
+  ): Promise<void> => {
     if (password !== confirmPassword) {
       addNotification({
         type: "error",
@@ -60,13 +40,24 @@ const SignUpPage = (): JSX.Element => {
     }
 
     try {
-      const hashedPassword: string = hashPassword(password || "");
-      sendPostRequest(name, email, hashedPassword);
+      const response = await axiosInstance.post(
+        "/auth/sign-up",
+        {
+          name,
+          email,
+          password,
+        },
+        { headers: { skipAuth: true } },
+      );
+
+      if (response?.status === 201) {
+        addNotification({ type: "success", message: SIGNUP_SUCCESSFUL });
+        setDisplayLoader(true);
+        router.push("/login");
+      }
     } catch (error) {
-      addNotification({
-        type: "error",
-        message: PASSWORD_HASH_ERROR,
-      });
+      addNotification({ type: "error", message: SIGNUP_FAILURE });
+      setDisplayLoader(false);
     }
   };
 
@@ -77,7 +68,10 @@ const SignUpPage = (): JSX.Element => {
       </div>
       <div className={styles.signUpForm}>
         <Heading size={3}>{SIGN_UP}</Heading>
-        <SignUpForm handleSignUpSubmission={handleSignUpSubmission} />
+        <SignUpForm
+          displayLoader={displayLoader}
+          handleSignUpSubmission={handleSignUpSubmission}
+        />
       </div>
     </div>
   );

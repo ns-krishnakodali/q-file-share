@@ -25,6 +25,7 @@
 }
 
 .loginButton {
+  width: 60%;
   margin-top: var(--spacing-6);
 }
 

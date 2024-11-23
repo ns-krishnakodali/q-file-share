@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { FormEvent, useRef, useState } from "react";
 
-import { Button, Input, Text } from "@/elements";
+import { Button, Input, Loader, Text } from "@/elements";
 import {
   ALREADY_JOINED,
   CONFIRM_PASSWORD,
@@ -20,6 +20,7 @@ import eyeShow from "@/assets/eye-show.svg";
 import eyeHide from "@/assets/eye-hide.svg";
 
 interface ISignUpFormProps {
+  displayLoader: boolean;
   handleSignUpSubmission: (
     n: string | undefined,
     e: string | undefined,
@@ -29,7 +30,7 @@ interface ISignUpFormProps {
 }
 
 export const SignUpForm = (props: ISignUpFormProps): JSX.Element => {
-  const { handleSignUpSubmission } = props;
+  const { displayLoader = false, handleSignUpSubmission } = props;
 
   const router = useRouter();
 
@@ -118,7 +119,7 @@ export const SignUpForm = (props: ISignUpFormProps): JSX.Element => {
         type="submit"
         variant="primary"
       >
-        {SIGN_UP}
+        {displayLoader ? <Loader /> : SIGN_UP}
       </Button>
       <div className={styles.loginActions}>
         <Text size="small">{ALREADY_JOINED}</Text>

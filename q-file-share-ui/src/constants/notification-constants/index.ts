@@ -5,3 +5,5 @@ export const PASSWORD_HASH_ERROR =
 
 export const SIGNUP_SUCCESSFUL = "User successfully signed up! Please log in.";
 export const SIGNUP_FAILURE = "Sign-up failed. Please try again.";
+
+export const LOGIN_FAILURE = "Something went wrong. Please try logging in again.";

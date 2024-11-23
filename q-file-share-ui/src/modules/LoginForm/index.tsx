@@ -5,18 +5,19 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { FormEvent, useRef, useState } from "react";
 
-import { Button, Input, Text } from "@/elements";
+import { Button, Input, Loader, Text } from "@/elements";
 import { EMAIL, LOGIN, NEW_USER, PASSWORD, SIGN_UP } from "@/constants";
 
 import eyeShow from "@/assets/eye-show.svg";
 import eyeHide from "@/assets/eye-hide.svg";
 
 interface ILoginFormProps {
+  displayLoader: boolean;
   handleLoginSubmission: (e: string | undefined, p: string | undefined) => void;
 }
 
 export const LoginForm = (props: ILoginFormProps): JSX.Element => {
-  const { handleLoginSubmission } = props;
+  const { displayLoader, handleLoginSubmission } = props;
 
   const router = useRouter();
 
@@ -68,7 +69,7 @@ export const LoginForm = (props: ILoginFormProps): JSX.Element => {
         type="submit"
         variant="primary"
       >
-        {LOGIN}
+        {displayLoader ? <Loader /> : LOGIN}
       </Button>
       <div className={styles.signUpActions}>
         <Text size="small">{NEW_USER}</Text>
