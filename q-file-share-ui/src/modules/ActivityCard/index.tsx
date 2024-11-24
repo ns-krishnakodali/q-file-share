@@ -10,18 +10,18 @@ import closeIcon from "@/assets/close-icon.svg";
 import sentIcon from "@/assets/sent-icon.svg";
 import receivedIcon from "@/assets/received-icon.svg";
 
-export interface INotification {
+export interface IActivity {
   message: string;
   type: "receive" | "send";
 }
 
 interface IActivityProps {
   className?: string;
-  notifications: INotification[];
+  activities: IActivity[];
 }
 
 export const ActivityCard = (props: IActivityProps): JSX.Element => {
-  const { className = "", notifications } = props;
+  const { className = "", activities } = props;
 
   const handleCloseActivity = (): void => {};
 
@@ -34,20 +34,20 @@ export const ActivityCard = (props: IActivityProps): JSX.Element => {
       </div>
       <div className={styles.activityElementContainer}>
         <ul className={styles.activityElementList}>
-          {notifications.map((notification: INotification, index: number) => (
+          {activities.map((activity: IActivity, index: number) => (
             <li
               className={styles.activityElement}
               key={index}
               onClick={() => openActivityHandler(index)}
             >
               <Image
-                src={notification.type === "send" ? sentIcon : receivedIcon}
+                src={activity.type === "send" ? sentIcon : receivedIcon}
                 className={styles.notificationIcon}
-                alt={`${notification?.type}-icon`}
+                alt={`${activity?.type}-icon`}
                 width={20}
                 height={20}
               />
-              <Text>{notification?.message || ""}</Text>
+              <Text>{activity?.message || ""}</Text>
               <Image
                 src={closeIcon}
                 className={styles.closeIcon}

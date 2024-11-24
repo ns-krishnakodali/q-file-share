@@ -1,8 +1,11 @@
+"use client";
+
 import { redirect } from "next/navigation";
 
-const Home = () => {
-  const isAuthenticated = false;
-  const pageToLoad = isAuthenticated ? "/dashboard" : "/login";
+import { isValidToken } from "@/utils";
+
+const Home = (): JSX.Element => {
+  const pageToLoad = isValidToken() ? "/dashboard" : "/login";
 
   redirect(pageToLoad);
 };

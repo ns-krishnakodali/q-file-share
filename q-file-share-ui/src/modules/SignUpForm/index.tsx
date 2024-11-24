@@ -5,7 +5,6 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { FormEvent, useRef, useState } from "react";
 
-import { Button, Input, Loader, Text } from "@/elements";
 import {
   ALREADY_JOINED,
   CONFIRM_PASSWORD,
@@ -15,6 +14,7 @@ import {
   PASSWORD,
   SIGN_UP,
 } from "@/constants";
+import { Button, Input, Loader, Text } from "@/elements";
 
 import eyeShow from "@/assets/eye-show.svg";
 import eyeHide from "@/assets/eye-hide.svg";

@@ -3,19 +3,19 @@
 import styles from "./signup.module.css";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { Heading } from "@/elements";
-import { SignUpForm } from "@/modules";
-import { axiosInstance } from "@/utils";
-import { useNotification } from "@/context";
 import {
   PASSWORD_MATCH_ERROR,
   SIGN_UP,
   SIGNUP_FAILURE,
   SIGNUP_SUCCESSFUL,
 } from "@/constants";
+import { Heading } from "@/elements";
+import { SignUpForm } from "@/modules";
+import { useNotification } from "@/context";
+import { axiosInstance, isValidToken } from "@/utils";
 
 import qfsLogo from "@/assets/qfs-logo.svg";
 
@@ -24,6 +24,11 @@ const SignUpPage = (): JSX.Element => {
 
   const router = useRouter();
   const { addNotification } = useNotification();
+
+  useEffect(() => {
+    if(isValidToken())
+      router.replace("/dashboard");
+  }, []);
 
   const handleSignUpSubmission = async (
     name?: string,

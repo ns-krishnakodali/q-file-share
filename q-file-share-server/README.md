@@ -5,6 +5,8 @@ Server for secure file sharing application, developed using Post-Quantum Cryptog
 
 ## Server Setup:
 
+**Use the following commands to create a Python virtual environment and install the required dependencies for this project.**
+
 ```bash
 # Setup virtual environment
 python -m venv venv
@@ -18,8 +20,27 @@ venv\Scripts\activate
 # Install FastAPI, SQLAlchemy and other packages
 pip install "fastapi[standard]" sqlalchemy psycopg2 python-dotenv pyjwt passlib[bcrypt]
 ```
+----
 
-## Database Setup:
+### Setting Up Environment Variables
+
+**Create a `.env` file and include the following variables required for authentication.**
+
+```plaintext
+SECRET_KEY=SECRET_KEY
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=300
+```
+
+**Generate a secret key using the following Python code:**
+
+```python
+import secrets
+print(secrets.token_hex(32))
+```
+----
+
+### Database Setup:
 ```sql
 -- Replace the placeholders i.e. USER and PASSWORD enclosed in <> with the appropriate values.
 CREATE USER <USER> WITH PASSWORD '<PASSWORD>';
@@ -32,13 +53,17 @@ GRANT ALL PRIVILEGES ON DATABASE <DB> TO <USER>;
 GRANT ALL ON SCHEMA public TO <USER>;
 ```
 
-- Create a `.env` file in the local environment and add the following variables:
-    - DATABASE_USER=USER<br>
-    - DATABASE_PASSWORD=PASSWORD<br>
-    - DATABASE_NAME=DB<br>
-    - DATABASE_PORT=5432<br>
-    - DATABASE_HOST=localhost
-- Replace `USER`, `PASSWORD` and `DB` with the variables used during the PostgreSQL database setup.
+**Create a `.env` file if not pre in the local environment and add the following variables:**
+```plaintext
+DATABASE_USER=USER<br>
+DATABASE_PASSWORD=PASSWORD<br>
+DATABASE_NAME=DB<br>
+DATABASE_PORT=5432<br>
+DATABASE_HOST=localhost
+```
+**Replace `USER`, `PASSWORD` and `DB` with the variables used during the PostgreSQL database setup.**
+
+----
 
 ## Start the server:
 ```bash

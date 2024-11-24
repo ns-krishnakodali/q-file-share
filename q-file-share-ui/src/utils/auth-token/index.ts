@@ -13,3 +13,8 @@ export const getAuthToken = (): string | null => {
 export const removeAuthToken = (): void => {
   localStorage.removeItem("token");
 };
+
+export const isValidToken = (): boolean => {
+  const token: string | null = getAuthToken();
+  return typeof token === "string" && token !== null && token.trim() !== "";
+};
