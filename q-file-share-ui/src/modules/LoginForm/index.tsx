@@ -5,11 +5,11 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { FormEvent, useRef, useState } from "react";
 
-import { Button, Input, Loader, Text } from "@/elements";
 import { EMAIL, LOGIN, NEW_USER, PASSWORD, SIGN_UP } from "@/constants";
+import { Button, Input, Loader, Text } from "@/elements";
 
-import eyeShow from "@/assets/eye-show.svg";
 import eyeHide from "@/assets/eye-hide.svg";
+import eyeShow from "@/assets/eye-show.svg";
 
 interface ILoginFormProps {
   displayLoader: boolean;

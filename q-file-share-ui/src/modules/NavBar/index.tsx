@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/elements";
+import { removeAuthToken } from "@/utils";
 
 import qfsLogo from "@/assets/qfs-logo.svg";
 import logoutLogo from "@/assets/logout.svg";
@@ -24,12 +25,17 @@ interface INavBarProps {
 export const NavBar = (props: INavBarProps): JSX.Element => {
   const { pageName1, pageURL1, pageName2, pageURL2, showLogo = true } = props;
 
+  const router = useRouter();
+
   const pageDetails: PageDetail[] = [
     { pageName: pageName1, pageURL: pageURL1 },
     { pageName: pageName2, pageURL: pageURL2 },
   ];
 
-  const router = useRouter();
+  const handleLogOut = (): void => {
+    removeAuthToken();
+    router.replace("/login");
+  };
 
   return (
     <div className={styles.container}>
@@ -55,7 +61,7 @@ export const NavBar = (props: INavBarProps): JSX.Element => {
             {pageName}
           </Button>
         ))}
-        <div className={styles.logout} onClick={() => {}}>
+        <div className={styles.logout} onClick={handleLogOut}>
           <Image
             src={logoutLogo}
             alt="QFS Logo"
