@@ -1,4 +1,4 @@
-const sampleInBall = (): number[] => {
+export const sampleInBall = (): number[] => {
   const ball = Array(256).fill(0);
 
   for (let indexI = 196; indexI <= 255; indexI++) {
@@ -12,4 +12,4 @@ const sampleInBall = (): number[] => {
   return ball;
 };
 
-const expandA = (seed: Uint8Array<ArrayBuffer>) => {};
+export const expandA = (seed: Uint8Array<ArrayBuffer>) => {};
