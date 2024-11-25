@@ -3,8 +3,8 @@ import datetime
 from app.auth.password_handler import hash_password, verify_password
 from app.auth.jwt_handler import create_access_token
 from app.db.db_session import get_db_session
-from app.models.user import User
-from app.models.dto.auth_dto import LoginRequest, SignUpRequest
+from app.models.db_schemas import User
+from app.models.dto import LoginRequest, SignUpRequest
 
 
 def authenticate_user(request: LoginRequest) -> str:

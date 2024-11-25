@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, status
 from fastapi.responses import JSONResponse
 
-from app.models.dto.auth_dto import LoginRequest, SignUpRequest
+from app.models.dto import LoginRequest, SignUpRequest
 from app.services.auth_services import authenticate_user, regsiter_user
 
 router = APIRouter()

@@ -18,7 +18,7 @@ source venv/bin/activate
 venv\Scripts\activate
 
 # Install FastAPI, SQLAlchemy and other packages
-pip install "fastapi[standard]" sqlalchemy psycopg2 python-dotenv pyjwt passlib[bcrypt]
+pip install "fastapi[standard]" sqlalchemy psycopg2 python-dotenv pyjwt passlib[bcrypt] pydantic
 ```
 ----
 
@@ -62,6 +62,8 @@ DATABASE_PORT=5432<br>
 DATABASE_HOST=localhost
 ```
 **Replace `USER`, `PASSWORD` and `DB` with the variables used during the PostgreSQL database setup.**
+
+**All databases used by this application will be automatically created if they do not already exist upon server startup. Ensure .env is configured properly.**
 
 ----
 

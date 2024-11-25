@@ -1,10 +1,16 @@
 # QFileShare UI
 
-User-interface for secure file sharing application, developed using Post-Quantum Cryptography techniques
+User-interface for secure file sharing application, developed using Post-Quantum Cryptography techniques.
 
 ## Getting Started with QFileShare UI with Next.js
 
-First, run the development server:
+First, install all the dependencies:
+
+```bash
+npm install
+```
+
+To run the development server, use the following commands:
 
 ```bash
 npm run dev
@@ -18,9 +24,33 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The project follows a modular structure for maintainability and scalability, as outlined below:
+
+- **`app`**  
+  Contains all pages organized by their respective routes, following Next.js conventions.
+
+- **`assets`**  
+  Includes all static files such as images and other media assets.
+
+- **`constants`**  
+  Stores all hardcoded strings and other constants used across the project. These can be imported as needed.
+
+- **`context`**  
+  Implements context providers to manage and share state across the application.
+ 
+- **`elements`**  
+  Contains basic atomic-level elements such as `Input`, `Button`, and `Text`. These are reusable components used throughout the application.
+
+- **`modules`**  
+  Consists of one or more elements combined to build functional components or sections of web pages.
+
+- **`quantum-protocols`**  
+  Contains the implementation of post-quantum cryptographic protocols, **DiLithium** and **Kyber**.
+
+- **`utils`**  
+  Contains helper and utility functions to support various functionalities.
 
 ## Learn More
 
@@ -39,19 +69,21 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 ## Commit Message Format
 
-Commit messages need to follow [ESLint commit message format](https://eslint.org/docs/developer-guide/contributing/pull-requests#step-2-make-your-changes)
+Commit messages need to follow [ESLint commit message format](https://eslint.org/docs/developer-guide/contributing/pull-requests#step-2-make-your-changes):
 
 ```
 <Tag>: <Summary>
 ```
 
-Following tags to be used for commit messages.
+Use the following tags for commit messages:
 
 - **Breaking** - For a backward-incompatible enhancement or feature.
-- **Build** - Changes applied to build process only.
+- **Build** - Changes applied to the build process only.
 - **Chore** - For refactoring, adding test cases, etc.
 - **Docs** - Changes for documentation only.
 - **Fix** - For a bug fix.
 - **New** - For a new feature.
-- **Update** - Either for backwards-compatibility or for a rule change that adds reported problems.
-- **WIP** - For Work that is still in progress but needs to be committed.
+- **Update** - Either for backward compatibility or for a rule change that adds reported problems.
+- **WIP** - For work that is still in progress but needs to be committed.
+
+---
