@@ -1,6 +1,37 @@
-import { modPlus } from "..";
+import { shake128 } from "js-sha3";
 
-const sampleInBall = (): number[] => {
+import { Matrix, modularExponentiation, Polynomial } from "..";
+import { N, Q } from "@/quantum-protocols";
+
+const STREAM128_BLOCKBYTES: number = 168;
+const UNIFORM_NBLOCKS: number = Math.ceil(
+  (768 + STREAM128_BLOCKBYTES - 1) / STREAM128_BLOCKBYTES,
+);
+
+export const expandA = (
+  seed: Uint8Array,
+  k: number,
+  l: number,
+): Matrix => {
+  const A: Matrix = Array.from({ length: k }, () => Array(l).fill([]));
+
+  for (let i = 0; i < k; i++) {
+    const base: number = i << 8;
+    for (let j = 0; j < l; j++) {
+      const nonce: number = base + j;
+      A[i][j] = getUniformPolynomial(seed, new Uint8Array([nonce >> 8, nonce & 0xff]));
+    }
+  }
+
+  return A;
+};
+
+export const getRandomVectors = (l: number, n: number): Polynomial[] =>
+  Array.from({ length: l }, () => 
+    Array.from({ length: N }, () => randomInt(-n, n + 1))
+  );
+
+export const sampleInBall = (): number[] => {
   const ball = Array(256).fill(0);
 
   for (let indexI = 196; indexI <= 255; indexI++) {
@@ -14,70 +45,58 @@ const sampleInBall = (): number[] => {
   return ball;
 };
 
-const expandA = (seed: Uint8Array) => {};
 
-export const reduceNTT = (
-  polynomial: number[],
-  rootArray: number[],
-  q: number,
-): number[] => {
-  let nttPolynomial: number[] = Array(256).fill(0);
+const getUniformPolynomial = (
+  seed: Uint8Array,
+  nonce: Uint8Array,
+): Polynomial => {
+  const bufferLength: number = UNIFORM_NBLOCKS * STREAM128_BLOCKBYTES;
 
-  for (
-    let ntt_coefficient = 0;
-    ntt_coefficient < polynomial.length / 2;
-    ntt_coefficient++
-  ) {
-    let root: number = rootArray[ntt_coefficient];
-    [
-      nttPolynomial[ntt_coefficient * 2],
-      nttPolynomial[ntt_coefficient * 2 + 1],
-    ] = computePolynomialAtRoot(polynomial, root, q);
-  }
+  const buffer: Uint8Array = new Uint8Array(bufferLength + 2);
 
-  return nttPolynomial;
+  const shake = shake128.create(bufferLength * 8);
+  shake.update(seed);
+  shake.update(nonce);
+
+  buffer.set(new Uint8Array(shake.arrayBuffer()));
+
+  return rejectUniformSampling(new Array(N).fill(0), buffer, bufferLength);
 };
 
-const computePolynomialAtRoot = (polynomial: number[], r: number, q: number): [number, number] => {
-  const a0Polynomial: number[] = polynomial.map(
-    (value: number, index: number) =>
-      modularMultiplication(value, modularExponentiation(r, index, q), q),
-  );
+const rejectUniformSampling = (
+  polynomial: Polynomial,
+  buffer: Uint8Array,
+  bufferLength: number,
+): Polynomial => {
+  let ctr: number = 0;
+  let pos: number = 0;
 
-  let sum1 = 0;
-  let sum2 = 0;
+  let b: number = 0;
 
-  a0Polynomial.forEach((value: number, index: number) => {
-    sum1 = modPlus(sum1 + value, q);
-    sum2 = modPlus(sum2 + Math.pow(-1, index) * value, q);
-  });
+  while (ctr < N && pos + 3 <= bufferLength) {
+    b = buffer[pos++];
+    b |= buffer[pos++] << 8;
+    b |= buffer[pos++] << 16;
+    b &= 0x7fffff;
 
-  return [sum1, sum2];
-};
-
-const modularMultiplication = (a: number, b: number, mod: number): number => {
-  let result: number = 0;
-  a = a % mod;
-
-  while (b > 0) {
-    if ((b & 1) > 0) {
-      result = (result + a) % mod;
+    if (b < Q) {
+      polynomial[ctr++] = b;
     }
-    a = (2 * a) % mod;
-    b = b >> 1;
   }
-  return result;
+
+  return polynomial;
 };
 
-const modularExponentiation = (x: number, y: number, p: number): number => {
-  let result: number = 1;
-  x = x % p;
-  if (x == 0) return 0;
-
-  while (y > 0) {
-    if (y & 1) result = (result * x) % p;
-    y = y >> 1;
-    x = (x * x) % p;
+const randomInt = (min: number, max: number): number => {
+  if (typeof window !== "undefined" && window.crypto) {
+    const range = max - min;
+    const randomBuffer = new Uint32Array(1);
+    window.crypto.getRandomValues(randomBuffer);
+    return min + (randomBuffer[0] % range);
+  } else if (typeof require !== "undefined") {
+    const crypto = require("crypto");
+    return crypto.randomInt(min, max);
+  } else {
+    return Math.floor(Math.random() * (max - min)) + min;
   }
-  return result;
 };

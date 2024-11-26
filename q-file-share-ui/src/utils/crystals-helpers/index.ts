@@ -1,3 +1,5 @@
+export * from "./polynomial-helpers";
+
 export const modPlus = (r: number, alpha: number): number =>
   ((r % alpha) + alpha) % alpha;
 
@@ -44,25 +46,19 @@ export const makeHint = (
   q: number,
 ): boolean => highBits(r, alpha, q) !== highBits(r + z, alpha, q);
 
-export const hexToBin = (hex: string): string => {
-  let bin = "";
-  for (const digit of hex) {
-    bin += parseInt(digit, 16).toString(2).padStart(4, "0");
+export const hexToByte = (hex: string): Uint8Array => {
+  const sanitizedHex: string = hex.replace(/^0x/i, "");
+  const hexLength: number = sanitizedHex.length;
+
+  if (hexLength % 2 !== 0) {
+    throw new Error("Invalid Hex for Byte conversion");
   }
-  return bin;
-};
+  
+  const byteArray: Uint8Array = new Uint8Array(hexLength / 2);
 
-export const useHint = (
-  h: boolean,
-  r: number,
-  alpha: number,
-  q: number,
-): number => {
-  const m = (q - 1) / alpha;
-  const [r1, r0] = decompose(r, alpha, q);
+  for (let i = 0; i < hexLength; i += 2) {
+    byteArray[i / 2] = parseInt(sanitizedHex.slice(i, i + 2), 16);
+  }
 
-  if (h && r0 > 0) return modPlus(r1 + 1, m);
-  if (h && r0 <= 0) return modPlus(r1 - 1, m);
-
-  return r1;
+  return byteArray;
 };
