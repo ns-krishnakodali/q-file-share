@@ -31,26 +31,25 @@ export const multiplyPolynomialMatrix = (
 };
 
 export const multiplyPolynomials = (A: number[], B: number[]): number[] => {
-  const n = Math.max(A.length, B.length);
+  const maxDegree: number = Math.max(A.length, B.length);
 
-  if (n === 1) return [(A[0] * B[0]) % Q];
+  if (maxDegree === 1) return [(A[0] * B[0]) % Q];
 
-  const half = Math.ceil(n / 2);
-  const A0 = A.slice(0, half);
-  const A1 = A.slice(half);
-  const B0 = B.slice(0, half);
-  const B1 = B.slice(half);
+  const half: number = Math.ceil(maxDegree / 2);
+  const A0: Polynomial = A.slice(0, half);
+  const A1: Polynomial = A.slice(half);
+  const B0: Polynomial = B.slice(0, half);
+  const B1: Polynomial = B.slice(half);
 
-  const C0 = multiplyPolynomials(A0, B0);
-  const C2 = multiplyPolynomials(A1, B1);
-  const C1 = multiplyPolynomials(
+  const C0: Polynomial = multiplyPolynomials(A0, B0);
+  const C2: Polynomial = multiplyPolynomials(A1, B1);
+  const C1: Polynomial = multiplyPolynomials(
     addPolynomials(A0, A1),
     addPolynomials(B0, B1),
   );
 
-  const middle = subtractPolynomials(subtractPolynomials(C1, C0), C2);
-
-  const result = new Array(2 * n - 1).fill(0);
+  const middle: Polynomial = subtractPolynomials(subtractPolynomials(C1, C0), C2);
+  const result: Polynomial = new Array(2 * maxDegree - 1).fill(0);
 
   for (let i = 0; i < C0.length; i++) result[i] = (result[i] + C0[i]) % Q;
   for (let i = 0; i < middle.length; i++)

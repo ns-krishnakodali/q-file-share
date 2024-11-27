@@ -1,6 +1,7 @@
 import { shake128 } from "js-sha3";
 
-import { Matrix, modularExponentiation, Polynomial } from "..";
+import { Matrix, Polynomial } from "..";
+
 import { N, Q } from "@/quantum-protocols";
 
 const STREAM128_BLOCKBYTES: number = 168;
@@ -37,7 +38,6 @@ export const sampleInBall = (): number[] => {
   for (let indexI = 196; indexI <= 255; indexI++) {
     const indexJ = Math.floor(Math.random() * (indexI + 1));
     const s = Math.floor(Math.random() * 2);
-
     ball[indexI] = ball[indexJ];
     ball[indexJ] = s === 0 ? 1 : -1;
   }

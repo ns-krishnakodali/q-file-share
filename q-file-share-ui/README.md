@@ -4,21 +4,21 @@ User-interface for secure file sharing application, developed using Post-Quantum
 
 ## Getting Started with QFileShare UI with Next.js
 
-### Install Dependencies
+### Install Dependencies  
 
-Run the following command to install all required dependencies:
+Run the following command to install all required dependencies:  
 
-```bash
-npm install
-```
+```bash  
+npm install  
+```  
 
-### Configure Environment Variables
+### Configure Environment Variables  
 
-Create a `.env.local` file for local development or a `.env` file for production deployments. Add the following configuration:
+Create a `.env.local` file for local development or a `.env` file for production deployments. Add the following configuration:  
 
-```plaintext
-NEXT_PUBLIC_API_BASE_URL=http://<IP>:<PORT>
-```
+```plaintext  
+NEXT_PUBLIC_API_BASE_URL=http://<IP>:<PORT>  
+```  
 
 Replace `<IP>` and `<PORT>` with the appropriate values for your setup.
 
@@ -34,7 +34,7 @@ yarn dev
 pnpm dev]
 # or
 bun dev
-```
+```  
 
 Open [http://localhost:3000](http://localhost:3000) in your browser to see the application in action.
 
@@ -100,4 +100,8 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
+<<<<<<< HEAD
 ---
+=======
+---
+>>>>>>> 977ba54 (Fix: Minor UI changes)
