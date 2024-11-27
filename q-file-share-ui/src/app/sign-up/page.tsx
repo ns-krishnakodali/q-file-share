@@ -45,6 +45,7 @@ const SignUpPage = (): JSX.Element => {
     }
 
     try {
+      setDisplayLoader(true);
       const response = await axiosInstance.post(
         "/auth/sign-up",
         {
@@ -57,11 +58,10 @@ const SignUpPage = (): JSX.Element => {
 
       if (response?.status === 201) {
         addNotification({ type: "success", message: SIGNUP_SUCCESSFUL });
-        setDisplayLoader(true);
         router.push("/login");
       }
-    } catch (error) {
-      addNotification({ type: "error", message: SIGNUP_FAILURE });
+    } catch (error: any) {
+      addNotification({ type: "error", message: error?.response?.data?.detail || SIGNUP_FAILURE });
       setDisplayLoader(false);
     }
   };

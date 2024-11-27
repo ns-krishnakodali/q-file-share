@@ -26,6 +26,7 @@ def login(request: LoginRequest) -> JSONResponse:
 def sign_up(request: SignUpRequest) -> JSONResponse:
     try:
         new_user = regsiter_user(request)
+        print(request)
         return JSONResponse(
             status_code=status.HTTP_201_CREATED,
             content={

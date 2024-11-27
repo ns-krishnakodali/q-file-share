@@ -4,25 +4,39 @@ User-interface for secure file sharing application, developed using Post-Quantum
 
 ## Getting Started with QFileShare UI with Next.js
 
-First, install all the dependencies:
+### Install Dependencies  
 
-```bash
-npm install
-```
+Run the following command to install all required dependencies:  
 
-To run the development server, use the following commands:
+```bash  
+npm install  
+```  
+
+### Configure Environment Variables  
+
+Create a `.env.local` file for local development or a `.env` file for production deployments. Add the following configuration:  
+
+```plaintext  
+NEXT_PUBLIC_API_BASE_URL=http://<IP>:<PORT>  
+```  
+
+Replace `<IP>` and `<PORT>` with the appropriate values for your setup.
+
+### Run the Development Server
+
+Start the development server using one of the following commands:
 
 ```bash
 npm run dev
 # or
 yarn dev
 # or
-pnpm dev
+pnpm dev]
 # or
 bun dev
-```
+```  
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser to see the application in action.
 
 ## Project Structure
 
@@ -52,21 +66,6 @@ The project follows a modular structure for maintainability and scalability, as 
 - **`utils`**  
   Contains helper and utility functions to support various functionalities.
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-
 ## Commit Message Format
 
 Commit messages need to follow [ESLint commit message format](https://eslint.org/docs/developer-guide/contributing/pull-requests#step-2-make-your-changes):
@@ -85,5 +84,20 @@ Use the following tags for commit messages:
 - **New** - For a new feature.
 - **Update** - Either for backward compatibility or for a rule change that adds reported problems.
 - **WIP** - For work that is still in progress but needs to be committed.
+
+## Learn More
+
+To learn more about Next.js, take a look at the following resources:
+
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+
+## Deploy on Vercel
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
 ---

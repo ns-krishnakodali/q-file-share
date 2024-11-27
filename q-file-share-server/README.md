@@ -1,7 +1,5 @@
 # QFileShare Server
-Server for secure file sharing application, developed using Post-Quantum Cryptography techniques
-
-## Getting Started with QFileShare using FastAPI
+Server for a secure file-sharing application, developed using FastAPI and integrated with post-quantum cryptographic techniques.
 
 ## Server Setup:
 
@@ -18,7 +16,7 @@ source venv/bin/activate
 venv\Scripts\activate
 
 # Install FastAPI, SQLAlchemy and other packages
-pip install "fastapi[standard]" sqlalchemy psycopg2 python-dotenv pyjwt passlib[bcrypt] pydantic
+pip install "fastapi[standard]" sqlalchemy psycopg2 python-dotenv pyjwt bcrypt pydantic
 ```
 ----
 
@@ -55,10 +53,10 @@ GRANT ALL ON SCHEMA public TO <USER>;
 
 **Create a `.env` file if not pre in the local environment and add the following variables:**
 ```plaintext
-DATABASE_USER=USER<br>
-DATABASE_PASSWORD=PASSWORD<br>
-DATABASE_NAME=DB<br>
-DATABASE_PORT=5432<br>
+DATABASE_USER=USER
+DATABASE_PASSWORD=PASSWORD
+DATABASE_NAME=DB
+DATABASE_PORT=5432
 DATABASE_HOST=localhost
 ```
 **Replace `USER`, `PASSWORD` and `DB` with the variables used during the PostgreSQL database setup.**
