@@ -20,7 +20,7 @@ def authenticate_user(request: LoginRequest) -> str:
     return create_access_token({"email": user.email})
 
 
-def regsiter_user(request: SignUpRequest) -> User:
+def register_user(request: SignUpRequest) -> User:
     db = next(get_db_session())
     existing_user = db.query(User).filter(User.email == request.email).first()
 

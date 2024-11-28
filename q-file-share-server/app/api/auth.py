@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 
 from app.models.dto import LoginRequest, SignUpRequest
 from app.models.db_schemas import User
-from app.services.auth_services import authenticate_user, regsiter_user
+from app.services.auth_services import authenticate_user, register_user
 from app.db.db_session import get_db_session
 from app.auth.jwt_handler import verify_access_token
 
@@ -31,7 +31,7 @@ def login(request: LoginRequest) -> JSONResponse:
 @router.post("/sign-up")
 def sign_up(request: SignUpRequest) -> JSONResponse:
     try:
-        new_user = regsiter_user(request)
+        new_user = register_user(request)
         return JSONResponse(
             status_code=status.HTTP_201_CREATED,
             content={

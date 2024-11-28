@@ -70,3 +70,8 @@ async def share_file(
     db.refresh(file_log)
 
     return {"message": "File shared successfully", "file_id": file_id}
+
+
+# @router.get("/hello")
+# async def hello(current_user=Depends(get_current_user)):
+#     return {"message": "Hello World!", "user": current_user.email}

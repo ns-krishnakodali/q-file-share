@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.auth import router as auth_router
 from app.api.shared_files import router as shared_files_router
+from app.api.received_files import router as received_files_router
 from app.db.config import engine
 from app.models import db_schemas
 
@@ -21,3 +22,4 @@ app.add_middleware(
 
 app.include_router(auth_router, prefix="/auth", tags=["auth"])
 app.include_router(shared_files_router, tags=["files"])
+app.include_router(received_files_router, tags=["files"])
