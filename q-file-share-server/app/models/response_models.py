@@ -3,6 +3,14 @@ from datetime import datetime
 from pydantic import ConfigDict, BaseModel, Field
 
 
+class ActivitiesResponse(BaseModel):
+    name: str
+    received_from: str = Field(alias="from_email")
+    sent_to: str = Field(alias="to_email")
+
+    model_config = ConfigDict(from_attributes=True, populate_by_name=True)
+
+
 class ReceivedFilesResponse(BaseModel):
     name: str
     size: int
