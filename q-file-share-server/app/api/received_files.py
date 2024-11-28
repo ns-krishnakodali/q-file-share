@@ -9,10 +9,12 @@ from ..api.auth import get_current_user
 
 router = APIRouter()
 
+
 class ReceivedFileResponse(BaseModel):
     name: str
     size: int
-    sent_on: datetime
+    received_on: datetime
+    received_from: str
     expiry: datetime
 
     model_config = ConfigDict(from_attributes=True, populate_by_name=True)
@@ -23,7 +25,13 @@ async def get_received_files(
     current_user=Depends(get_current_user), db: Session = Depends(get_db_session)
 ):
     files = (
-        db.query(FileLog)
+        db.query(
+            FileLog.name,
+            FileLog.size,
+            FileLog.sent_on.label("received_on"),
+            FileLog.from_email.label("received_from"),
+            FileLog.expiry,
+        )
         .filter(
             FileLog.to_email == current_user.email,
             FileLog.status == "active",
