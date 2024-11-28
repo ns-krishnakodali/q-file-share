@@ -1,7 +1,7 @@
 import jwt
 import os
 
-from fastapi import HTTPException, status
+from fastapi import HTTPException, Request, status
 
 from datetime import datetime, timezone, timedelta
 from dotenv import load_dotenv
@@ -23,9 +23,16 @@ def create_access_token(data: dict) -> str:
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
 
-def verify_access_token(token: str) -> dict:
+def get_access_token(request: Request) -> dict:
+    jwt_token: str | None = request.headers.get("Authorization")
+    if not jwt_token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Authorization header missing",
+        )
+
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode(jwt_token, SECRET_KEY, algorithms=[ALGORITHM])
         return payload
     except jwt.ExpiredSignatureError:
         raise HTTPException(

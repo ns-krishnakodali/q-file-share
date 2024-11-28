@@ -3,7 +3,7 @@ import datetime
 from app.auth.password_handler import hash_password, verify_password
 from app.auth.jwt_handler import create_access_token
 from app.db.db_session import get_db_session
-from app.models.db_schemas import User
+from app.models.db_models import User
 from app.models.dto import LoginRequest, SignUpRequest
 
 
@@ -20,7 +20,7 @@ def authenticate_user(request: LoginRequest) -> str:
     return create_access_token({"email": user.email})
 
 
-def regsiter_user(request: SignUpRequest) -> User:
+def register_user(request: SignUpRequest) -> User:
     db = next(get_db_session())
     existing_user = db.query(User).filter(User.email == request.email).first()
 
