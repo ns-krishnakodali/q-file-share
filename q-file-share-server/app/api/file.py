@@ -47,7 +47,7 @@ async def get_received_files(
         return JSONResponse(
             status_code=status.HTTP_200_OK,
             content={
-                "activities": received_files,
+                "receivedFiles": received_files,
             },
         )
     except ValueError as error:
@@ -65,7 +65,7 @@ async def get_received_files(
         return JSONResponse(
             status_code=status.HTTP_200_OK,
             content={
-                "activities": shared_files,
+                "sharedFiles": shared_files,
             },
         )
     except ValueError as error:

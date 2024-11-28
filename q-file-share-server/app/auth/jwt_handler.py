@@ -47,5 +47,5 @@ def get_access_token(request: Request) -> dict:
     except ValueError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid expiry format in token",
+            detail="Cannot validate token",
         )
