@@ -26,8 +26,7 @@ const SignUpPage = (): JSX.Element => {
   const { addNotification } = useNotification();
 
   useEffect(() => {
-    if(isValidToken())
-      router.replace("/dashboard");
+    if (isValidToken()) router.replace("/dashboard");
   }, []);
 
   const handleSignUpSubmission = async (
@@ -61,7 +60,10 @@ const SignUpPage = (): JSX.Element => {
         router.push("/login");
       }
     } catch (error: any) {
-      addNotification({ type: "error", message: error?.response?.data?.detail || SIGNUP_FAILURE });
+      addNotification({
+        type: "error",
+        message: error?.response?.data?.detail || SIGNUP_FAILURE,
+      });
       setDisplayLoader(false);
     }
   };
