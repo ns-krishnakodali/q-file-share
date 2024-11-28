@@ -2,13 +2,13 @@ from fastapi import APIRouter, HTTPException, status
 from fastapi.responses import JSONResponse
 
 from app.models.dto import LoginRequest, SignUpRequest
-from app.services.auth_services import authenticate_user, regsiter_user
+from app.services.auth_services import authenticate_user, register_user
 
 router = APIRouter()
 
 
 @router.post("/login")
-def login(request: LoginRequest) -> JSONResponse:
+async def login(request: LoginRequest) -> JSONResponse:
     try:
         access_token = authenticate_user(request)
         return JSONResponse(
@@ -23,9 +23,9 @@ def login(request: LoginRequest) -> JSONResponse:
 
 
 @router.post("/sign-up")
-def sign_up(request: SignUpRequest) -> JSONResponse:
+async def sign_up(request: SignUpRequest) -> JSONResponse:
     try:
-        new_user = regsiter_user(request)
+        new_user = register_user(request)
         return JSONResponse(
             status_code=status.HTTP_201_CREATED,
             content={
