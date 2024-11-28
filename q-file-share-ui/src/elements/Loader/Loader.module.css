@@ -1,6 +1,21 @@
+.static {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: inline-block;
+  height: 3em;
+  aspect-ratio: 1;
+  border: 0.2em solid var(--color-loader);
+  border-radius: 50%;
+  border-bottom-color: transparent;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+
 .loader {
   display: inline-block;
-  /* width: 10px; */
   height: 100%;
   aspect-ratio: 1;
   border: 0.2em solid var(--color-loader);

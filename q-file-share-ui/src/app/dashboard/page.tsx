@@ -39,12 +39,12 @@ const Dashboard = (): JSX.Element => {
 
   return (
     <>
-      {isLoading ? (
-        <Loader />
-      ) : (
-        <>
-          <NavBar />
-          <div className={styles.dashboardContainer}>
+      <NavBar />
+      <div className={styles.dashboardContainer}>
+        {isLoading ? (
+          <Loader isStatic/>
+        ) : (
+          <>
             <div className={styles.cardContainer}>
               <Card
                 id="send-file-card"
@@ -80,9 +80,9 @@ const Dashboard = (): JSX.Element => {
             <div className={styles.activityContainer}>
               <ActivityCard activities={activities} />
             </div>
-          </div>
-        </>
-      )}
+          </>
+        )}
+      </div>
     </>
   );
 };

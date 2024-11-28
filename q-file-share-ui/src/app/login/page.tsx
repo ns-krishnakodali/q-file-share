@@ -4,27 +4,39 @@ import styles from "./login.module.css";
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-import { Heading } from "@/elements";
-import { LoginForm } from "@/modules";
-import { useNotification } from "@/context";
 import { LOGIN, LOGIN_FAILURE } from "@/constants";
-import { axiosInstance, setAuthToken } from "@/utils";
+import { useNotification } from "@/context";
+import { Heading, Loader } from "@/elements";
+import { LoginForm } from "@/modules";
+import { axiosInstance, isValidToken, setAuthToken } from "@/utils";
 
 import qfsLogo from "@/assets/qfs-logo.svg";
 
 const LoginPage = (): JSX.Element => {
-  const [displayLoader, setDisplayLoader] = useState<boolean>(false);
-
   const router = useRouter();
   const { addNotification } = useNotification();
+
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [displayFormLoader, setDisplayFormLoader] = useState<boolean>(false);
+
+  useEffect(() => {
+    const checkAuthToken = async () => {
+      if (isValidToken()) {
+        await router.replace("/dashboard");
+      } else {
+        setIsLoading(false);
+      }
+    };
+    checkAuthToken();
+  }, []);
 
   const handleLoginSubmission = async (
     email?: string,
     password?: string,
   ): Promise<void> => {
-    setDisplayLoader(true);
+    setDisplayFormLoader(true);
     try {
       const response = await axiosInstance.post(
         "/auth/login",
@@ -36,7 +48,7 @@ const LoginPage = (): JSX.Element => {
         router.replace("/dashboard");
       }
     } catch (error: any) {
-      setDisplayLoader(false);
+      setDisplayFormLoader(false);
       addNotification({
         type: "error",
         message: error?.response?.data?.detail || LOGIN_FAILURE,
@@ -45,17 +57,29 @@ const LoginPage = (): JSX.Element => {
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.logo}>
-        <Image src={qfsLogo} alt="qfs-logo" width={120} height={120} priority />
-      </div>
-      <div className={styles.loginForm}>
-        <Heading size={3}>{LOGIN}</Heading>
-        <LoginForm
-          displayLoader={displayLoader}
-          handleLoginSubmission={handleLoginSubmission}
-        />
-      </div>
+    <div className={isLoading? styles.loading: styles.container}>
+      {isLoading ? (
+        <Loader isStatic />
+      ) : (
+        <>
+          <div className={styles.logo}>
+            <Image
+              src={qfsLogo}
+              alt="qfs-logo"
+              width={120}
+              height={120}
+              priority
+            />
+          </div>
+          <div className={styles.loginForm}>
+            <Heading size={3}>{LOGIN}</Heading>
+            <LoginForm
+              displayLoader={displayFormLoader}
+              handleLoginSubmission={handleLoginSubmission}
+            />
+          </div>
+        </>
+      )}
     </div>
   );
 };
