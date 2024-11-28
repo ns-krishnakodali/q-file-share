@@ -32,6 +32,7 @@ async def get_received_files(
             FileLog.sent_on.label("received_on"),
             FileLog.from_email.label("received_from"),
             FileLog.expiry,
+            FileLog.is_anonymous
         )
         .filter(
             FileLog.to_email == current_user.email,
