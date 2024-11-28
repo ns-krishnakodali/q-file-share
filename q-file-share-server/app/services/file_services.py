@@ -1,67 +1,25 @@
-import datetime
-
 from app.db.db_session import get_db_session
-from app.models.db_models import FileLog
-from app.models.response_models import ReceivedFilesResponse, SharedFilesResponse
+from app.models.db_schemas import FileLog
 
-
-def retrieve_received_files(email: str) -> str:
+def get_user_activity(user_email: str):
     db = next(get_db_session())
-    files = (
-        db.query(
-            FileLog.name,
-            FileLog.size,
-            FileLog.sent_on.label("received_on"),
-            FileLog.from_email.label("received_from"),
-            FileLog.expiry,
-            FileLog.is_anonymous,
-        )
-        .filter(
-            FileLog.to_email == email,
-            FileLog.status == "active",
-            FileLog.expiry > datetime.datetime.now(),
-        )
-        .all()
-    )
+    activities = db.query(FileLog).filter(
+        (FileLog.from_email == user_email) | (FileLog.to_email == user_email)
+    ).order_by(FileLog.sent_on.desc()).all()
+    return [activity_to_dict(activity) for activity in activities]
 
-    return [
-        ReceivedFilesResponse(
-            name=file.name,
-            size=file.size,
-            received_on=file.received_on,
-            received_from=file.received_from if not file.is_anonymous else None,
-            expiry=file.expiry,
-        )
-        for file in files
-    ]
-
-
-def retrieve_shared_files(email: str) -> str:
-    db = next(get_db_session())
-    files = (
-        db.query(
-            FileLog.name,
-            FileLog.size,
-            FileLog.sent_on.label("received_on"),
-            FileLog.to_email.label("received_from"),
-            FileLog.expiry,
-            FileLog.is_anonymous,
-        )
-        .filter(
-            FileLog.from_email == email,
-            FileLog.status == "active",
-            FileLog.expiry > datetime.datetime.now(),
-        )
-        .all()
-    )
-
-    return [
-        SharedFilesResponse(
-            name=file.name,
-            size=file.size,
-            sent_on=file.received_on,
-            sent_to=file.received_from if not file.is_anonymous else None,
-            expiry=file.expiry,
-        )
-        for file in files
-    ]
+def activity_to_dict(activity):
+    return {
+        "id": activity.id,
+        "name": activity.name,
+        "size": activity.size,
+        "from_email": activity.from_email,
+        "to_email": activity.to_email,
+        "sent_on": activity.sent_on,
+        "expiry": activity.expiry,
+        "download_count": activity.download_count,
+        "file_id": activity.file_id,
+        "is_anonymous": activity.is_anonymous,
+        "status": activity.status,
+        "updated_at": activity.updated_at,
+    }

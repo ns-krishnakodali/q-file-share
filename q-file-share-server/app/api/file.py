@@ -1,36 +1,27 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, HTTPException, status, Depends
 from fastapi.responses import JSONResponse
-from typing import List
-
-from app.auth.jwt_handler import get_access_token
-from app.models.response_models import ReceivedFilesResponse, SharedFilesResponse
-from app.services.file_services import retrieve_received_files, retrieve_shared_files
+from app.services.file_services import get_user_activity
+from app.auth.jwt_handler import JWTBearer
 
 router = APIRouter()
 
-
-@router.get("/received-files", response_model=List[ReceivedFilesResponse])
-async def get_received_files(
-    tokenPayload: str = Depends(get_access_token),
-) -> JSONResponse:
+@router.get("/activity", dependencies=[Depends(JWTBearer())])
+def get_activity(current_user: str = Depends(JWTBearer())) -> JSONResponse:
     try:
-        files: list = retrieve_received_files(tokenPayload.get("email"))
-        return files
+        activities = get_user_activity(current_user)
+        return JSONResponse(
+            status_code=status.HTTP_200_OK,
+            content={
+                "message": "Activities fetched successfully",
+                "activities": activities,
+            },
+        )
     except ValueError as error:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(error))
+    except Exception:
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(error)
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="An unexpected error occurred.",
         )
 
 
-@router.get("/shared-files", response_model=List[SharedFilesResponse])
-async def get_received_files(
-    tokenPayload: str = Depends(get_access_token),
-) -> JSONResponse:
-    try:
-        files: list = retrieve_shared_files(tokenPayload.get("email"))
-        print(files)
-        return files
-    except ValueError as error:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(error)
-        )
