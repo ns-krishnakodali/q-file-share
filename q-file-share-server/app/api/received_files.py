@@ -6,6 +6,7 @@ from pydantic import BaseModel, ConfigDict
 from ..db.db_session import get_db_session
 from ..models.db_schemas import FileLog
 from ..api.auth import get_current_user
+from typing import Any
 
 router = APIRouter()
 
@@ -14,7 +15,7 @@ class ReceivedFileResponse(BaseModel):
     name: str
     size: int
     received_on: datetime
-    received_from: str
+    received_from: Any
     expiry: datetime
 
     model_config = ConfigDict(from_attributes=True, populate_by_name=True)
@@ -39,4 +40,16 @@ async def get_received_files(
         )
         .all()
     )
+
+    files = [
+        ReceivedFileResponse(
+            name=file.name,
+            size=file.size,
+            received_on=file.received_on,
+            received_from=file.received_from if not file.is_anonymous else None,
+            expiry=file.expiry,
+        )
+        for file in files
+    ]
+
     return files
