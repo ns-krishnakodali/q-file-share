@@ -73,7 +73,6 @@ export const SendFileOptions = (props: ISendFileOptionsProps): JSX.Element => {
           placeholder={SEND_ANONYMOUSLY}
         />
       </div>
-
       <Button id="share-button" type="submit">
         {SHARE}
       </Button>

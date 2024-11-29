@@ -16,6 +16,7 @@ import qfsLogo from "@/assets/qfs-logo.svg";
 
 const LoginPage = (): JSX.Element => {
   const router = useRouter();
+
   const { addNotification } = useNotification();
 
   const [isLoading, setIsLoading] = useState<boolean>(true);

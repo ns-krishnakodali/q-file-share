@@ -23,6 +23,7 @@ import sharedFilesIcon from "@/assets/shared-files-icon.svg";
 
 const Dashboard = (): JSX.Element => {
   const router = useRouter();
+
   const [activities, setActivities] = useState<IActivity[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 

@@ -10,7 +10,7 @@ router = APIRouter()
 @router.post("/login")
 async def login(request: LoginRequest) -> JSONResponse:
     try:
-        access_token = authenticate_user(request)
+        access_token = authenticate_user(request.email, request.password)
         return JSONResponse(
             status_code=status.HTTP_200_OK,
             content={
@@ -25,7 +25,7 @@ async def login(request: LoginRequest) -> JSONResponse:
 @router.post("/sign-up")
 async def sign_up(request: SignUpRequest) -> JSONResponse:
     try:
-        new_user = register_user(request)
+        new_user = register_user(request.name, request.email, request.password)
         return JSONResponse(
             status_code=status.HTTP_201_CREATED,
             content={
