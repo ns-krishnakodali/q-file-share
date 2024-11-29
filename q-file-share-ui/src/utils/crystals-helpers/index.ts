@@ -94,3 +94,6 @@ export const modularExponentiation = (
   }
   return result;
 };
+
+export const serializeUint8Array = (array: Uint8Array) =>
+  Buffer.from(array).toString("base64");

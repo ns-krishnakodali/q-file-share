@@ -105,14 +105,13 @@ export const signWithDilithium = (
 
     if (v1 || v2) z = undefined;
   }
-
   return [z, cp];
 };
 
 export const verifyDilthiumSignature = (
-  publicKey: PublicKey,
-  signature: Signature,
   message: Uint8Array,
+  signature: Signature,
+  publicKey: PublicKey,
 ): boolean => {
   const A: Matrix = publicKey?.[0];
   const t: Polynomial[] = publicKey?.[1];

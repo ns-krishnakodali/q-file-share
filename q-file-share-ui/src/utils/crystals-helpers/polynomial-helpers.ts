@@ -46,11 +46,11 @@ export const multiplyPolynomials = (A: number[], B: number[]): number[] => {
   );
   const result: Polynomial = new Array(2 * maxDegree - 1).fill(0);
 
-  for (let i = 0; i < C0.length; i++) result[i] = result[i] + C0[i];
+  for (let i = 0; i < C0.length; i++) result[i] += C0[i];
   for (let i = 0; i < middle.length; i++)
-    result[i + half] = result[i + half] + middle[i];
+    result[i + half] += middle[i];
   for (let i = 0; i < C2.length; i++)
-    result[i + 2 * half] = result[i + 2 * half] + C2[i];
+    result[i + 2 * half] += C2[i];
 
   return reducePolynomial(result);
 };

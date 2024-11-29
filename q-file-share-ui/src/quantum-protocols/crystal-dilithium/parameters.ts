@@ -1,4 +1,4 @@
-export const Q: number = Math.pow(2, 23) - Math.pow(2, 13) + 1;
+export const Q: number = 8380417;
 
 export const N: number = 256;
 
