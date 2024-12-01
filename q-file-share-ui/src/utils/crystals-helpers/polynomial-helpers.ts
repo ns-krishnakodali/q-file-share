@@ -154,40 +154,6 @@ export const subtractPolynomials = (
   );
 };
 
-export const compressPolyQK = (polynomial: Polynomial): Polynomial => {
-  const compressedPoly: Polynomial = new Array((N / 2) | 0).fill(0);
-  const tByte: number[] = new Array(8).fill(0);
-
-  for (let i = 0; i < ((N / 8) | 0); i++) {
-    for (let j = 0; j < 8; j++) {
-      let u = polynomial[8 * i + j];
-      u += (u >> 15) & Q_K;
-      let d0 = u << 4;
-      d0 += 1665;
-      d0 *= 80635;
-      d0 >>= 28;
-      tByte[j] += d0 & 0xf;
-    }
-    compressedPoly[i] = tByte[0] | (tByte[1] << 4);
-    compressedPoly[i + 1] = tByte[2] | (tByte[3] << 4);
-    compressedPoly[i + 2] = tByte[4] | (tByte[5] << 4);
-    compressedPoly[i + 3] = tByte[6] | (tByte[7] << 4);
-  }
-
-  return compressedPoly;
-};
-
-export const decompressPolyQK = (compressedPoly: number[]): number[] => {
-  const polynomial: Polynomial = new Array(N).fill(0);
-
-  for (let i = 0; i < ((N / 2) | 0); i++) {
-    polynomial[2 * i] = ((compressedPoly[i] & 15) * Q_K + 8) >> 4;
-    polynomial[2 * i + 1] = ((compressedPoly[i] >> 4) * Q_K + 8) >> 4;
-  }
-
-  return polynomial;
-};
-
 export const reduceCoefficientsModQ = (
   polynomial: Polynomial,
   q: number,
