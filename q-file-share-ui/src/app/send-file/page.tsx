@@ -2,37 +2,22 @@
 
 import styles from "./SendFile.module.css";
 
+import { useEffect } from "react";
+
 import { NavBar, SendFileOptions, UploadFile } from "@/modules";
 import { RECEIVED_FILES, SHARED_FILES } from "@/constants";
-import { useEffect } from "react";
-import { axiosInstance, Matrix, Polynomial } from "@/utils";
-import { cpaDecryption, cpaEncryption } from "@/quantum-protocols/crystals-kyber";
 
 const SendFile = (): JSX.Element => {
-  useEffect(() => {
-  }, []);
+  useEffect(() => {}, []);
 
   const handleFilesUpload = (files: File[]) => {};
 
-  const handleFileSubmission = async(
+  const handleFileSubmission = async (
     recipientEmail: string,
     expiration: string,
     downloadCount: string,
     checkAnonymous: boolean,
-  ) => {
-    const response = await axiosInstance.get("/file/test");
-    const t  = response.data?.t;
-    const A: Matrix = response.data?.A;
-    const s: Polynomial[] = response.data?.s;
-
-    const uv = cpaEncryption(t, A);
-    console.log(cpaDecryption(s, uv));
-
-    await axiosInstance.post("/file/test1", {
-      u: uv[0],
-      v: uv[1]
-    })
-  };
+  ) => {};
 
   return (
     <>

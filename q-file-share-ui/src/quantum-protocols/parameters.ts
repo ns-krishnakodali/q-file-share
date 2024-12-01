@@ -25,9 +25,3 @@ export const Q_K: number = 7681;
 export const ETA_K: number = 4
 
 export const k_k: number = 3
-
-export const DT: number = 11
-
-export const DU: number = 11
-
-export const DV: number = 3
