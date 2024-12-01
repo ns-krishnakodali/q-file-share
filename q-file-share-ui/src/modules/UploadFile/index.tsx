@@ -84,6 +84,7 @@ export const UploadFile = (props: IUploadFileProps): JSX.Element => {
         <Image
           src={fileUploadIcon}
           className={styles.fileIcon}
+          priority
           alt={"file-icon"}
           width={100}
           height={100}

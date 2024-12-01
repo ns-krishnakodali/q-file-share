@@ -1,4 +1,4 @@
-import { BETA, ETA, GAMMA1, GAMMA2, k, l, N, SEED_LENGTH } from "./parameters";
+import { BETA, ETA, GAMMA1, GAMMA2, k, l, Q, SEED_LENGTH } from "../parameters";
 
 import {
   addPolynomialVectors,
@@ -6,60 +6,56 @@ import {
   expandA,
   generatePolyBuffer,
   getPolynomialChallenge,
+  getRandomSeed,
   getRandomVectors,
   highBits,
   lowBits,
   multiplyMatrixPolyVector,
   multiplyPolynomialWithPolyVector,
+  reducePolyVector,
   reducePolyVectorSymmetric,
   subtractPolynomialVectors,
   Matrix,
   Polynomial,
 } from "@/utils";
 
-export * from "./parameters";
+export type DLPublicKey = [Matrix, Polynomial[]];
 
-export type PublicKey = [Matrix, Polynomial[]];
-
-export type SecretKey = [Matrix, Polynomial[], Polynomial[], Polynomial[]];
+export type DLSecretKey = [Matrix, Polynomial[], Polynomial[], Polynomial[]];
 
 export type Signature = [Polynomial[], Uint8Array];
 
 export const generateDilithiumKeyPair = (): {
-  publicKey: PublicKey;
-  secretKey: SecretKey;
+  publicKey: DLPublicKey;
+  secretKey: DLSecretKey;
 } => {
-  const seed: Uint8Array = new Uint8Array(SEED_LENGTH);
-  const K: Uint8Array = new Uint8Array(SEED_LENGTH);
+  const seed: Uint8Array = getRandomSeed(SEED_LENGTH);
 
-  crypto.getRandomValues(seed);
-  crypto.getRandomValues(K);
-
-  const A: Matrix = expandA(seed, k, l);
+  const A: Matrix = expandA(seed, k, l, Q);
 
   const s1: Polynomial[] = getRandomVectors(l, ETA);
   const s2: Polynomial[] = getRandomVectors(k, ETA);
 
-  const t: Polynomial[] = addPolynomialVectors(
-    multiplyMatrixPolyVector(A, s1),
+  const t: Polynomial[] = reducePolyVector(addPolynomialVectors(
+    multiplyMatrixPolyVector(A, s1, Q),
     s2,
-  );
+  ), Q);
 
   return { publicKey: [A, t], secretKey: [A, t, s1, s2] };
 };
 
 export const signWithDilithium = (
-  secretKey: SecretKey,
+  secretKey: DLSecretKey,
   message: Uint8Array,
 ): Signature => {
   let z: Polynomial[] | undefined = undefined;
-  let cp: Uint8Array = new Uint8Array(32);
+  let cp: Uint8Array = new Uint8Array(SEED_LENGTH);
 
   const A: Matrix = secretKey?.[0];
 
   while (typeof z === "undefined") {
     const y: Polynomial[] = getRandomVectors(l, GAMMA1 - 1);
-    const Ay: Polynomial[] = multiplyMatrixPolyVector(A, y);
+    const Ay: Polynomial[] = multiplyMatrixPolyVector(A, y, Q);
 
     const w1: Polynomial[] = Ay.map((polynomial: Polynomial) =>
       polynomial.map((coefficient: number) =>
@@ -83,8 +79,9 @@ export const signWithDilithium = (
     z = reducePolyVectorSymmetric(
       addPolynomialVectors(
         y,
-        multiplyPolynomialWithPolyVector(c, secretKey?.[2]),
+        multiplyPolynomialWithPolyVector(c, secretKey?.[2], Q),
       ),
+      Q
     );
 
     const v1: boolean = z.some(
@@ -92,7 +89,7 @@ export const signWithDilithium = (
     );
     const v2: boolean = subtractPolynomialVectors(
       Ay,
-      multiplyPolynomialWithPolyVector(c, secretKey?.[3]),
+      multiplyPolynomialWithPolyVector(c, secretKey?.[3], Q),
     )
       .map((polynomial: Polynomial) =>
         polynomial.map((coefficient: number) =>
@@ -111,7 +108,7 @@ export const signWithDilithium = (
 export const verifyDilthiumSignature = (
   message: Uint8Array,
   signature: Signature,
-  publicKey: PublicKey,
+  publicKey: DLPublicKey,
 ): boolean => {
   const A: Matrix = publicKey?.[0];
   const t: Polynomial[] = publicKey?.[1];
@@ -121,8 +118,8 @@ export const verifyDilthiumSignature = (
   const c: Polynomial = getPolynomialChallenge(cp);
 
   const w1: Polynomial[] = subtractPolynomialVectors(
-    multiplyMatrixPolyVector(A, z),
-    multiplyPolynomialWithPolyVector(c, t),
+    multiplyMatrixPolyVector(A, z, Q),
+    multiplyPolynomialWithPolyVector(c, t, Q),
   ).map((polynomial: Polynomial) =>
     polynomial.map((coefficient: number) => highBits(coefficient, 2 * GAMMA2)),
   );

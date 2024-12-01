@@ -13,3 +13,15 @@ GAMMA1 = pow(2, 19)
 GAMMA2 = (Q - 1) / 32
 
 BETA = 196
+
+Q_K = 7681
+
+ETA_K = 4
+
+K_K = 3
+
+DT = 11
+
+DU = 11
+
+DV = 3

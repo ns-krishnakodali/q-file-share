@@ -1,8 +1,9 @@
+import { randomBytes } from "crypto";
 import { shake128, shake256 } from "js-sha3";
 
 import { Matrix, Polynomial } from "..";
 
-import { N, Q, TAU } from "@/quantum-protocols";
+import { N, Q_K, TAU } from "@/quantum-protocols";
 
 const STREAM256_OUTPUTBITS: number = 256;
 
@@ -12,7 +13,16 @@ const UNIFORM_NBLOCKS: number = Math.ceil(
   (768 + STREAM128_BLOCKBYTES - 1) / STREAM128_BLOCKBYTES,
 );
 
-export const expandA = (seed: Uint8Array, k: number, l: number): Matrix => {
+const GEN_NBLOCKS =
+  Math.ceil((12 * (N / 8) * (1 << 12)) / Q_K + STREAM128_BLOCKBYTES) /
+  STREAM128_BLOCKBYTES;
+
+export const expandA = (
+  seed: Uint8Array,
+  k: number,
+  l: number,
+  q: number,
+): Matrix => {
   const A: Matrix = Array.from({ length: k }, () => Array(l).fill([]));
 
   for (let i = 0; i < k; i++) {
@@ -22,7 +32,25 @@ export const expandA = (seed: Uint8Array, k: number, l: number): Matrix => {
       A[i][j] = getUniformPolynomial(
         seed,
         new Uint8Array([nonce >> 8, nonce & 0xff]),
+        q,
       );
+    }
+  }
+
+  return A;
+};
+
+export const expandAKyber = (
+  seed: Uint8Array,
+  k: number,
+  l: number,
+  q: number,
+) => {
+  const A: Matrix = Array.from({ length: k }, () => Array(l).fill([]));
+
+  for (let i = 0; i < k; i++) {
+    for (let j = 0; j < l; j++) {
+      A[i][j] = getUniformPolynomialKyber(seed, new Uint8Array([i, j]), q);
     }
   }
 
@@ -64,9 +92,25 @@ export const getPolynomialChallenge = (seed: Uint8Array): number[] => {
   return C;
 };
 
+export const getRandomSeed = (seedLength: number) => {
+  const seed: Uint8Array = new Uint8Array(seedLength);
+  crypto.getRandomValues(seed);
+  return seed;
+};
+
+export const generateSampleNoisePolynomial = (eta: number): number[] =>
+  Array.from({ length: N }, () => secureSampleCenteredBinomial(eta));
+
+export const generateSampleNoisePolyVector = (
+  size: number,
+  eta: number,
+): number[][] =>
+  Array.from({ length: size }, () => generateSampleNoisePolynomial(eta));
+
 const getUniformPolynomial = (
   seed: Uint8Array,
   nonce: Uint8Array,
+  q: number,
 ): Polynomial => {
   const bufferLength: number = UNIFORM_NBLOCKS * STREAM128_BLOCKBYTES;
   const buffer: Uint8Array = new Uint8Array(bufferLength + 2);
@@ -76,13 +120,30 @@ const getUniformPolynomial = (
   shakeHash.update(nonce);
 
   buffer.set(new Uint8Array(shakeHash.arrayBuffer()));
-  return rejectUniformSampling(new Array(N).fill(0), buffer, bufferLength);
+  return rejectUniformSamplingDL(new Array(N).fill(0), buffer, bufferLength, q);
 };
 
-const rejectUniformSampling = (
+const getUniformPolynomialKyber = (
+  seed: Uint8Array,
+  nonce: Uint8Array,
+  q: number,
+): Polynomial => {
+  const bufferLength: number = (GEN_NBLOCKS + 2) * STREAM128_BLOCKBYTES;
+  const buffer: Uint8Array = new Uint8Array(bufferLength);
+
+  const shakeHash = shake128.create(bufferLength * 8);
+  shakeHash.update(seed);
+  shakeHash.update(nonce);
+
+  buffer.set(new Uint8Array(shakeHash.arrayBuffer()));
+  return rejectUniformSamplingK(new Array(N).fill(0), buffer, bufferLength, q);
+};
+
+const rejectUniformSamplingDL = (
   polynomial: Polynomial,
   buffer: Uint8Array,
   bufferLength: number,
+  q: number,
 ): Polynomial => {
   let ctr: number = 0;
   let pos: number = 0;
@@ -95,9 +156,32 @@ const rejectUniformSampling = (
     b |= buffer[pos++] << 16;
     b &= 0x7fffff;
 
-    if (b < Q) {
-      polynomial[ctr++] = b;
-    }
+    if (b < q) polynomial[ctr++] = b;
+  }
+
+  return polynomial;
+};
+
+const rejectUniformSamplingK = (
+  polynomial: Polynomial,
+  buffer: Uint8Array,
+  bufferLength: number,
+  q: number,
+): Polynomial => {
+  let ctr: number = 0;
+  let pos: number = 0;
+
+  let val0: number = 0;
+  let val1: number = 0;
+
+  while (ctr < N && pos + 3 <= bufferLength) {
+    val0 = ((buffer[pos + 0] >> 0) | (buffer[pos + 1] << 8)) & 0xfff;
+    val1 = ((buffer[pos + 1] >> 4) | (buffer[pos + 2] << 4)) & 0xfff;
+    pos += 3;
+
+    if (val0 < q) polynomial[ctr++] = val0;
+
+    if (ctr < bufferLength && val1 < Q_K) polynomial[ctr++] = val1;
   }
 
   return polynomial;
@@ -115,4 +199,11 @@ const randomInt = (min: number, max: number): number => {
   } else {
     return Math.floor(Math.random() * (max - min)) + min;
   }
+};
+
+const secureSampleCenteredBinomial = (eta: number): number => {
+  const a: number[] = Array.from({ length: eta }, () => randomBytes(1)[0] % 2);
+  const b: number[] = Array.from({ length: eta }, () => randomBytes(1)[0] % 2);
+
+  return a.reduce((sum, ai, index) => sum + (ai - b[index]), 0);
 };
