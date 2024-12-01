@@ -1,4 +1,4 @@
-import { Q } from "@/quantum-protocols";
+import { Q, Q_K } from "@/quantum-protocols";
 
 export * from "./polynomial-helpers";
 
@@ -9,20 +9,14 @@ export const modSymmetric = (r: number, alpha: number): number =>
   ((r + (alpha % 2 === 0 ? alpha / 2 : (alpha - 1) / 2)) % alpha) -
   (alpha % 2 === 0 ? alpha / 2 : (alpha - 1) / 2);
 
-export const power2Round = (
-  r: number,
-  d: number,
-): [number, number] => {
+export const power2Round = (r: number, d: number): [number, number] => {
   r = modPlus(r, Q);
   const pow2d: number = Math.pow(2, d);
   const r0 = modSymmetric(r, pow2d);
   return [(r - r0) / pow2d, r0];
 };
 
-export const decompose = (
-  r: number,
-  alpha: number,
-): [number, number] => {
+export const decompose = (r: number, alpha: number): [number, number] => {
   r = modPlus(r, Q);
   const r0: number = modSymmetric(r, alpha);
   if (r - r0 === Q - 1) {
@@ -36,13 +30,6 @@ export const highBits = (r: number, alpha: number): number =>
 
 export const lowBits = (r: number, alpha: number): number =>
   decompose(r, alpha)[1];
-
-export const makeHint = (
-  z: number,
-  r: number,
-  alpha: number,
-  q: number,
-): boolean => highBits(r, alpha) !== highBits(r + z, alpha);
 
 export const hexToByte = (hex: string): Uint8Array => {
   const sanitizedHex: string = hex.replace(/^0x/i, "");
@@ -95,5 +82,20 @@ export const modularExponentiation = (
   return result;
 };
 
-export const serializeUint8Array = (array: Uint8Array) =>
+export const serializeUint8Array = (array: Uint8Array): string =>
   Buffer.from(array).toString("base64");
+
+export const deserializeToUint8Array = (base64: string): Uint8Array => {
+  const binaryString: string = atob(base64);
+  return Uint8Array.from(binaryString, (char) => char.charCodeAt(0));
+};
+
+export const uint8ArrayToBitArray = (byteArray: Uint8Array): number[] => {
+  if (byteArray.length !== 32)
+    throw new Error("Input must be a Uint8Array of size 32.");
+
+  return Array.from(byteArray).flatMap((byte) =>
+    Array.from({ length: 8 }, (_, i) => (byte >> (7 - i)) & 1)
+  );
+};
+

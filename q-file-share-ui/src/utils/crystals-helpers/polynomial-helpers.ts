@@ -1,6 +1,6 @@
 import { modPlus, modSymmetric } from ".";
 
-import { k, l, N, Q } from "@/quantum-protocols";
+import { N, Q_K } from "@/quantum-protocols";
 
 export type Polynomial = number[];
 
@@ -22,64 +22,64 @@ export const subtractPolynomialVectors = (
     subtractPolynomials(polynomial, polyVector2[index]),
   );
 
-export const multiplyPolynomials = (A: number[], B: number[]): number[] => {
-  const maxDegree: number = Math.max(A.length, B.length);
-
-  if (maxDegree === 1) return [A[0] * B[0]];
-
-  const half: number = Math.ceil(maxDegree / 2);
-  const A0: Polynomial = A.slice(0, half);
-  const A1: Polynomial = A.slice(half);
-  const B0: Polynomial = B.slice(0, half);
-  const B1: Polynomial = B.slice(half);
-
-  const C0: Polynomial = multiplyPolynomials(A0, B0);
-  const C2: Polynomial = multiplyPolynomials(A1, B1);
-  const C1: Polynomial = multiplyPolynomials(
-    addPolynomials(A0, A1),
-    addPolynomials(B0, B1),
-  );
-
-  const middle: Polynomial = subtractPolynomials(
-    subtractPolynomials(C1, C0),
-    C2,
-  );
-  const result: Polynomial = new Array(2 * maxDegree - 1).fill(0);
-
-  for (let i = 0; i < C0.length; i++) result[i] += C0[i];
-  for (let i = 0; i < middle.length; i++)
-    result[i + half] += middle[i];
-  for (let i = 0; i < C2.length; i++)
-    result[i + 2 * half] += C2[i];
-
-  return reducePolynomial(result);
-};
-
 export const multiplyPolynomialWithPolyVector = (
   polynomial: Polynomial,
   polyVector: Polynomial[],
+  q: number,
 ): Polynomial[] =>
-  polyVector.map((poly: Polynomial) => multiplyPolynomials(poly, polynomial));
+  polyVector.map((poly: Polynomial) =>
+    reduceCoefficientsModQ(
+      reducedPolynomialsMultiplication(poly, polynomial),
+      q,
+    ),
+  );
+
+export const multiplyPolyVectors = (
+  polyVector1: Polynomial[],
+  polyVector2: Polynomial[],
+  q: number,
+): Polynomial => {
+  let resultPolynomial: Polynomial = new Array(N).fill(0);
+
+  if (polyVector1.length !== polyVector2.length)
+    throw new Error("Polynomial vectors must have the same length");
+
+  for (let i = 0; i < polyVector1.length; i++) {
+    const polyProduct: Polynomial = reducedPolynomialsMultiplication(
+      polyVector1[i],
+      polyVector2[i],
+    );
+    resultPolynomial = reduceCoefficientsModQ(
+      addPolynomials(resultPolynomial, polyProduct),
+      q,
+    );
+  }
+
+  return resultPolynomial;
+};
 
 export const multiplyMatrixPolyVector = (
   matrix: Matrix,
   polyVector: Polynomial[],
+  q: number,
+  transpose?: boolean,
 ) => {
-  const resPolynomial: Polynomial[] = [];
+  const isTranspose: boolean = typeof transpose !== "undefined" && transpose;
 
-  for (let i = 0; i < k; i++) {
-    let rowResult: Polynomial = multiplyPolynomials(
+  const resPolynomial: Polynomial[] = [];
+  for (let i = 0; i < matrix.length; i++) {
+    let rowResult: Polynomial = reducedPolynomialsMultiplication(
       polyVector[0],
-      matrix[i][0],
+      isTranspose ? matrix[0][i] : matrix[i][0],
     );
-    for (let j = 1; j < l; j++) {
-      const multipliedPolynomial: Polynomial = multiplyPolynomials(
+    for (let j = 1; j < matrix?.[0].length; j++) {
+      const multipliedPolynomial: Polynomial = reducedPolynomialsMultiplication(
         polyVector[j],
-        matrix[i][j],
+        isTranspose ? matrix[j][i] : matrix[i][j],
       );
-      rowResult = addPolynomials(
-        rowResult,
-        reduceCoefficientsModQ(multipliedPolynomial),
+      rowResult = reduceCoefficientsModQ(
+        addPolynomials(rowResult, multipliedPolynomial),
+        q,
       );
     }
     resPolynomial.push(rowResult);
@@ -88,11 +88,20 @@ export const multiplyMatrixPolyVector = (
   return resPolynomial;
 };
 
-export const reducePolyVectorSymmetric = (
+export const reducePolyVector = (
   polyVector: Polynomial[],
+  q: number,
 ): Polynomial[] =>
   polyVector?.map((polynomial: Polynomial) =>
-    reduceCoefficientsSymModQ(polynomial),
+    reduceCoefficientsModQ(polynomial, q),
+  );
+
+export const reducePolyVectorSymmetric = (
+  polyVector: Polynomial[],
+  q: number,
+): Polynomial[] =>
+  polyVector?.map((polynomial: Polynomial) =>
+    reduceCoefficientsSymModQ(polynomial, q),
   );
 
 export const encodePolynomialCoefficients = (
@@ -105,7 +114,7 @@ export const encodePolynomialCoefficients = (
     ),
   );
 
-const addPolynomials = (
+export const addPolynomials = (
   polynomial1: number[],
   polynomial2: number[],
 ): number[] => {
@@ -125,7 +134,7 @@ const addPolynomials = (
   );
 };
 
-const subtractPolynomials = (
+export const subtractPolynomials = (
   polynomial1: number[],
   polynomial2: number[],
 ): number[] => {
@@ -145,22 +154,105 @@ const subtractPolynomials = (
   );
 };
 
-const reducePolynomial = (polynomial: Polynomial): Polynomial => {
-  const degree: number = polynomial.length;
-  if (degree <= N)
-    return polynomial.map((coefficient: number) => modPlus(coefficient, Q));
+export const compressPolyQK = (polynomial: Polynomial): Polynomial => {
+  const compressedPoly: Polynomial = new Array((N / 2) | 0).fill(0);
+  const tByte: number[] = new Array(8).fill(0);
 
-  const result: Polynomial = [...polynomial];
-  for (let i = N; i < degree; i++) {
-    result[i - N] = (result[i - N] - result[i]) % Q;
+  for (let i = 0; i < ((N / 8) | 0); i++) {
+    for (let j = 0; j < 8; j++) {
+      let u = polynomial[8 * i + j];
+      u += (u >> 15) & Q_K;
+      let d0 = u << 4;
+      d0 += 1665;
+      d0 *= 80635;
+      d0 >>= 28;
+      tByte[j] += d0 & 0xf;
+    }
+    compressedPoly[i] = tByte[0] | (tByte[1] << 4);
+    compressedPoly[i + 1] = tByte[2] | (tByte[3] << 4);
+    compressedPoly[i + 2] = tByte[4] | (tByte[5] << 4);
+    compressedPoly[i + 3] = tByte[6] | (tByte[7] << 4);
   }
-  return result
-    .slice(0, N)
-    .map((coefficient: number) => modPlus(coefficient, Q));
+
+  return compressedPoly;
 };
 
-const reduceCoefficientsModQ = (polynomial: Polynomial): Polynomial =>
-  polynomial.map((coefficient: number) => modPlus(coefficient, Q));
+export const decompressPolyQK = (compressedPoly: number[]): number[] => {
+  const polynomial: Polynomial = new Array(N).fill(0);
 
-const reduceCoefficientsSymModQ = (polynomial: Polynomial): Polynomial =>
-  polynomial.map((coefficient: number) => modSymmetric(coefficient, Q));
+  for (let i = 0; i < ((N / 2) | 0); i++) {
+    polynomial[2 * i] = ((compressedPoly[i] & 15) * Q_K + 8) >> 4;
+    polynomial[2 * i + 1] = ((compressedPoly[i] >> 4) * Q_K + 8) >> 4;
+  }
+
+  return polynomial;
+};
+
+export const reduceCoefficientsModQ = (
+  polynomial: Polynomial,
+  q: number,
+): Polynomial =>
+  polynomial.map((coefficient: number) => modPlus(coefficient, q));
+
+export const reduceCoefficientsSymModQ = (
+  polynomial: Polynomial,
+  q: number,
+): Polynomial =>
+  polynomial.map((coefficient: number) => modSymmetric(coefficient, q));
+
+export const multiplyPolynomials = (
+  polynomial1: number[],
+  polynomial2: number[],
+): number[] => {
+  // remove export
+  const maxDegree: number = Math.max(polynomial1.length, polynomial2.length);
+
+  if (maxDegree === 1) return [polynomial1[0] * polynomial2[0]];
+
+  const half: number = Math.ceil(maxDegree / 2);
+  const A0: Polynomial = polynomial1.slice(0, half);
+  const A1: Polynomial = polynomial1.slice(half);
+  const B0: Polynomial = polynomial2.slice(0, half);
+  const B1: Polynomial = polynomial2.slice(half);
+
+  const C0: Polynomial = multiplyPolynomials(A0, B0);
+  const C2: Polynomial = multiplyPolynomials(A1, B1);
+  const C1: Polynomial = multiplyPolynomials(
+    addPolynomials(A0, A1),
+    addPolynomials(B0, B1),
+  );
+
+  const middle: Polynomial = subtractPolynomials(
+    subtractPolynomials(C1, C0),
+    C2,
+  );
+  const result: Polynomial = new Array(2 * maxDegree - 1).fill(0);
+
+  for (let i = 0; i < C0.length; i++) result[i] += C0[i];
+  for (let i = 0; i < middle.length; i++) result[i + half] += middle[i];
+  for (let i = 0; i < C2.length; i++) result[i + 2 * half] += C2[i];
+
+  return result;
+};
+
+const polynomialRingReduction = (polynomial: Polynomial): number[] => {
+  const reducedPolynomial: Polynomial = new Array(N).fill(0);
+  const degree: number = polynomial.length - 1;
+
+  polynomial.forEach((coeff, i) => {
+    const index = (degree - i) % N;
+    if (Math.floor((degree - i) / N) % 2 === 0) {
+      reducedPolynomial[index] += coeff;
+    } else {
+      reducedPolynomial[index] -= coeff;
+    }
+  });
+
+  return reducedPolynomial.reverse();
+};
+
+const reducedPolynomialsMultiplication = (
+  polynomial1: Polynomial,
+  polynomial2: Polynomial,
+): number[] =>
+  polynomialRingReduction(multiplyPolynomials(polynomial1, polynomial2));
