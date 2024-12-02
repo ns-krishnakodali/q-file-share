@@ -25,8 +25,6 @@ export const cpaEncrypt = (
   const m1: number[] = uint8ArrayToBitArray(getRandomSeed(SEED_LENGTH));
   const m: Polynomial = m1.map((value: number) => value * Math.ceil(Q_K / 2));
 
-  console.log(m);
-
   const seed: Uint8Array = deserializeToUint8Array(seedString);
   const A: Matrix = expandAKyber(seed, k_k, k_k, Q_K);
 
