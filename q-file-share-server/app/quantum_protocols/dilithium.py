@@ -1,6 +1,6 @@
 import numpy as np
 
-from typing import List
+from typing import List, Tuple
 
 from .parameters import N, Q, GAMMA1, GAMMA2, BETA
 
@@ -19,7 +19,12 @@ from .helpers import (
 
 
 class Dilithium:
-    def verify_dilthium_signature(self, message, signature, public_key):
+    def verify_dilthium_signature(
+        self,
+        message: bytes,
+        signature: Tuple[List[List[int]], str],
+        public_key: Tuple[List[List[List[int]]], List[List[int]]],
+    ):
         try:
             A = public_key[0]
             t = public_key[1]

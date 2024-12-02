@@ -14,7 +14,7 @@ class SignUpRequest(BaseModel):
     password: str
 
 
-class Payload(BaseModel):
+class FileDTO(BaseModel):
     message: str
     signature: Tuple[List[List[int]], str]
     publicKey: Tuple[List[List[List[int]]], List[List[int]]]

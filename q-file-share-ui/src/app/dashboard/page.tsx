@@ -43,7 +43,7 @@ const Dashboard = (): JSX.Element => {
       <NavBar />
       <div className={styles.dashboardContainer}>
         {isLoading ? (
-          <Loader isStatic/>
+          <Loader isStatic />
         ) : (
           <>
             <div className={styles.cardContainer}>

@@ -95,7 +95,6 @@ export const uint8ArrayToBitArray = (byteArray: Uint8Array): number[] => {
     throw new Error("Input must be a Uint8Array of size 32.");
 
   return Array.from(byteArray).flatMap((byte) =>
-    Array.from({ length: 8 }, (_, i) => (byte >> (7 - i)) & 1)
+    Array.from({ length: 8 }, (_, i) => (byte >> (7 - i)) & 1),
   );
 };
-

@@ -36,10 +36,10 @@ export const generateDilithiumKeyPair = (): {
   const s1: Polynomial[] = getRandomVectors(l, ETA);
   const s2: Polynomial[] = getRandomVectors(k, ETA);
 
-  const t: Polynomial[] = reducePolyVector(addPolynomialVectors(
-    multiplyMatrixPolyVector(A, s1, Q),
-    s2,
-  ), Q);
+  const t: Polynomial[] = reducePolyVector(
+    addPolynomialVectors(multiplyMatrixPolyVector(A, s1, Q), s2),
+    Q,
+  );
 
   return { publicKey: [A, t], secretKey: [A, t, s1, s2] };
 };
@@ -81,7 +81,7 @@ export const signWithDilithium = (
         y,
         multiplyPolynomialWithPolyVector(c, secretKey?.[2], Q),
       ),
-      Q
+      Q,
     );
 
     const v1: boolean = z.some(

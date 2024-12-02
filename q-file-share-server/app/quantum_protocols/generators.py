@@ -27,7 +27,9 @@ def expand_a(seed: bytes, k: int, l: int, q: int) -> List[List[List[int]]]:
         base = i << 8
         for j in range(l):
             nonce = base + j
-            A[i][j] = get_uniform_polynomial(seed, bytes([(nonce >> 8) & 0xFF, nonce & 0xFF]), q)
+            A[i][j] = get_uniform_polynomial(
+                seed, bytes([(nonce >> 8) & 0xFF, nonce & 0xFF]), q
+            )
 
     return A
 
@@ -37,7 +39,7 @@ def expand_a_kyber(seed: bytes, k: int, l: int, q: int) -> list:
 
     for i in range(k):
         for j in range(l):
-            A[i][j] = get_uniform_polynomial_kyber(seed, bytes([i, j]),  q)
+            A[i][j] = get_uniform_polynomial_kyber(seed, bytes([i, j]), q)
 
     return A
 
@@ -76,8 +78,8 @@ def get_polynomial_challenge(seed: bytes) -> List[int]:
     return C
 
 
-def get_random_seed(seed_length) -> bytes:
-    return secrets.token_bytes(seed_length)
+def get_random_seed() -> bytes:
+    return secrets.token_bytes(SEED_LENGTH)
 
 
 def generate_sample_noise_polynomial(eta: int) -> List[int]:
@@ -131,6 +133,9 @@ def reject_uniform_sampling_k(
 ) -> List[int]:
     ctr = 0
     pos = 0
+
+    val0 = 0
+    val1 = 0
 
     while ctr < N and pos + 3 <= buffer_length:
         val0 = ((buffer[pos + 0] >> 0) | (buffer[pos + 1] << 8)) & 0xFFF

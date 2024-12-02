@@ -3,6 +3,8 @@ import { ETA_K, k_k, Q_K, SEED_LENGTH } from "../parameters";
 import {
   addPolynomials,
   addPolynomialVectors,
+  deserializeToUint8Array,
+  expandAKyber,
   generateSampleNoisePolynomial,
   generateSampleNoisePolyVector,
   getRandomSeed,
@@ -18,10 +20,15 @@ import {
 
 export const cpaEncrypt = (
   t: Polynomial[],
-  A: Matrix,
+  seedString: string,
 ): [Polynomial[], Polynomial] => {
   const m1: number[] = uint8ArrayToBitArray(getRandomSeed(SEED_LENGTH));
   const m: Polynomial = m1.map((value: number) => value * Math.ceil(Q_K / 2));
+
+  console.log(m);
+
+  const seed: Uint8Array = deserializeToUint8Array(seedString);
+  const A: Matrix = expandAKyber(seed, k_k, k_k, Q_K);
 
   const r: Polynomial[] = generateSampleNoisePolyVector(k_k, ETA_K);
   const e1: Polynomial[] = generateSampleNoisePolyVector(k_k, ETA_K);
@@ -40,10 +47,7 @@ export const cpaEncrypt = (
   return [u, v];
 };
 
-export const cpaDecrypt = (
-  s: Polynomial[],
-  uv: [Polynomial[], Polynomial],
-) => {
+export const cpaDecrypt = (s: Polynomial[], uv: [Polynomial[], Polynomial]) => {
   const mn = reduceCoefficientsModQ(
     subtractPolynomials(uv[1], multiplyPolyVectors(s, uv[0], Q_K)),
     Q_K,
