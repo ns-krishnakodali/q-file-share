@@ -6,8 +6,6 @@ import { useEffect } from "react";
 
 import { RECEIVED_FILES, SHARED_FILES } from "@/constants";
 import { NavBar, SendFileOptions, UploadFile } from "@/modules";
-import { axiosInstance } from "@/utils";
-import { cpaEncrypt } from "@/quantum-protocols";
 
 const SendFile = (): JSX.Element => {
   useEffect(() => {}, []);
@@ -19,18 +17,7 @@ const SendFile = (): JSX.Element => {
     expiration: string,
     downloadCount: string,
     checkAnonymous: boolean,
-  ) => {
-    const response = await axiosInstance.get("/file/test");
-    const t  = response.data?.t;
-    const seed = response.data?.seed;
-
-    const uv = cpaEncrypt(t, seed);
-
-    await axiosInstance.post("/file/test1", {
-      u: uv[0],
-      v: uv[1]
-    })
-  };
+  ) => {};
 
   return (
     <>
