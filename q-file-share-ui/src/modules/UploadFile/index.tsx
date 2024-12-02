@@ -4,8 +4,9 @@ import cx from "classnames";
 import Image from "next/image";
 import { useRef, useState } from "react";
 
-import { Text } from "@/elements";
 import { UPLOAD_FILES_TEXT } from "@/constants";
+import { Text } from "@/elements";
+import { getFileSize } from "@/utils";
 
 import fileUploadIcon from "@/assets/file-upload.svg";
 
@@ -96,7 +97,7 @@ export const UploadFile = (props: IUploadFileProps): JSX.Element => {
           <ul>
             {uploadedFiles.map((file: File, index: number) => (
               <li key={index}>
-                {file.name} - {(file.size / 1024).toFixed(2)} KB
+                {file.name} - {getFileSize(file.size)}
               </li>
             ))}
           </ul>

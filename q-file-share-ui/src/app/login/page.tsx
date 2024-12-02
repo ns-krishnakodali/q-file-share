@@ -58,7 +58,7 @@ const LoginPage = (): JSX.Element => {
   };
 
   return (
-    <div className={isLoading? styles.loading: styles.container}>
+    <div className={isLoading ? styles.loading : styles.container}>
       {isLoading ? (
         <Loader isStatic />
       ) : (

@@ -8,17 +8,14 @@ from app.models.response_models import (
     ReceivedFilesResponse,
     SharedFilesResponse,
 )
-from app.quantum_protocols.kyber import Kyber
 from app.services.file_services import (
     get_files_actitvity,
     retrieve_received_files,
     retrieve_shared_files,
 )
 
-router = APIRouter()
 
-kyber = Kyber()
-key_pair = kyber.generate_key_pair()
+router = APIRouter()
 
 
 @router.get("/activity", response_model=List[ActivitiesResponse])
@@ -75,25 +72,4 @@ async def get_received_files(
     except ValueError as error:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(error)
-        )
-
-import base64
-@router.get("/test")
-async def test() -> JSONResponse:
-    try:
-        return JSONResponse(
-            status_code=status.HTTP_200_OK,
-            content={
-                "t": key_pair["public_key"]["t"],
-                "A": key_pair["public_key"]["A"],
-                "s": key_pair["secret_key"]
-            },
-        )
-    except ValueError as error:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(error))
-    except Exception as error:
-        print(error)
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="An unexpected error occurred.",
         )

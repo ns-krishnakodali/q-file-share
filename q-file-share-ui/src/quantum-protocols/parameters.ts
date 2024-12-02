@@ -22,6 +22,6 @@ export const SEED_LENGTH: number = 32;
 
 export const Q_K: number = 7681;
 
-export const ETA_K: number = 4
+export const ETA_K: number = 4;
 
-export const k_k: number = 3
+export const k_k: number = 3;

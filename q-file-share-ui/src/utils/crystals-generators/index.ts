@@ -13,9 +13,10 @@ const UNIFORM_NBLOCKS: number = Math.ceil(
   (768 + STREAM128_BLOCKBYTES - 1) / STREAM128_BLOCKBYTES,
 );
 
-const GEN_NBLOCKS =
+const GEN_NBLOCKS = Math.ceil(
   Math.ceil((12 * (N / 8) * (1 << 12)) / Q_K + STREAM128_BLOCKBYTES) /
-  STREAM128_BLOCKBYTES;
+    STREAM128_BLOCKBYTES,
+);
 
 export const expandA = (
   seed: Uint8Array,
@@ -128,8 +129,8 @@ const getUniformPolynomialKyber = (
   nonce: Uint8Array,
   q: number,
 ): Polynomial => {
-  const bufferLength: number = (GEN_NBLOCKS + 2) * STREAM128_BLOCKBYTES;
-  const buffer: Uint8Array = new Uint8Array(bufferLength);
+  const bufferLength: number = GEN_NBLOCKS * STREAM128_BLOCKBYTES;
+  const buffer: Uint8Array = new Uint8Array(bufferLength + 2);
 
   const shakeHash = shake128.create(bufferLength * 8);
   shakeHash.update(seed);
@@ -181,7 +182,7 @@ const rejectUniformSamplingK = (
 
     if (val0 < q) polynomial[ctr++] = val0;
 
-    if (ctr < bufferLength && val1 < Q_K) polynomial[ctr++] = val1;
+    if (ctr < N && val1 < Q_K) polynomial[ctr++] = val1;
   }
 
   return polynomial;
