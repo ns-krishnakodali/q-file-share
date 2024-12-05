@@ -2,8 +2,10 @@ import styles from "./SendFileOptions.module.css";
 
 import { FormEvent, useRef } from "react";
 
-import { Button, Input } from "@/elements";
+import { Button, Input, Loader } from "@/elements";
 import {
+  DEFAULT_DOWNLOAD_COUNT,
+  DEFAULT_EXPIRATION_DAYS,
   DOWNLOAD_COUNT,
   EXPIRATION,
   RECIPIENT_EMAIL,
@@ -12,11 +14,12 @@ import {
 } from "@/constants";
 
 interface ISendFileOptionsProps {
-  handleFileSubmission: (r: string, e: string, d: string, c: boolean) => void;
+  handleFileSubmission: (re: string, e: string, d: string, c: boolean) => void;
+  isUploading?: boolean;
 }
 
 export const SendFileOptions = (props: ISendFileOptionsProps): JSX.Element => {
-  const { handleFileSubmission } = props;
+  const { handleFileSubmission, isUploading = false } = props;
 
   const recipientEmailRef = useRef<HTMLInputElement>(null);
   const expirationRef = useRef<HTMLInputElement>(null);
@@ -27,8 +30,10 @@ export const SendFileOptions = (props: ISendFileOptionsProps): JSX.Element => {
     event.preventDefault();
 
     const recipientEmail: string = recipientEmailRef.current?.value || "";
-    const expiration: string = expirationRef.current?.value || "";
-    const downloadCount: string = downloadCountRef.current?.value || "";
+    const expiration: string =
+      expirationRef.current?.value || DEFAULT_EXPIRATION_DAYS.toString();
+    const downloadCount: string =
+      downloadCountRef.current?.value || DEFAULT_DOWNLOAD_COUNT.toString();
     const checkAnonymous: boolean = checkAnonymousRef.current?.checked || false;
 
     handleFileSubmission(
@@ -46,22 +51,25 @@ export const SendFileOptions = (props: ISendFileOptionsProps): JSX.Element => {
           <Input
             id="recipient-email"
             className={styles.inputElement}
-            ref={expirationRef}
+            ref={recipientEmailRef}
             type="email"
+            required
             placeholder={RECIPIENT_EMAIL}
           />
           <Input
             id="expiration-days"
             className={styles.inputElement}
             ref={expirationRef}
-            type="text"
+            type="number"
+            required
             placeholder={EXPIRATION}
           />
           <Input
             id="download-count"
             className={styles.inputElement}
             ref={downloadCountRef}
-            type="text"
+            type="number"
+            required
             placeholder={DOWNLOAD_COUNT}
           />
         </div>
@@ -74,7 +82,7 @@ export const SendFileOptions = (props: ISendFileOptionsProps): JSX.Element => {
         />
       </div>
       <Button id="share-button" type="submit">
-        {SHARE}
+        {!isUploading ? SHARE : <Loader />}
       </Button>
     </form>
   );

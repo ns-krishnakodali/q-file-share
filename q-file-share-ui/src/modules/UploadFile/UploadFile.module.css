@@ -47,6 +47,16 @@
 .uploadedFiles li {
   padding: var(--spacing-1) 0;
   border-bottom: 1px solid #eee;
+  margin-bottom: var(--spacing-half);
+}
+
+.fileContainer {
+  display: flex;
+  align-items: center;
+}
+
+.fileCheckIcon {
+  margin-right: var(--spacing-half);
 }
 
 .uploadedFiles li:last-child {

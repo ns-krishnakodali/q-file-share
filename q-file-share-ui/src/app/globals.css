@@ -27,7 +27,7 @@
   --color-notification-success: #32cd32;
   --color-notification-error: #ff5555;
   --color-notification-warn: #ffc107;
-  --color-notification-info: #17a2b8;
+  --color-notification-info: #79dafb;
 
   /* Spacing */
   --spacing-quarter: 2px;
@@ -59,4 +59,10 @@ body {
   font-family: "Nunito", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }

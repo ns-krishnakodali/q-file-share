@@ -1,3 +1,5 @@
+export const PLACEHOLDER = "{{}}";
+
 export const PASSWORD_MATCH_ERROR =
   "The passwords do not match. Please try again.";
 export const PASSWORD_HASH_ERROR =
@@ -8,3 +10,14 @@ export const SIGNUP_FAILURE = "Sign-up failed. Please try again.";
 
 export const LOGIN_FAILURE =
   "Something went wrong. Please try logging in again.";
+
+export const FILE_UPLOAD_WARN = `You can only upload up to ${PLACEHOLDER} files.`;
+
+export const FILE_UPLOAD_UNSUCCESSFUL =
+  "File upload unsuccessful. Please try again.";
+
+export const SESSION_EXPIRED_MESSAGE =
+  "Your session has expired. Please login again.";
+
+export const GENERIC_ERROR_MESSAGE =
+  "Encountered an issue. Please try again later.";

@@ -34,3 +34,13 @@ export const RECIPIENT_EMAIL = "Recipient Email";
 export const EXPIRATION = "Expiration (in days)";
 export const SEND_ANONYMOUSLY = "Send Anonymously";
 export const SHARE = "Share";
+
+// Error Constants
+export const INVALID_ENCRYPTION_KEY_ERROR =
+  "Key must be 32 bytes for encryption";
+
+// Numeric Constants
+export const MAX_FILES_COUNT = 5;
+export const MAX_FILE_BYTES = 1024;
+export const DEFAULT_DOWNLOAD_COUNT = 10;
+export const DEFAULT_EXPIRATION_DAYS = 30;

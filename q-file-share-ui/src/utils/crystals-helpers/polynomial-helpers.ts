@@ -166,11 +166,10 @@ export const reduceCoefficientsSymModQ = (
 ): Polynomial =>
   polynomial.map((coefficient: number) => modSymmetric(coefficient, q));
 
-export const multiplyPolynomials = (
+const multiplyPolynomials = (
   polynomial1: number[],
   polynomial2: number[],
 ): number[] => {
-  // remove export
   const maxDegree: number = Math.max(polynomial1.length, polynomial2.length);
 
   if (maxDegree === 1) return [polynomial1[0] * polynomial2[0]];
