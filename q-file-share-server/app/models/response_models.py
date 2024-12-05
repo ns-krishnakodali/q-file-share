@@ -1,6 +1,12 @@
 from datetime import datetime
 
+from typing import List
 from pydantic import ConfigDict, BaseModel, Field
+
+
+class KyberKeyResponse(BaseModel):
+    t: List[List[int]]
+    seed: str
 
 
 class ActivitiesResponse(BaseModel):

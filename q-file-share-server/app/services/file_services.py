@@ -1,12 +1,22 @@
+import base64
 import datetime
 
 from app.db.db_session import get_db_session
 from app.models.db_models import FileLog
+from app.quantum_protocols.kyber import Kyber
 from app.models.response_models import (
     ActivitiesResponse,
     ReceivedFilesResponse,
     SharedFilesResponse,
 )
+
+
+def get_kyber_key_details():
+    kyber = Kyber()
+    key_pair = kyber.generate_key_pair()
+    seed = base64.b64encode(key_pair["public_key"]["seed"]).decode('utf-8', errors="ignore")
+
+    return {"t": key_pair["public_key"]["t"], "seed": seed, "s": key_pair["secret_key"]}
 
 
 def get_files_actitvity(user_email: str):

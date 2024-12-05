@@ -1,14 +1,16 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, status
 from fastapi.responses import JSONResponse
-from typing import List
+from typing import Dict, List
 
 from app.auth.jwt_handler import get_access_token
 from app.models.response_models import (
+    KyberKeyResponse,
     ActivitiesResponse,
     ReceivedFilesResponse,
     SharedFilesResponse,
 )
 from app.services.file_services import (
+    get_kyber_key_details,
     get_files_actitvity,
     retrieve_received_files,
     retrieve_shared_files,
@@ -16,6 +18,61 @@ from app.services.file_services import (
 
 
 router = APIRouter()
+
+kyber_sk_details: Dict[str, str] = {}
+
+
+@router.get("/kyber-key", response_model=List[KyberKeyResponse])
+async def get_activity(
+    tokenPayload: str = Depends(get_access_token),
+) -> JSONResponse:
+    try:
+        email = tokenPayload.get("email")
+        kyber_key_details = get_kyber_key_details()
+        kyber_sk_details[email] = kyber_key_details["s"]
+
+        return JSONResponse(
+            status_code=status.HTTP_200_OK,
+            content={"t": kyber_key_details["t"], "seed": kyber_key_details["seed"]},
+        )
+    except ValueError as error:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(error))
+    except Exception:
+        print(error)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="An unexpected error occurred.",
+        )
+
+
+from typing import Any
+
+
+@router.post("/upload")
+async def get_activity(
+    encrypted_file_buffers: List[UploadFile] = File(..., alias="EncryptedFileBuffers"),
+    init_vectors: List[str] = Form(..., alias="InitVector"),
+    file_signatures: List[str] = Form(..., alias="FileSignature"),
+    kyber_key: str = Form(..., alias="KyberKey"),
+    recipient_email: str = Form(..., alias="RecipientEmail"),
+    expiration: str = Form(..., alias="Expiration"),
+    download_count: int = Form(..., alias="DownloadCount"),
+    anonymous: bool = Form(..., alias="Anonymous"),
+    tokenPayload: str = Depends(get_access_token),
+) -> JSONResponse:
+    try:
+        return JSONResponse(
+            status_code=status.HTTP_200_OK,
+            content={"message": "Successful"},
+        )
+    except ValueError as error:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(error))
+    except Exception:
+        print(error)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="An unexpected error occurred.",
+        )
 
 
 @router.get("/activity", response_model=List[ActivitiesResponse])

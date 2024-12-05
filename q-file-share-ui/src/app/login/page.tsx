@@ -49,11 +49,12 @@ const LoginPage = (): JSX.Element => {
         router.replace("/dashboard");
       }
     } catch (error: any) {
-      setDisplayFormLoader(false);
       addNotification({
         type: "error",
         message: error?.response?.data?.detail || LOGIN_FAILURE,
       });
+    } finally {
+      setDisplayFormLoader(false);
     }
   };
 

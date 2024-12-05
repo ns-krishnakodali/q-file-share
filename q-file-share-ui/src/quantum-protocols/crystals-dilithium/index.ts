@@ -23,7 +23,10 @@ export type DLPublicKey = [Matrix, Polynomial[]];
 
 export type DLSecretKey = [Matrix, Polynomial[], Polynomial[], Polynomial[]];
 
-export type Signature = [Polynomial[], Uint8Array];
+export interface DLSignature {
+  z: Polynomial[];
+  cp: Uint8Array;
+}
 
 export const generateDilithiumKeyPair = (): {
   publicKey: DLPublicKey;
@@ -47,7 +50,7 @@ export const generateDilithiumKeyPair = (): {
 export const signWithDilithium = (
   secretKey: DLSecretKey,
   message: Uint8Array,
-): Signature => {
+): DLSignature => {
   let z: Polynomial[] | undefined = undefined;
   let cp: Uint8Array = new Uint8Array(SEED_LENGTH);
 
@@ -102,18 +105,18 @@ export const signWithDilithium = (
 
     if (v1 || v2) z = undefined;
   }
-  return [z, cp];
+  return { z, cp };
 };
 
 export const verifyDilthiumSignature = (
   message: Uint8Array,
-  signature: Signature,
+  signature: DLSignature,
   publicKey: DLPublicKey,
 ): boolean => {
   const A: Matrix = publicKey?.[0];
   const t: Polynomial[] = publicKey?.[1];
-  const z: Polynomial[] = signature?.[0];
-  const cp: Uint8Array = signature?.[1];
+  const z: Polynomial[] = signature?.z;
+  const cp: Uint8Array = signature?.cp;
 
   const c: Polynomial = getPolynomialChallenge(cp);
 

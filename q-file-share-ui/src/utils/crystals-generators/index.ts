@@ -93,7 +93,9 @@ export const getPolynomialChallenge = (seed: Uint8Array): number[] => {
   return C;
 };
 
-export const getRandomSeed = (seedLength: number) => {
+export const getRandomSeed = (
+  seedLength: number,
+): Uint8Array<ArrayBufferLike> => {
   const seed: Uint8Array = new Uint8Array(seedLength);
   crypto.getRandomValues(seed);
   return seed;

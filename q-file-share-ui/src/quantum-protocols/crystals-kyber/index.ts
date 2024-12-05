@@ -18,10 +18,13 @@ import {
   uint8ArrayToBitArray,
 } from "@/utils";
 
-export const cpaEncrypt = (
-  t: Polynomial[],
-  seedString: string,
-): [Polynomial[], Polynomial] => {
+export interface KyberKey {
+  u: Polynomial[];
+  v: Polynomial;
+  key: number[];
+}
+
+export const cpaEncrypt = (t: Polynomial[], seedString: string): KyberKey => {
   const m1: number[] = uint8ArrayToBitArray(getRandomSeed(SEED_LENGTH));
   const m: Polynomial = m1.map((value: number) => value * Math.ceil(Q_K / 2));
 
@@ -42,11 +45,14 @@ export const cpaEncrypt = (
     Q_K,
   );
 
-  return [u, v];
+  return { u, v, key: m1 };
 };
 
-export const cpaDecrypt = (s: Polynomial[], uv: [Polynomial[], Polynomial]) => {
-  const mn = reduceCoefficientsModQ(
+export const cpaDecrypt = (
+  s: Polynomial[],
+  uv: [Polynomial[], Polynomial],
+): number[] => {
+  const mn: Polynomial = reduceCoefficientsModQ(
     subtractPolynomials(uv[1], multiplyPolyVectors(s, uv[0], Q_K)),
     Q_K,
   );
