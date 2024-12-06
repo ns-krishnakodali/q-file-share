@@ -6,7 +6,7 @@ from datetime import datetime, timezone, timedelta
 
 from app.db.db_session import get_db_session
 from app.models.db_models import Files, FileLogs, Users
-from app.models.dto import FileUploadDTO
+from app.models.dto import FileUploadDTO, FileDownloadDTO
 from app.models.response_models import (
     ActivitiesResponse,
     ReceivedFilesResponse,
@@ -18,6 +18,7 @@ from app.utils.file_handler import (
     decrypt_file_data,
     decrypt_client_file_data,
     generate_file_hash,
+    get_file_hash_key,
     verify_file_signature,
 )
 
@@ -32,12 +33,12 @@ def get_kyber_key_details():
     return {"t": key_pair["public_key"]["t"], "seed": seed, "s": key_pair["secret_key"]}
 
 
-async def upload_files(
+async def process_upload_files(
     encrypted_file_buffers: list,
     file_upload_dto: FileUploadDTO,
     secret_key: list,
     user_email: str,
-):
+) -> None:
     db = next(get_db_session())
     try:
         if file_upload_dto.recipient_email.strip() == user_email:
@@ -51,12 +52,6 @@ async def upload_files(
         )
         if not emails_exist:
             raise ValueError("Cannot find the recipient email")
-
-        user_password = db.query(Users).filter(Users.email == user_email).first()
-
-        user_password = (
-            db.query(Users).filter(Users.email == user_email).first().password_hash
-        )
 
         kyber = Kyber()
         uv_kyber_key = json.loads(file_upload_dto.kyber_key)
@@ -83,10 +78,12 @@ async def upload_files(
                 raise ValueError("Corrupted file, please check and re-upload")
 
             file_hash = generate_file_hash(file_data)
-            encrypted_file_data = await encrypt_file_data(file_data, user_password)
+            encrypted_file_data = await encrypt_file_data(
+                file_data,
+                get_file_hash_key(file_upload_dto.recipient_email, user_email),
+            )
 
-            existing_file = db.query(Files).filter(Files.file_id == file_hash).first()
-            if not existing_file:
+            if not db.query(Files).filter(Files.file_id == file_hash).first():
                 new_file = Files(
                     file_id=file_hash,
                     file_data=encrypted_file_data["encrypted_file_data"],
@@ -125,9 +122,39 @@ async def upload_files(
     except ValueError as error:
         raise ValueError(str(error))
     except Exception as error:
-        print(error)
         db.rollback()
         raise HTTPException(status_code=400, detail=str(error))
+
+
+async def process_download_file(file_download_dto: FileDownloadDTO, user_email: str) -> dict:
+    db = next(get_db_session())
+    file_log = (
+        db.query(FileLogs)
+        .filter(
+            ((FileLogs.from_email == user_email) | (FileLogs.to_email == user_email))
+            & (FileLogs.public_id == file_download_dto.file_id)
+        )
+        .first()
+    )
+
+    if not file_log:
+        raise HTTPException(status_code=404, detail="Record not found")
+
+    existing_file = db.query(Files).filter(Files.file_id == file_log.file_id).first()
+
+    if not existing_file:
+        raise HTTPException(status_code=404, detail="File not found")
+
+    decrypted_file_data = await decrypt_file_data(
+        existing_file.file_data,
+        existing_file.iv,
+        get_file_hash_key(file_log.to_email, file_log.from_email),
+    )
+
+    return {
+        "decrypted_file_data": decrypted_file_data,
+        "file_name": file_log.name
+    }
 
 
 def get_files_actitvity(user_email: str):
@@ -167,7 +194,7 @@ def retrieve_received_files(user_email: str) -> str:
             FileLogs.expiry,
             FileLogs.is_anonymous,
             FileLogs.download_count,
-            FileLogs.file_id,
+            FileLogs.public_id,
         )
         .filter(
             FileLogs.to_email == user_email,
@@ -185,7 +212,7 @@ def retrieve_received_files(user_email: str) -> str:
             received_from=file_log.from_email if not file_log.is_anonymous else "*",
             expiry=file_log.expiry.isoformat(),
             download_count=file_log.download_count,
-            file_id=file_log.file_id
+            file_id=file_log.public_id,
         ).model_dump()
         for file_log in file_logs
     ]
@@ -202,7 +229,7 @@ def retrieve_shared_files(user_email: str) -> str:
             FileLogs.expiry,
             FileLogs.is_anonymous,
             FileLogs.download_count,
-            FileLogs.file_id,
+            FileLogs.public_id,
         )
         .filter(
             FileLogs.from_email == user_email,
@@ -220,7 +247,7 @@ def retrieve_shared_files(user_email: str) -> str:
             sent_to=file_log.to_email if not file_log.is_anonymous else "*",
             expiry=file_log.expiry.isoformat(),
             download_count=file_log.download_count,
-            file_id=file_log.file_id
+            file_id=file_log.public_id,
         ).model_dump()
         for file_log in file_logs
     ]

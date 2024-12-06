@@ -32,7 +32,7 @@ export const generateDilithiumKeyPair = (): {
   publicKey: DLPublicKey;
   secretKey: DLSecretKey;
 } => {
-  const seed: Uint8Array = getRandomSeed(SEED_LENGTH);
+  const seed: Uint8Array = getRandomSeed();
 
   const A: Matrix = expandA(seed, k, l, Q);
 

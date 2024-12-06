@@ -18,14 +18,38 @@ import {
   uint8ArrayToBitArray,
 } from "@/utils";
 
+export interface KyberKeyPair {
+  publicKey: {
+    t: Polynomial[];
+    seed: Uint8Array;
+  };
+  secretKey: Polynomial[];
+}
+
 export interface KyberKey {
   u: Polynomial[];
   v: Polynomial;
   key: number[];
 }
 
+export const generateKyberKeyPair = (): KyberKeyPair => {
+  const seed: Uint8Array = getRandomSeed();
+  const A: Matrix = expandAKyber(seed, k_k, k_k, Q_K);
+
+  const s = generateSampleNoisePolyVector(k_k, ETA_K);
+  const e = generateSampleNoisePolyVector(k_k, ETA_K);
+
+  let t = addPolynomialVectors(multiplyMatrixPolyVector(A, s, Q_K), e);
+  t = t.map((polynomial) => reduceCoefficientsModQ(polynomial, Q_K));
+
+  return {
+    publicKey: { t, seed },
+    secretKey: s,
+  };
+};
+
 export const cpaEncrypt = (t: Polynomial[], seedString: string): KyberKey => {
-  const m1: number[] = uint8ArrayToBitArray(getRandomSeed(SEED_LENGTH));
+  const m1: number[] = uint8ArrayToBitArray(getRandomSeed());
   const m: Polynomial = m1.map((value: number) => value * Math.ceil(Q_K / 2));
 
   const seed: Uint8Array = deserializeToUint8Array(seedString);

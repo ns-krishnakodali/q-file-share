@@ -27,6 +27,11 @@ class FileUploadDTO(BaseModel):
     expiration: int
     download_count: int
     anonymous: bool
+    
+    
+class FileDownloadDTO(BaseModel):
+    file_id: str
+    kyber_key_pair: str
 
 
 def file_upload_dto(

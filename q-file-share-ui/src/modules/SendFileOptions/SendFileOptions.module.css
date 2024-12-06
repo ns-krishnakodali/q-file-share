@@ -23,3 +23,7 @@
 .inputElement {
   margin: var(--spacing-2);
 }
+
+.shareButton {
+  min-width: 6em;
+}

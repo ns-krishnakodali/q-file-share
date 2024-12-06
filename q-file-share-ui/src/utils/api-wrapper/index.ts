@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from "axios";
+import { getAuthToken } from "../auth-token";
 
 const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
@@ -11,9 +12,9 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config) => {
     if (!config.headers.skipAuth) {
-      const token = localStorage.getItem("authToken");
+      const token = getAuthToken();
       if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+        config.headers.Authorization = `${token}`;
       }
     } else {
       delete config.headers.skipAuth;
@@ -25,6 +26,7 @@ axiosInstance.interceptors.request.use(
 
 axiosInstance.interceptors.response.use(
   (response: AxiosResponse) => {
+    console.log(response.headers)
     return response;
   },
   (error) => {

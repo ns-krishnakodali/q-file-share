@@ -1,9 +1,9 @@
-from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, status
-from fastapi.responses import JSONResponse
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
+from fastapi.responses import JSONResponse, StreamingResponse
 from typing import Dict, List
 
 from app.auth.jwt_handler import get_access_token
-from app.models.dto import FileUploadDTO, file_upload_dto
+from app.models.dto import FileDownloadDTO, FileUploadDTO, file_upload_dto
 from app.models.response_models import (
     KyberKeyResponse,
     ActivitiesResponse,
@@ -13,9 +13,10 @@ from app.models.response_models import (
 from app.services.file_services import (
     get_kyber_key_details,
     get_files_actitvity,
+    process_download_file,
+    process_upload_files,
     retrieve_received_files,
     retrieve_shared_files,
-    upload_files,
 )
 
 
@@ -25,7 +26,7 @@ kyber_sk_details: Dict[str, str] = {}
 
 
 @router.get("/kyber-key", response_model=List[KyberKeyResponse])
-async def get_activity(
+async def get_kyber_key(
     tokenPayload: str = Depends(get_access_token),
 ) -> JSONResponse:
     try:
@@ -48,14 +49,14 @@ async def get_activity(
 
 
 @router.post("/upload")
-async def get_activity(
+async def upload_files(
     encrypted_file_buffers: List[UploadFile] = File(..., alias="EncryptedFileBuffers"),
     file_upload_dto: FileUploadDTO = Depends(file_upload_dto),
     tokenPayload: str = Depends(get_access_token),
 ) -> JSONResponse:
     try:
         user_email = tokenPayload.get("email")
-        await upload_files(
+        await process_upload_files(
             encrypted_file_buffers,
             file_upload_dto,
             kyber_sk_details[user_email],
@@ -68,6 +69,28 @@ async def get_activity(
     except ValueError as error:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(error))
     except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="An unexpected error occurred.",
+        )
+
+
+@router.post("/download", response_class=StreamingResponse)
+async def download_file(
+    file_download_dto: FileDownloadDTO,  tokenPayload: str = Depends(get_access_token)
+) -> StreamingResponse:
+    try:
+        # print(file_download_dto.kyber_key_pair)
+        downloaded_file_data = await process_download_file(file_download_dto, tokenPayload.get("email"))
+
+        return StreamingResponse(
+            iter([downloaded_file_data["decrypted_file_data"]]),
+            media_type="application/octet-stream",
+            headers={"Content-Disposition": f'attachment; filename="{downloaded_file_data["file_name"]}"'}
+        )
+    except ValueError as error:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(error))
+    except Exception as error:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="An unexpected error occurred.",
@@ -119,7 +142,7 @@ async def get_received_files(
 
 
 @router.get("/shared-files", response_model=List[SharedFilesResponse])
-async def get_received_files(
+async def get_shared_files(
     tokenPayload: str = Depends(get_access_token),
 ) -> JSONResponse:
     try:

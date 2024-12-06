@@ -1,3 +1,5 @@
+import uuid
+
 from app.db.config import Base
 
 from sqlalchemy import Column, Integer, String, LargeBinary, Boolean, TIMESTAMP, func
@@ -35,6 +37,7 @@ class FileLogs(Base):
     expiry = Column(TIMESTAMP)
     download_count = Column(Integer, default=10)
     file_id = Column(String)
+    public_id = Column(String, unique=True, nullable=False, default=lambda: str(uuid.uuid4()))
     is_anonymous = Column(Boolean, default=False)
     status = Column(String, default="active")
     updated_at = Column(TIMESTAMP, onupdate=func.now())

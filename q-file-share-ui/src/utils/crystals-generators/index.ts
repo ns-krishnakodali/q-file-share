@@ -3,7 +3,7 @@ import { shake128, shake256 } from "js-sha3";
 
 import { Matrix, Polynomial } from "..";
 
-import { N, Q_K, TAU } from "@/quantum-protocols";
+import { N, Q_K, SEED_LENGTH, TAU } from "@/quantum-protocols";
 
 const STREAM256_OUTPUTBITS: number = 256;
 
@@ -93,10 +93,8 @@ export const getPolynomialChallenge = (seed: Uint8Array): number[] => {
   return C;
 };
 
-export const getRandomSeed = (
-  seedLength: number,
-): Uint8Array<ArrayBufferLike> => {
-  const seed: Uint8Array = new Uint8Array(seedLength);
+export const getRandomSeed = (): Uint8Array<ArrayBufferLike> => {
+  const seed: Uint8Array = new Uint8Array(SEED_LENGTH);
   crypto.getRandomValues(seed);
   return seed;
 };

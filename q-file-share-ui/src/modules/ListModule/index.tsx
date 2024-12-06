@@ -23,7 +23,7 @@ import {
 
 import upArrowIcon from "@/assets/up-arrow.svg";
 import downArrowIcon from "@/assets/down-arrow.svg";
-import downloadIcon from "@/assets/download-icon.svg"
+import downloadIcon from "@/assets/download-icon.svg";
 
 export interface IListElement {
   fileId?: string;
@@ -41,7 +41,7 @@ type SortedElementsOrder = {
 
 interface IListModuleProps {
   elements: IListElement[];
-  fileDownloadHandler: (fileId: string) => void;
+  fileDownloadHandler: (fileId: string, fileName: string) => void;
   renderSendFilesLayout?: boolean;
 }
 
@@ -60,7 +60,11 @@ const initialElementsOrder: SortedElementsOrder = {
 };
 
 export const ListModule = (props: IListModuleProps): JSX.Element => {
-  const { elements, renderSendFilesLayout = false, fileDownloadHandler } = props;
+  const {
+    elements,
+    renderSendFilesLayout = false,
+    fileDownloadHandler,
+  } = props;
 
   const [listElements, setListElements] = useState<IListElement[]>(
     elements || [],
@@ -173,7 +177,15 @@ export const ListModule = (props: IListModuleProps): JSX.Element => {
             {listElements.map((element: IListElement, index: number) => (
               <tr key={index}>
                 <td className={styles.tableCell}>
-                  <span className={styles.nameSpan} onClick={() => fileDownloadHandler(listElements[index]?.fileId || "")}>
+                  <span
+                    className={styles.nameSpan}
+                    onClick={() =>
+                      fileDownloadHandler(
+                        listElements[index]?.fileId || "",
+                        element?.name,
+                      )
+                    }
+                  >
                     {element?.name || ""}
                     <Image
                       src={downloadIcon}
