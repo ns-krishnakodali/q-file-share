@@ -38,6 +38,17 @@ export const getFileSRDetails = (
     transactionDate: fileDetail?.[transactionDate],
   }));
 
+export const downloadFile = (responseData: any, fileName: string): void => {
+  const url: string = window.URL.createObjectURL(new Blob([responseData]));
+  const link: HTMLAnchorElement = document.createElement("a");
+  link.href = url;
+  link.setAttribute("download", fileName || "untitled_file");
+
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
 export const signEncryptAndProcessFile = async (
   file: File,
   dlSecretKey: DLSecretKey,

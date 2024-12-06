@@ -38,6 +38,7 @@ export const RECIPIENT_EMAIL = "Recipient Email";
 export const EXPIRATION = "Expiration (in days)";
 export const SEND_ANONYMOUSLY = "Send Anonymously";
 export const SHARE = "Share";
+export const UNTITLED_FILE = "untitled-file";
 
 // Error Constants
 export const INVALID_ENCRYPTION_KEY_ERROR =

@@ -11,17 +11,21 @@ import {
   SEND_FILES,
   SESSION_EXPIRED_MESSAGE,
   SHARED_FILES,
+  UNTITLED_FILE,
 } from "@/constants";
 import { useNotification } from "@/context";
 import { Loader } from "@/elements";
 import { IListElement, ListHeader, ListModule, NavBar } from "@/modules";
 import {
   axiosInstance,
+  downloadFile,
   getAuthToken,
   getFileSRDetails,
   isValidToken,
   removeAuthToken,
+  stringifyKyberKeyPair,
 } from "@/utils";
+import { generateKyberKeyPair, KyberKeyPair } from "@/quantum-protocols";
 
 const ReceivedFiles = (): JSX.Element => {
   const router = useRouter();
@@ -72,8 +76,28 @@ const ReceivedFiles = (): JSX.Element => {
     getReceivedFiles();
   }, []);
 
-  const fileDownloadHandler = (fileId: string) => {
-    console.log(fileId);
+  const fileDownloadHandler = async (fileId: string, fileName?: string) => {
+    const kyberKeyPair: KyberKeyPair = generateKyberKeyPair();
+
+    try {
+      const response = await axiosInstance.post(
+        "/file/download",
+        {
+          file_id: fileId,
+          kyber_key_pair: stringifyKyberKeyPair(kyberKeyPair),
+        },
+        {
+          headers: {
+            Authorization: getAuthToken(),
+          },
+          responseType: "blob",
+        },
+      );
+      downloadFile(response?.data, fileName || UNTITLED_FILE);
+    } catch (error) {
+      console.log(error);
+      addNotification({ message: "", type: "error" });
+    }
   };
 
   return (
@@ -90,7 +114,10 @@ const ReceivedFiles = (): JSX.Element => {
         ) : (
           <>
             <ListHeader title={RECEIVED_FILES} />
-            <ListModule elements={receivedFiles} fileDownloadHandler={fileDownloadHandler} />
+            <ListModule
+              elements={receivedFiles}
+              fileDownloadHandler={fileDownloadHandler}
+            />
           </>
         )}
       </div>

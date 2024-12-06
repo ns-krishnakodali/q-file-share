@@ -1,4 +1,10 @@
-import { DLPublicKey, DLSignature, KyberKey, Q } from "@/quantum-protocols";
+import {
+  DLPublicKey,
+  DLSignature,
+  KyberKey,
+  KyberKeyPair,
+  Q,
+} from "@/quantum-protocols";
 
 export * from "./polynomial-helpers";
 
@@ -112,4 +118,10 @@ export const stringifyKyberKey = (kyberKey: KyberKey): string =>
   JSON.stringify({
     u: kyberKey.u,
     v: kyberKey.v,
+  });
+
+export const stringifyKyberKeyPair = (kyberKeyPair: KyberKeyPair): string =>
+  JSON.stringify({
+    t: kyberKeyPair.publicKey.t,
+    seed: serializeUint8Array(kyberKeyPair.publicKey.seed),
   });

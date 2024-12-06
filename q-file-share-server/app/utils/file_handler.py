@@ -92,6 +92,15 @@ async def decrypt_client_file_data(
 
     return decrypted_file_data
 
+def get_file_hash_key(email1: str, email2: str) -> str:
+    sorted_emails = sorted([email1, email2])
+    concatenated_emails = "".join(sorted_emails)
+    
+    sha3_256 = hashlib.sha3_256()
+    sha3_256.update(concatenated_emails.encode())
+    
+    return sha3_256.hexdigest()
+    
 
 def generate_file_hash(file_data: bytes) -> str:
     sha3_256 = hashlib.sha3_256()
