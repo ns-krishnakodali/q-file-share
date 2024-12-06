@@ -1,7 +1,11 @@
 import { Buffer } from "buffer";
 import { Cipher, createCipheriv, createDecipheriv, randomBytes } from "crypto";
 
-import { INVALID_ENCRYPTION_KEY_ERROR, MAX_FILE_BYTES, UNTITLED_FILE } from "@/constants";
+import {
+  INVALID_ENCRYPTION_KEY_ERROR,
+  MAX_FILE_BYTES,
+  UNTITLED_FILE,
+} from "@/constants";
 import { IActivity, IListElement } from "@/modules";
 import {
   cpaDecrypt,
@@ -45,7 +49,10 @@ export const getFileSRDetails = (
     transactionDate: fileDetail?.[transactionDate],
   }));
 
-export const fileDownloadHandler = async (fileId: string, fileName: string): Promise<void> => {
+export const fileDownloadHandler = async (
+  fileId: string,
+  fileName: string,
+): Promise<void> => {
   try {
     const kyberKeyPair: KyberKeyPair = generateKyberKeyPair();
     const response = await axiosInstance.post(

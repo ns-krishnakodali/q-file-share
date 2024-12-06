@@ -74,7 +74,10 @@ const SharedFiles = (): JSX.Element => {
     getSharedFiles();
   }, []);
 
-  const handleFileDownload = async (fileId: string, fileName?: string): Promise<void> => {
+  const handleFileDownload = async (
+    fileId: string,
+    fileName?: string,
+  ): Promise<void> => {
     try {
       await fileDownloadHandler(fileId, fileName || "");
     } catch (error: any) {
