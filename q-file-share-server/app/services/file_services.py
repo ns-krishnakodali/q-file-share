@@ -15,6 +15,7 @@ from app.models.response_models import (
 from app.quantum_protocols.kyber import Kyber
 from app.utils.file_handler import (
     encrypt_file_data,
+    encrypt_client_file_data,
     decrypt_file_data,
     decrypt_client_file_data,
     generate_file_hash,
@@ -106,6 +107,7 @@ async def process_upload_files(
                     sent_on=datetime.now(timezone.utc),
                     expiry=expiry_timestamp,
                     download_count=file_upload_dto.download_count,
+                    updated_download_count=file_upload_dto.download_count,
                     file_id=file_hash,
                     is_anonymous=file_upload_dto.anonymous,
                     status="active",
@@ -126,35 +128,71 @@ async def process_upload_files(
         raise HTTPException(status_code=400, detail=str(error))
 
 
-async def process_download_file(file_download_dto: FileDownloadDTO, user_email: str) -> dict:
+async def process_download_file(
+    file_download_dto: FileDownloadDTO, user_email: str
+) -> dict:
     db = next(get_db_session())
-    file_log = (
-        db.query(FileLogs)
-        .filter(
-            ((FileLogs.from_email == user_email) | (FileLogs.to_email == user_email))
-            & (FileLogs.public_id == file_download_dto.file_id)
+    try:
+        file_log = (
+            db.query(FileLogs)
+            .filter(
+                (
+                    (FileLogs.from_email == user_email)
+                    | (FileLogs.to_email == user_email)
+                )
+                & (FileLogs.public_id == file_download_dto.file_id)
+            )
+            .first()
         )
-        .first()
-    )
+        if not file_log:
+            raise HTTPException(status_code=404, detail="Record not found")
+        if file_log.updated_download_count < 1:
+            raise HTTPException(status_code=400, detail="Download limit reached.")
 
-    if not file_log:
-        raise HTTPException(status_code=404, detail="Record not found")
+        existing_file = (
+            db.query(Files).filter(Files.file_id == file_log.file_id).first()
+        )
+        if not existing_file:
+            raise HTTPException(status_code=404, detail="File not found")
 
-    existing_file = db.query(Files).filter(Files.file_id == file_log.file_id).first()
+        decrypted_file_data = await decrypt_file_data(
+            existing_file.file_data,
+            existing_file.iv,
+            get_file_hash_key(file_log.to_email, file_log.from_email),
+        )
 
-    if not existing_file:
-        raise HTTPException(status_code=404, detail="File not found")
+        kyber = Kyber()
+        ts_kyber_key = json.loads(file_download_dto.kyber_key_pair)
+        kyber_public_key = kyber.cpa_encrypt(
+            ts_kyber_key["t"], base64.b64decode(ts_kyber_key["seed"])
+        )
 
-    decrypted_file_data = await decrypt_file_data(
-        existing_file.file_data,
-        existing_file.iv,
-        get_file_hash_key(file_log.to_email, file_log.from_email),
-    )
+        encrypted_file_data = await encrypt_client_file_data(
+            decrypted_file_data, kyber_public_key["key"]
+        )
 
-    return {
-        "decrypted_file_data": decrypted_file_data,
-        "file_name": file_log.name
-    }
+        if file_log.to_email == user_email:
+            file_log.updated_download_count -= 1
+        db.commit()
+        db.refresh(file_log)
+
+        return {
+            "file_data": encrypted_file_data["encryptedFileBuffer"],
+            "kyber_public_key": {
+                "u": kyber_public_key["u"],
+                "v": kyber_public_key["v"],
+                "iv": encrypted_file_data["iv"],
+            },
+            "file_name": file_log.name,
+        }
+
+    except ValueError as error:
+        raise ValueError(str(error))
+    except HTTPException as error:
+        raise error
+    except Exception as error:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(error))
 
 
 def get_files_actitvity(user_email: str):
@@ -193,7 +231,7 @@ def retrieve_received_files(user_email: str) -> str:
             FileLogs.from_email,
             FileLogs.expiry,
             FileLogs.is_anonymous,
-            FileLogs.download_count,
+            FileLogs.updated_download_count,
             FileLogs.public_id,
         )
         .filter(
@@ -201,6 +239,7 @@ def retrieve_received_files(user_email: str) -> str:
             FileLogs.status == "active",
             FileLogs.expiry > datetime.now(),
         )
+        .order_by(FileLogs.sent_on.desc())
         .all()
     )
 
@@ -211,7 +250,7 @@ def retrieve_received_files(user_email: str) -> str:
             received_on=file_log.sent_on.isoformat(),
             received_from=file_log.from_email if not file_log.is_anonymous else "*",
             expiry=file_log.expiry.isoformat(),
-            download_count=file_log.download_count,
+            download_count=file_log.updated_download_count,
             file_id=file_log.public_id,
         ).model_dump()
         for file_log in file_logs
@@ -236,6 +275,7 @@ def retrieve_shared_files(user_email: str) -> str:
             FileLogs.status == "active",
             FileLogs.expiry > datetime.now(),
         )
+        .order_by(FileLogs.sent_on.desc())
         .all()
     )
 

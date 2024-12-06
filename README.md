@@ -24,7 +24,7 @@ q-file-share/
 
 The diagram below illustrates the architecture and cryptographic flow of the QFileShare application:
 
-<img src="./resources/system-flow.jpg" alt="QFileShare Architecture" width="500">
+<img src="./resources/system-flow.png" alt="QFileShare Architecture" width="500">
 
 ## Snapshots of UI
 

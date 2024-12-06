@@ -26,7 +26,6 @@ axiosInstance.interceptors.request.use(
 
 axiosInstance.interceptors.response.use(
   (response: AxiosResponse) => {
-    console.log(response.headers)
     return response;
   },
   (error) => {

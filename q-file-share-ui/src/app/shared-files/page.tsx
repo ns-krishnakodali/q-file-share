@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import {
+  DOWNLOAD_FAILED,
   GENERIC_ERROR_MESSAGE,
   RECEIVED_FILES,
   SEND_FILES,
@@ -17,6 +18,7 @@ import { Loader } from "@/elements";
 import { IListElement, ListHeader, ListModule, NavBar } from "@/modules";
 import {
   axiosInstance,
+  fileDownloadHandler,
   getAuthToken,
   getFileSRDetails,
   isValidToken,
@@ -72,6 +74,17 @@ const SharedFiles = (): JSX.Element => {
     getSharedFiles();
   }, []);
 
+  const handleFileDownload = async (fileId: string, fileName?: string): Promise<void> => {
+    try {
+      await fileDownloadHandler(fileId, fileName || "");
+    } catch (error: any) {
+      addNotification({
+        message: error?.response?.data?.detail || DOWNLOAD_FAILED,
+        type: "error",
+      });
+    }
+  };
+
   return (
     <div className={styles.container}>
       <NavBar
@@ -86,7 +99,11 @@ const SharedFiles = (): JSX.Element => {
         ) : (
           <>
             <ListHeader title={SHARED_FILES} />
-            <ListModule elements={sharedFiles} renderSendFilesLayout fileDownloadHandler={(f) => {}}/>
+            <ListModule
+              elements={sharedFiles}
+              renderSendFilesLayout
+              fileDownloadHandler={handleFileDownload}
+            />
           </>
         )}
       </div>

@@ -36,6 +36,7 @@ class FileLogs(Base):
     sent_on = Column(TIMESTAMP)
     expiry = Column(TIMESTAMP)
     download_count = Column(Integer, default=10)
+    updated_download_count = Column(Integer, default=10)
     file_id = Column(String)
     public_id = Column(String, unique=True, nullable=False, default=lambda: str(uuid.uuid4()))
     is_anonymous = Column(Boolean, default=False)

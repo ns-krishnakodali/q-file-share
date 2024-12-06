@@ -1,14 +1,21 @@
-import { Cipher, createCipheriv, randomBytes } from "crypto";
+import { Buffer } from "buffer";
+import { Cipher, createCipheriv, createDecipheriv, randomBytes } from "crypto";
 
-import { INVALID_ENCRYPTION_KEY_ERROR, MAX_FILE_BYTES } from "@/constants";
+import { INVALID_ENCRYPTION_KEY_ERROR, MAX_FILE_BYTES, UNTITLED_FILE } from "@/constants";
 import { IActivity, IListElement } from "@/modules";
 import {
+  cpaDecrypt,
   DLSecretKey,
   DLSignature,
+  generateKyberKeyPair,
+  KyberKeyPair,
   signWithDilithium,
 } from "@/quantum-protocols";
 
-import { getActivityTypeMessage, getDateFromISOFormat } from "../string-utils";
+import axiosInstance from "../api-wrapper";
+import { getAuthToken } from "../auth-token";
+import { stringifyKyberKeyPair } from "../crystals-helpers";
+import { getActivityTypeMessage } from "../string-utils";
 
 export const getFileSize = (fileSize: number) => {
   const sizeInKB = fileSize / 1024;
@@ -38,15 +45,38 @@ export const getFileSRDetails = (
     transactionDate: fileDetail?.[transactionDate],
   }));
 
-export const downloadFile = (responseData: any, fileName: string): void => {
-  const url: string = window.URL.createObjectURL(new Blob([responseData]));
-  const link: HTMLAnchorElement = document.createElement("a");
-  link.href = url;
-  link.setAttribute("download", fileName || "untitled_file");
+export const fileDownloadHandler = async (fileId: string, fileName: string): Promise<void> => {
+  try {
+    const kyberKeyPair: KyberKeyPair = generateKyberKeyPair();
+    const response = await axiosInstance.post(
+      "/file/download",
+      {
+        file_id: fileId,
+        kyber_key_pair: stringifyKyberKeyPair(kyberKeyPair),
+      },
+      {
+        headers: {
+          Authorization: getAuthToken(),
+        },
+        responseType: "blob",
+      },
+    );
 
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+    const kyberPublicKey = JSON.parse(response.headers["x-array-data"]);
+    const kyberSharedKey: number[] = cpaDecrypt(kyberKeyPair.secretKey, [
+      kyberPublicKey["u"],
+      kyberPublicKey["v"],
+    ]);
+
+    decryptAndDownloadFile(
+      response?.data,
+      kyberSharedKey,
+      kyberPublicKey["iv"],
+      fileName || UNTITLED_FILE,
+    );
+  } catch (error: any) {
+    throw error;
+  }
 };
 
 export const signEncryptAndProcessFile = async (
@@ -93,6 +123,29 @@ export const signEncryptAndProcessFile = async (
   };
 };
 
+export const decryptAndDownloadFile = async (
+  fileBlob: any,
+  key: number[],
+  iv: string,
+  fileName: string,
+): Promise<void> => {
+  const arrayBuffer = await fileBlob.arrayBuffer();
+  const encryptedFileBuffer = Buffer.from(arrayBuffer);
+  const decryptedFileBuffer = await decryptFile(encryptedFileBuffer, key, iv);
+
+  const url: string = window.URL.createObjectURL(
+    new Blob([decryptedFileBuffer], { type: "application/octet-stream" }),
+  );
+
+  const link: HTMLAnchorElement = document.createElement("a");
+  link.href = url;
+  link.setAttribute("download", fileName || "untitled_file");
+
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
 const encryptFile = async (
   file: File,
   key: number[],
@@ -125,4 +178,30 @@ const encryptFile = async (
     initVector: initVector.toString("base64"),
     encryptedFileBuffer,
   };
+};
+
+const decryptFile = async (
+  encryptedFileBuffer: Buffer,
+  key: number[],
+  initVectorBase64: string,
+): Promise<Buffer> => {
+  if (key.length !== 256 || !key.every((bit) => bit === 0 || bit === 1)) {
+    throw new Error("Invalid encryption key");
+  }
+
+  const byteKey: Uint8Array = new Uint8Array(
+    Array.from({ length: 24 }, (_, i) =>
+      parseInt(key.slice(i * 8, i * 8 + 8).join(""), 2),
+    ),
+  );
+
+  const initVector: Buffer = Buffer.from(initVectorBase64, "base64");
+
+  const decipher = createDecipheriv("aes-192-cbc", byteKey, initVector);
+  const decryptedFileBuffer: Buffer = Buffer.concat([
+    decipher.update(encryptedFileBuffer),
+    decipher.final(),
+  ]);
+
+  return decryptedFileBuffer;
 };
