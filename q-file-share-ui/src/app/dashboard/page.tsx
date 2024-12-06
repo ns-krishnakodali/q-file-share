@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import {
-  SEND_FILE,
+  SEND_FILES,
   SEND_FILES_TEXT,
   RECEIVED_FILES,
   RECEIVED_FILES_TEXT,
@@ -18,7 +18,13 @@ import {
 import { useNotification } from "@/context";
 import { Loader } from "@/elements";
 import { ActivityCard, Card, NavBar, IActivity } from "@/modules";
-import { axiosInstance, getAuthToken, isValidToken } from "@/utils";
+import {
+  axiosInstance,
+  getAuthToken,
+  getFileActivities,
+  isValidToken,
+  removeAuthToken,
+} from "@/utils";
 
 import sendFileIcon from "@/assets/send-file-icon.svg";
 import receivedFilesIcon from "@/assets/received-files-icon.svg";
@@ -39,28 +45,30 @@ const Dashboard = (): JSX.Element => {
         return;
       }
 
-      const authToken: string | null = getAuthToken();
       try {
         const response = await axiosInstance.get("/file/activity", {
           headers: {
-            Authorization: `${authToken}`,
+            Authorization: getAuthToken(),
           },
         });
-
-        if (response?.status === 401) {
+        if (response?.status === 200) {
+          setActivities(getFileActivities(response.data?.activities));
+        }
+      } catch (error: any) {
+        if (error?.response?.status === 401) {
           addNotification({ message: SESSION_EXPIRED_MESSAGE, type: "warn" });
+          removeAuthToken();
           await router.replace("/login");
         } else {
           setActivities([]);
+          addNotification({
+            type: "error",
+            message: error?.response?.data?.detail || GENERIC_ERROR_MESSAGE,
+          });
         }
-      } catch (error: any) {
-        addNotification({
-          type: "error",
-          message: error?.response?.data?.detail || GENERIC_ERROR_MESSAGE,
-        });
-        router.replace("/login");
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     };
 
     getActivity();
@@ -79,7 +87,7 @@ const Dashboard = (): JSX.Element => {
                 id="send-file-card"
                 className={styles.card}
                 src={sendFileIcon}
-                title={SEND_FILE}
+                title={SEND_FILES}
                 description={SEND_FILES_TEXT}
                 onClickHandler={() => {
                   router.push("/send-files");

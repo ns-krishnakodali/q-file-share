@@ -28,4 +28,20 @@
   padding: var(--spacing-half);
   width: fit-content;
   white-space: nowrap;
+  align-items: center;
+}
+
+.nameSpan {
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.nameSpan:hover {
+  color: var(--color-button-selected-1);
+}
+
+.downloadIcon {
+  margin-left: var(--spacing-half);
 }

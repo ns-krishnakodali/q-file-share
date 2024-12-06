@@ -120,7 +120,10 @@ const SendFile = (): JSX.Element => {
           );
         }
       });
-      formData.append("DLPublicKey", stringifyDLPublicKey(dlGenKeyPair.publicKey));
+      formData.append(
+        "DLPublicKey",
+        stringifyDLPublicKey(dlGenKeyPair.publicKey),
+      );
       formData.append("KyberKey", stringifyKyberKey(kyberKey));
       formData.append("RecipientEmail", recipientEmail);
       formData.append("Expiration", expiration);
@@ -133,10 +136,15 @@ const SendFile = (): JSX.Element => {
           "Content-Type": "multipart/form-data",
         },
       });
-      if(response.status === 200) 
-        addNotification({ message: FILE_UPLOAD_SUCCESSFUL, type: "success" });  
+      if (response.status === 200) {
+        addNotification({ message: FILE_UPLOAD_SUCCESSFUL, type: "success" });
+        router.refresh();
+      }
     } catch (error: any) {
-      addNotification({ message: error?.response?.data?.detail || FILE_UPLOAD_UNSUCCESSFUL, type: "error" });
+      addNotification({
+        message: error?.response?.data?.detail || FILE_UPLOAD_UNSUCCESSFUL,
+        type: "error",
+      });
     } finally {
       setIsUploading(false);
     }

@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from typing import List
-from pydantic import ConfigDict, BaseModel, Field
+from pydantic import BaseModel, Field
 
 
 class KyberKeyResponse(BaseModel):
@@ -10,30 +10,25 @@ class KyberKeyResponse(BaseModel):
 
 
 class ActivitiesResponse(BaseModel):
-    name: str
-    received_from: str = Field(alias="from_email")
-    sent_to: str = Field(alias="to_email")
-
-    model_config = ConfigDict(from_attributes=True, populate_by_name=True)
+    email: str
+    type: str
 
 
 class ReceivedFilesResponse(BaseModel):
+    file_id: str
     name: str
     size: int
-    received_from: str = Field(alias="from_email")
-    received_on: datetime
-    expiry: datetime
+    received_from: str
+    received_on: str
+    expiry: str
     download_count: int
-
-    model_config = ConfigDict(from_attributes=True, populate_by_name=True)
 
 
 class SharedFilesResponse(BaseModel):
+    file_id: str
     name: str
     size: int
-    sent_to: str = Field(alias="to_email")
-    sent_on: datetime
-    expiry: datetime
+    sent_to: str
+    sent_on: str
+    expiry: str
     download_count: int
-
-    model_config = ConfigDict(from_attributes=True, populate_by_name=True)

@@ -1,23 +1,8 @@
 .listHeader {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   flex: 1;
   padding: var(--spacing-1) var(--spacing-2);
-}
-
-.logo {
-  margin-right: var(--spacing-half);
-}
-
-.filter {
-  display: flex;
-  align-items: center;
-  background-color: var(--color-white);
-  color: var(--color-black);
-  padding: var(--spacing-1-5);
-}
-
-.filter:hover {
-  background-color: var(--color-light-gray);
+  margin: var(--spacing-2) 0px;
 }

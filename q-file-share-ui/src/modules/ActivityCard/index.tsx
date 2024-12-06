@@ -2,8 +2,9 @@ import styles from "./ActivityCard.module.css";
 import cx from "classnames";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
-import { ACTIVITY } from "@/constants";
+import { ACTIVITY, NO_RECENT_ACTIVITY } from "@/constants";
 import { Heading, Text } from "@/elements";
 
 import sentIcon from "@/assets/sent-icon.svg";
@@ -20,9 +21,22 @@ interface IActivityProps {
 }
 
 export const ActivityCard = (props: IActivityProps): JSX.Element => {
+  const router = useRouter();
+
   const { className = "", activities } = props;
 
-  const openActivityHandler = (index: number): void => {};
+  const openActivityHandler = async (index: number): Promise<void> => {
+    const type = activities[index]?.type;
+    const route =
+      type === "send"
+        ? "/shared-files"
+        : type === "receive"
+          ? "/received-files"
+          : undefined;
+    if (route) {
+      await router.push(route);
+    }
+  };
 
   return (
     <div className={cx(styles.activityCard, className)}>
@@ -50,7 +64,7 @@ export const ActivityCard = (props: IActivityProps): JSX.Element => {
             ))}
           </ul>
         ) : (
-          <Text className={styles.noActivityText}>No recent activity</Text>
+          <Text className={styles.noActivityText}>{NO_RECENT_ACTIVITY}</Text>
         )}
       </div>
     </div>
