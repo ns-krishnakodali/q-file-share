@@ -74,11 +74,13 @@ const ReceivedFiles = (): JSX.Element => {
     getReceivedFiles();
   }, []);
 
-  const handleFileDownload = async (fileId: string, fileName?: string): Promise<void> => {
+  const handleFileDownload = async (
+    fileId: string,
+    fileName?: string,
+  ): Promise<void> => {
     try {
       await fileDownloadHandler(fileId, fileName || "");
-    }  catch (error: any) {
-      console.log(error)
+    } catch (error: any) {
       addNotification({
         message: error?.response?.data?.detail || DOWNLOAD_FAILED,
         type: "error",
