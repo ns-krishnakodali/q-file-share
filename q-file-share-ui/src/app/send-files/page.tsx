@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import {
+  FILE_UPLOAD_SUCCESSFUL,
   FILE_UPLOAD_UNSUCCESSFUL,
   GENERIC_ERROR_MESSAGE,
   RECEIVED_FILES,
@@ -25,7 +26,8 @@ import {
   axiosInstance,
   getAuthToken,
   isValidToken,
-  signAndEncryptFile,
+  signEncryptAndProcessFile,
+  stringifyDLPublicKey,
   stringifyDLSignature,
   stringifyKyberKey,
 } from "@/utils";
@@ -97,7 +99,7 @@ const SendFile = (): JSX.Element => {
 
       const encryptedFilesData = await Promise.all(
         files.map((file: File) =>
-          signAndEncryptFile(file, dlGenKeyPair.secretKey, kyberKey.key),
+          signEncryptAndProcessFile(file, dlGenKeyPair.secretKey, kyberKey.key),
         ),
       );
 
@@ -109,12 +111,16 @@ const SendFile = (): JSX.Element => {
             new Blob([fileData.encryptedFileBuffer]),
           );
           formData.append("InitVector", fileData.initVector);
+          formData.append("FileNames", fileData.fileName);
+          formData.append("FileSizes", fileData.fileSize.toString());
+          formData.append("FileTypes", fileData.fileType);
           formData.append(
             "FileSignature",
             stringifyDLSignature(fileData.fileSignature),
           );
         }
       });
+      formData.append("DLPublicKey", stringifyDLPublicKey(dlGenKeyPair.publicKey));
       formData.append("KyberKey", stringifyKyberKey(kyberKey));
       formData.append("RecipientEmail", recipientEmail);
       formData.append("Expiration", expiration);
@@ -127,8 +133,10 @@ const SendFile = (): JSX.Element => {
           "Content-Type": "multipart/form-data",
         },
       });
-    } catch (error) {
-      addNotification({ message: FILE_UPLOAD_UNSUCCESSFUL, type: "error" });
+      if(response.status === 200) 
+        addNotification({ message: FILE_UPLOAD_SUCCESSFUL, type: "success" });  
+    } catch (error: any) {
+      addNotification({ message: error?.response?.data?.detail || FILE_UPLOAD_UNSUCCESSFUL, type: "error" });
     } finally {
       setIsUploading(false);
     }

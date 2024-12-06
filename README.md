@@ -47,8 +47,8 @@ The following diagrams provide snapshots of the different UI components.
   </tr>
   <tr>
     <td align="center">
-      <strong>Send File Page</strong><br>
-      <img src="./resources/sendfile-page.png" alt="Send File Page" width="350">
+      <strong>Send Files Page</strong><br>
+      <img src="./resources/sendfiles-page.png" alt="Send Files Page" width="350">
     </td>
     <td align="center">
       <strong>Shared Files Page</strong><br>

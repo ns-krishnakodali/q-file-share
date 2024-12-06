@@ -1,14 +1,14 @@
-import datetime
+from datetime import datetime, timezone
 
+from app.models.db_models import Users
+from app.db.db_session import get_db_session
 from app.auth.password_handler import hash_password, verify_password
 from app.auth.jwt_handler import create_access_token
-from app.db.db_session import get_db_session
-from app.models.db_models import User
 
 
-def authenticate_user(email: str, password: str) -> str:
+def authenticate_user(user_email: str, password: str) -> str:
     db = next(get_db_session())
-    user = db.query(User).filter(User.email == email).first()
+    user = db.query(Users).filter(Users.email == user_email).first()
 
     if not user:
         raise ValueError("Email not registered. Please check the email address.")
@@ -19,20 +19,20 @@ def authenticate_user(email: str, password: str) -> str:
     return create_access_token({"email": user.email})
 
 
-def register_user(name: str, email: str, password: str) -> User:
+def register_user(name: str, user_email: str, password: str) -> Users:
     db = next(get_db_session())
-    existing_user = db.query(User).filter(User.email == email).first()
+    existing_user = db.query(Users).filter(Users.email == user_email).first()
 
     if existing_user:
         raise ValueError("A user with this email already exists.")
 
     hashed_password = hash_password(password)
-    new_user = User(
+    new_user = Users(
         name=name,
-        email=email,
+        email=user_email,
         password_hash=hashed_password,
-        created_at=datetime.datetime.now(datetime.UTC),
-        updated_at=datetime.datetime.now(datetime.UTC),
+        created_at=datetime.now(timezone.utc),
+        updated_at=datetime.now(timezone.utc),
     )
 
     try:

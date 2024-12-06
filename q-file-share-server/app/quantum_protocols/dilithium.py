@@ -54,6 +54,6 @@ class Dilithium:
                 and len(cp_v) == len(cp)
                 and all(value == cp[i] for i, value in enumerate(cp_v))
             )
-        except Exception as e:
-            print(f"Error during signature verification: {e}")
+        except Exception as error:
+            print(f"Error during signature verification: {error}")
             return False

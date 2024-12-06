@@ -13,8 +13,11 @@ export const LOGIN_FAILURE =
 
 export const FILE_UPLOAD_WARN = `You can only upload up to ${PLACEHOLDER} files.`;
 
+export const FILE_UPLOAD_SUCCESSFUL =
+  "File(s) upload successful.";
+
 export const FILE_UPLOAD_UNSUCCESSFUL =
-  "File upload unsuccessful. Please try again.";
+  "File(s) upload unsuccessful. Please try again.";
 
 export const SESSION_EXPIRED_MESSAGE =
   "Your session has expired. Please login again.";

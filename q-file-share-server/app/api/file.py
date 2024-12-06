@@ -3,6 +3,7 @@ from fastapi.responses import JSONResponse
 from typing import Dict, List
 
 from app.auth.jwt_handler import get_access_token
+from app.models.dto import FileUploadDTO, file_upload_dto
 from app.models.response_models import (
     KyberKeyResponse,
     ActivitiesResponse,
@@ -14,6 +15,7 @@ from app.services.file_services import (
     get_files_actitvity,
     retrieve_received_files,
     retrieve_shared_files,
+    upload_files,
 )
 
 
@@ -38,29 +40,27 @@ async def get_activity(
     except ValueError as error:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(error))
     except Exception:
-        print(error)
+
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="An unexpected error occurred.",
         )
 
 
-from typing import Any
-
-
 @router.post("/upload")
 async def get_activity(
     encrypted_file_buffers: List[UploadFile] = File(..., alias="EncryptedFileBuffers"),
-    init_vectors: List[str] = Form(..., alias="InitVector"),
-    file_signatures: List[str] = Form(..., alias="FileSignature"),
-    kyber_key: str = Form(..., alias="KyberKey"),
-    recipient_email: str = Form(..., alias="RecipientEmail"),
-    expiration: str = Form(..., alias="Expiration"),
-    download_count: int = Form(..., alias="DownloadCount"),
-    anonymous: bool = Form(..., alias="Anonymous"),
+    file_upload_dto: FileUploadDTO = Depends(file_upload_dto),
     tokenPayload: str = Depends(get_access_token),
 ) -> JSONResponse:
     try:
+        user_email = tokenPayload.get("email")
+        await upload_files(
+            encrypted_file_buffers,
+            file_upload_dto,
+            kyber_sk_details[user_email],
+            user_email,
+        )
         return JSONResponse(
             status_code=status.HTTP_200_OK,
             content={"message": "Successful"},
@@ -68,7 +68,6 @@ async def get_activity(
     except ValueError as error:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(error))
     except Exception:
-        print(error)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="An unexpected error occurred.",
