@@ -66,7 +66,7 @@
 }
 
 .noActivityText {
-  margin-top: var(--spacing-2);
+  margin-top: var(--spacing-2) !important;
 }
 
 .notificationIcon {

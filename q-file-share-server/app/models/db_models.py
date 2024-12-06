@@ -34,7 +34,7 @@ class FileLogs(Base):
     sent_on = Column(TIMESTAMP)
     expiry = Column(TIMESTAMP)
     download_count = Column(Integer, default=10)
-    file_id = Column(String, unique=True)
+    file_id = Column(String)
     is_anonymous = Column(Boolean, default=False)
     status = Column(String, default="active")
     updated_at = Column(TIMESTAMP, onupdate=func.now())

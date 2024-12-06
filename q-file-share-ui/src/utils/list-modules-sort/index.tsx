@@ -1,4 +1,4 @@
-import { ListElement } from "@/modules/ListModule";
+import { IListElement } from "@/modules/ListModule";
 
 const sortListByNumbers = (
   list: any[],
@@ -36,10 +36,10 @@ const sortListByString = (
 };
 
 export const sortListElementsByColumn = (
-  listElements: ListElement[],
-  columnKey: keyof ListElement,
+  listElements: IListElement[],
+  columnKey: keyof IListElement,
   sortAscending: boolean,
-): ListElement[] => {
+): IListElement[] => {
   if (typeof listElements === "undefined") return [];
 
   if (columnKey === "size" || columnKey == "downloads")

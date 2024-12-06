@@ -4,3 +4,4 @@ export * from "./crystals-generators";
 export * from "./crystals-helpers";
 export * from "./file-helpers";
 export * from "./list-modules-sort";
+export * from "./string-utils";

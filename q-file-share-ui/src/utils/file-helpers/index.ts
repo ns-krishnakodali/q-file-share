@@ -1,11 +1,14 @@
 import { Cipher, createCipheriv, randomBytes } from "crypto";
 
 import { INVALID_ENCRYPTION_KEY_ERROR, MAX_FILE_BYTES } from "@/constants";
+import { IActivity, IListElement } from "@/modules";
 import {
   DLSecretKey,
   DLSignature,
   signWithDilithium,
 } from "@/quantum-protocols";
+
+import { getActivityTypeMessage, getDateFromISOFormat } from "../string-utils";
 
 export const getFileSize = (fileSize: number) => {
   const sizeInKB = fileSize / 1024;
@@ -13,6 +16,27 @@ export const getFileSize = (fileSize: number) => {
     ? `${sizeInKB.toFixed(2)} KB`
     : `${(sizeInKB / 1024).toFixed(2)} MB`;
 };
+
+export const getFileActivities = (activities: any[]): IActivity[] =>
+  activities?.map((activity: any) => ({
+    message: `${getActivityTypeMessage(activity["type"])} ${activity["email"]}`,
+    type: activity["type"],
+  }));
+
+export const getFileSRDetails = (
+  fileDetails: any[],
+  transceive: string,
+  transactionDate: string,
+): IListElement[] =>
+  fileDetails?.map((fileDetail: any) => ({
+    fileId: fileDetail?.file_id,
+    name: fileDetail?.name,
+    size: fileDetail?.size,
+    expiry: fileDetail?.expiry,
+    downloads: fileDetail?.download_count,
+    transceive: fileDetail?.[transceive],
+    transactionDate: fileDetail?.[transactionDate],
+  }));
 
 export const signEncryptAndProcessFile = async (
   file: File,

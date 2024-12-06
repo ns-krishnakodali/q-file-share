@@ -1,5 +1,4 @@
 import base64
-import datetime
 import json
 
 from fastapi import HTTPException
@@ -43,6 +42,17 @@ async def upload_files(
     try:
         if file_upload_dto.recipient_email.strip() == user_email:
             raise ValueError("Cannot send to same email")
+
+        emails_exist = (
+            db.query(Users)
+            .filter(Users.email.in_([file_upload_dto.recipient_email, user_email]))
+            .count()
+            == 2
+        )
+        if not emails_exist:
+            raise ValueError("Cannot find the recipient email")
+
+        user_password = db.query(Users).filter(Users.email == user_email).first()
 
         user_password = (
             db.query(Users).filter(Users.email == user_email).first().password_hash
@@ -90,18 +100,20 @@ async def upload_files(
                 days=file_upload_dto.expiration
             )
 
-            file_logs.append(FileLogs(
-                name=file_upload_dto.file_names[index],
-                size=file_upload_dto.file_sizes[index],
-                from_email=user_email,
-                to_email=file_upload_dto.recipient_email,
-                sent_on=datetime.now(timezone.utc),
-                expiry=expiry_timestamp,
-                download_count=file_upload_dto.download_count,
-                file_id=file_hash,
-                is_anonymous=file_upload_dto.anonymous,
-                status="active",
-            ))
+            file_logs.append(
+                FileLogs(
+                    name=file_upload_dto.file_names[index],
+                    size=file_upload_dto.file_sizes[index],
+                    from_email=user_email,
+                    to_email=file_upload_dto.recipient_email,
+                    sent_on=datetime.now(timezone.utc),
+                    expiry=expiry_timestamp,
+                    download_count=file_upload_dto.download_count,
+                    file_id=file_hash,
+                    is_anonymous=file_upload_dto.anonymous,
+                    status="active",
+                )
+            )
 
         db.add_all(file_logs)
         db.commit()
@@ -120,7 +132,7 @@ async def upload_files(
 
 def get_files_actitvity(user_email: str):
     db = next(get_db_session())
-    files = (
+    file_logs = (
         db.query(FileLogs)
         .filter((FileLogs.from_email == user_email) | (FileLogs.to_email == user_email))
         .order_by(FileLogs.sent_on.desc())
@@ -129,69 +141,86 @@ def get_files_actitvity(user_email: str):
     )
     return [
         ActivitiesResponse(
-            name=file.name, received_from=file.from_email, sent_to=file.to_email
-        )
-        for file in files
+            email=(
+                "*"
+                if file_log.is_anonymous
+                else (
+                    file_log.to_email
+                    if file_log.from_email == user_email
+                    else file_log.from_email
+                )
+            ),
+            type="send" if file_log.from_email == user_email else "receive",
+        ).model_dump()
+        for file_log in file_logs
     ]
 
 
 def retrieve_received_files(user_email: str) -> str:
     db = next(get_db_session())
-    files = (
+    file_logs = (
         db.query(
             FileLogs.name,
             FileLogs.size,
-            FileLogs.sent_on.label("received_on"),
-            FileLogs.from_email.label("received_from"),
+            FileLogs.sent_on,
+            FileLogs.from_email,
             FileLogs.expiry,
             FileLogs.is_anonymous,
+            FileLogs.download_count,
+            FileLogs.file_id,
         )
         .filter(
             FileLogs.to_email == user_email,
             FileLogs.status == "active",
-            FileLogs.expiry > datetime.datetime.now(),
+            FileLogs.expiry > datetime.now(),
         )
         .all()
     )
 
     return [
         ReceivedFilesResponse(
-            name=file.name,
-            size=file.size,
-            received_on=file.received_on,
-            received_from=file.from_email if not file.is_anonymous else None,
-            expiry=file.expiry,
-        )
-        for file in files
+            name=file_log.name,
+            size=file_log.size,
+            received_on=file_log.sent_on.isoformat(),
+            received_from=file_log.from_email if not file_log.is_anonymous else "*",
+            expiry=file_log.expiry.isoformat(),
+            download_count=file_log.download_count,
+            file_id=file_log.file_id
+        ).model_dump()
+        for file_log in file_logs
     ]
 
 
 def retrieve_shared_files(user_email: str) -> str:
     db = next(get_db_session())
-    files = (
+    file_logs = (
         db.query(
             FileLogs.name,
             FileLogs.size,
-            FileLogs.sent_on.label("received_on"),
-            FileLogs.to_email.label("received_from"),
+            FileLogs.sent_on,
+            FileLogs.to_email,
             FileLogs.expiry,
             FileLogs.is_anonymous,
+            FileLogs.download_count,
+            FileLogs.file_id,
         )
         .filter(
             FileLogs.from_email == user_email,
             FileLogs.status == "active",
-            FileLogs.expiry > datetime.datetime.now(),
+            FileLogs.expiry > datetime.now(),
         )
         .all()
     )
 
     return [
         SharedFilesResponse(
-            name=file.name,
-            size=file.size,
-            sent_on=file.received_on,
-            sent_to=file.to_email if not file.is_anonymous else None,
-            expiry=file.expiry,
-        )
-        for file in files
+            name=file_log.name,
+            size=file_log.size,
+            sent_on=file_log.sent_on.isoformat(),
+            sent_to=file_log.to_email if not file_log.is_anonymous else "*",
+            expiry=file_log.expiry.isoformat(),
+            download_count=file_log.download_count,
+            file_id=file_log.file_id
+        ).model_dump()
+        for file_log in file_logs
     ]

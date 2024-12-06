@@ -106,7 +106,7 @@ export const stringifyDLSignature = (dlSignature: DLSignature): string =>
   });
 
 export const stringifyDLPublicKey = (dlPublicKey: DLPublicKey): string =>
-    JSON.stringify(dlPublicKey);
+  JSON.stringify(dlPublicKey);
 
 export const stringifyKyberKey = (kyberKey: KyberKey): string =>
   JSON.stringify({
