@@ -1,6 +1,6 @@
 import { Cipher, createCipheriv, randomBytes } from "crypto";
 
-import { INVALID_ENCRYPTION_KEY_ERROR } from "@/constants";
+import { INVALID_ENCRYPTION_KEY_ERROR, MAX_FILE_BYTES } from "@/constants";
 import {
   DLSecretKey,
   DLSignature,
@@ -14,7 +14,7 @@ export const getFileSize = (fileSize: number) => {
     : `${(sizeInKB / 1024).toFixed(2)} MB`;
 };
 
-export const signAndEncryptFile = async (
+export const signEncryptAndProcessFile = async (
   file: File,
   dlSecretKey: DLSecretKey,
   kyberKey: number[],
@@ -22,6 +22,9 @@ export const signAndEncryptFile = async (
   initVector: string;
   encryptedFileBuffer: Buffer;
   fileSignature?: DLSignature;
+  fileName: string;
+  fileSize: number;
+  fileType: string;
 }> => {
   let fileSignature: DLSignature | undefined;
 
@@ -38,7 +41,7 @@ export const signAndEncryptFile = async (
 
   const arrayBuffer = await fileReadPromise;
 
-  const byteLength: number = Math.min(1024, arrayBuffer.byteLength);
+  const byteLength: number = Math.min(MAX_FILE_BYTES, arrayBuffer.byteLength);
   fileSignature = signWithDilithium(
     dlSecretKey,
     new Uint8Array(arrayBuffer, 0, byteLength),
@@ -46,7 +49,13 @@ export const signAndEncryptFile = async (
 
   const encryptedData = await encryptFile(file, kyberKey);
 
-  return { ...encryptedData, fileSignature };
+  return {
+    ...encryptedData,
+    fileSignature,
+    fileName: file.name,
+    fileSize: file.size,
+    fileType: file.type,
+  };
 };
 
 const encryptFile = async (
@@ -78,7 +87,7 @@ const encryptFile = async (
   ]);
 
   return {
-    initVector: initVector.toString("hex"),
+    initVector: initVector.toString("base64"),
     encryptedFileBuffer,
   };
 };

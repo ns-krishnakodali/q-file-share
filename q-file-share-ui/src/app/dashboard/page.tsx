@@ -82,7 +82,7 @@ const Dashboard = (): JSX.Element => {
                 title={SEND_FILE}
                 description={SEND_FILES_TEXT}
                 onClickHandler={() => {
-                  router.push("/send-file");
+                  router.push("/send-files");
                 }}
               />
               <Card

@@ -36,11 +36,13 @@ class Kyber:
         mn = reduce_coefficients_mod_q(
             subtract_polynomials(uv["v"], multiply_poly_vectors(s, uv["u"], Q_K)), Q_K
         )
+        
+        ceil_qk = math.ceil(Q_K / 2)
         return [
             (
-                math.ceil(Q_K / 2)
-                if abs(m - math.ceil(Q_K / 2)) < min(abs(m), abs(m - Q_K))
+                ceil_qk
+                if abs(m - ceil_qk) < min(abs(m), abs(m - Q_K))
                 else 0
-            )
+            ) // ceil_qk
             for m in mn
         ]

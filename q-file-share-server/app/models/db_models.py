@@ -1,9 +1,9 @@
 from app.db.config import Base
 
-from sqlalchemy import Column, Integer, String, TIMESTAMP, Boolean, func
+from sqlalchemy import Column, Integer, String, LargeBinary, Boolean, TIMESTAMP, func
 
 
-class User(Base):
+class Users(Base):
     __tablename__ = "Users"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -14,8 +14,17 @@ class User(Base):
     updated_at = Column(TIMESTAMP)
 
 
-class FileLog(Base):
-    __tablename__ = "FileLog"
+class Files(Base):
+    __tablename__ = "Files"
+
+    id = Column(Integer, primary_key=True, index=True)
+    file_id = Column(String, unique=True, nullable=False)
+    file_data = Column(LargeBinary, nullable=False)
+    iv = Column(String, nullable=False)
+
+
+class FileLogs(Base):
+    __tablename__ = "FileLogs"
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True, nullable=False)
