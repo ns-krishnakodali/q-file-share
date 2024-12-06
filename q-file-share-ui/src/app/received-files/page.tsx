@@ -6,26 +6,24 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import {
+  DOWNLOAD_FAILED,
   GENERIC_ERROR_MESSAGE,
   RECEIVED_FILES,
   SEND_FILES,
   SESSION_EXPIRED_MESSAGE,
   SHARED_FILES,
-  UNTITLED_FILE,
 } from "@/constants";
 import { useNotification } from "@/context";
 import { Loader } from "@/elements";
 import { IListElement, ListHeader, ListModule, NavBar } from "@/modules";
 import {
   axiosInstance,
-  downloadFile,
+  fileDownloadHandler,
   getAuthToken,
   getFileSRDetails,
   isValidToken,
   removeAuthToken,
-  stringifyKyberKeyPair,
 } from "@/utils";
-import { generateKyberKeyPair, KyberKeyPair } from "@/quantum-protocols";
 
 const ReceivedFiles = (): JSX.Element => {
   const router = useRouter();
@@ -76,27 +74,15 @@ const ReceivedFiles = (): JSX.Element => {
     getReceivedFiles();
   }, []);
 
-  const fileDownloadHandler = async (fileId: string, fileName?: string) => {
-    const kyberKeyPair: KyberKeyPair = generateKyberKeyPair();
-
+  const handleFileDownload = async (fileId: string, fileName?: string): Promise<void> => {
     try {
-      const response = await axiosInstance.post(
-        "/file/download",
-        {
-          file_id: fileId,
-          kyber_key_pair: stringifyKyberKeyPair(kyberKeyPair),
-        },
-        {
-          headers: {
-            Authorization: getAuthToken(),
-          },
-          responseType: "blob",
-        },
-      );
-      downloadFile(response?.data, fileName || UNTITLED_FILE);
-    } catch (error) {
-      console.log(error);
-      addNotification({ message: "", type: "error" });
+      await fileDownloadHandler(fileId, fileName || "");
+    }  catch (error: any) {
+      console.log(error)
+      addNotification({
+        message: error?.response?.data?.detail || DOWNLOAD_FAILED,
+        type: "error",
+      });
     }
   };
 
@@ -116,7 +102,7 @@ const ReceivedFiles = (): JSX.Element => {
             <ListHeader title={RECEIVED_FILES} />
             <ListModule
               elements={receivedFiles}
-              fileDownloadHandler={fileDownloadHandler}
+              fileDownloadHandler={handleFileDownload}
             />
           </>
         )}

@@ -32,6 +32,7 @@ export const SENT_FILE_TO = "Sent file(s) to";
 export const RECEIVE_FILE_FROM = "Received file(s) from";
 export const FILTER = "Filter";
 export const NO_FILES_MESSAGE = "No files to show";
+export const DOWNLOAD_FAILED = "Failed to download the file";
 
 // Send File Constants
 export const RECIPIENT_EMAIL = "Recipient Email";

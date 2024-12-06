@@ -75,21 +75,30 @@ async def upload_files(
         )
 
 
+import json
+
+
 @router.post("/download", response_class=StreamingResponse)
 async def download_file(
-    file_download_dto: FileDownloadDTO,  tokenPayload: str = Depends(get_access_token)
+    file_download_dto: FileDownloadDTO, tokenPayload: str = Depends(get_access_token)
 ) -> StreamingResponse:
     try:
-        # print(file_download_dto.kyber_key_pair)
-        downloaded_file_data = await process_download_file(file_download_dto, tokenPayload.get("email"))
+        downloaded_file_data = await process_download_file(
+            file_download_dto, tokenPayload.get("email")
+        )
+        kyber_public_key_data = json.dumps(downloaded_file_data["kyber_public_key"])
 
         return StreamingResponse(
-            iter([downloaded_file_data["decrypted_file_data"]]),
+            iter([downloaded_file_data["file_data"]]),
             media_type="application/octet-stream",
-            headers={"Content-Disposition": f'attachment; filename="{downloaded_file_data["file_name"]}"'}
+            headers={
+                "Content-Disposition": f'attachment; filename="{downloaded_file_data["file_name"]}"',
+                "X-Array-Data": kyber_public_key_data,
+                "Access-Control-Expose-Headers": "Content-Disposition, X-Array-Data",
+            },
         )
-    except ValueError as error:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(error))
+    except (ValueError, HTTPException) as error:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(error.detail))
     except Exception as error:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

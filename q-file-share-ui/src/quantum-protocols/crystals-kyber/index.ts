@@ -81,9 +81,10 @@ export const cpaDecrypt = (
     Q_K,
   );
 
+  const ceilQK: number = Math.ceil(Q_K / 2);
   return mn.map((m) =>
-    Math.abs(m - Math.ceil(Q_K / 2)) < Math.min(Math.abs(m), Math.abs(m - Q_K))
-      ? Math.ceil(Q_K / 2)
+    Math.abs(m - ceilQK) < Math.min(Math.abs(m), Math.abs(m - Q_K))
+      ? Math.floor(ceilQK / ceilQK)
       : 0,
   );
 };

@@ -85,6 +85,21 @@ export const ListModule = (props: IListModuleProps): JSX.Element => {
     }));
   };
 
+  const handleFileDownload = async (
+    index: number,
+    fileName: string,
+  ): Promise<void> => {
+    fileDownloadHandler(listElements[index]?.fileId || "", fileName);
+    !renderSendFilesLayout &&
+      setListElements((prevElements) =>
+        prevElements.map((item: IListElement, i: number) =>
+          i === index
+            ? { ...item, downloads: Math.max((item.downloads || 0) - 1, 0) }
+            : item,
+        ),
+      );
+  };
+
   return (
     <div className={styles.tableContainer}>
       {typeof elements === "undefined" || elements.length === 0 ? (
@@ -179,12 +194,7 @@ export const ListModule = (props: IListModuleProps): JSX.Element => {
                 <td className={styles.tableCell}>
                   <span
                     className={styles.nameSpan}
-                    onClick={() =>
-                      fileDownloadHandler(
-                        listElements[index]?.fileId || "",
-                        element?.name,
-                      )
-                    }
+                    onClick={() => handleFileDownload(index, element?.name)}
                   >
                     {element?.name || ""}
                     <Image

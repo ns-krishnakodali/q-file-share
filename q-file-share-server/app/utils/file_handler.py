@@ -5,6 +5,7 @@ import secrets
 
 from dotenv import load_dotenv
 from fastapi import UploadFile
+from typing import Dict
 
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import padding
@@ -73,6 +74,33 @@ async def decrypt_file_data(
     return decrypted_data
 
 
+async def encrypt_client_file_data(file_data: bytes, key: list) -> Dict[str, str]:
+    if len(key) != 256 or not all(bit == 0 or bit == 1 for bit in key):
+        raise ValueError("Error during encryption")
+
+    byte_key = bytes(
+        int("".join(str(bit) for bit in key[i * 8 : i * 8 + 8]), 2) for i in range(24)
+    )
+
+    init_vector_bytes = os.urandom(16)
+
+    padder = padding.PKCS7(128).padder()
+    padded_data = padder.update(file_data) + padder.finalize()
+
+    cipher = Cipher(
+        algorithms.AES(byte_key),
+        modes.CBC(init_vector_bytes),
+        backend=default_backend(),
+    )
+    encryptor = cipher.encryptor()
+    encrypted_file_data = encryptor.update(padded_data) + encryptor.finalize()
+
+    return {
+        "iv": base64.b64encode(init_vector_bytes).decode("utf-8"),
+        "encryptedFileBuffer": encrypted_file_data,
+    }
+
+
 async def decrypt_client_file_data(
     encrypted_file: UploadFile, init_vector: str, key: list
 ) -> bytes:
@@ -92,15 +120,16 @@ async def decrypt_client_file_data(
 
     return decrypted_file_data
 
+
 def get_file_hash_key(email1: str, email2: str) -> str:
     sorted_emails = sorted([email1, email2])
     concatenated_emails = "".join(sorted_emails)
-    
+
     sha3_256 = hashlib.sha3_256()
     sha3_256.update(concatenated_emails.encode())
-    
+
     return sha3_256.hexdigest()
-    
+
 
 def generate_file_hash(file_data: bytes) -> str:
     sha3_256 = hashlib.sha3_256()
