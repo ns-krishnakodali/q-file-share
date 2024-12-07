@@ -20,11 +20,15 @@ q-file-share/
 └── q-file-share-ui/         # Frontend code (Next.js)
 ```
 
-## Architecture Diagram
+## Architecture and Flow Diagrams
 
 The diagram below illustrates the architecture and cryptographic flow of the QFileShare application:
 
-<img src="./resources/system-flow.png" alt="QFileShare Architecture" width="500">
+<img src="./resources/system-flow.png" alt="QFileShare Architecture" width="600">
+
+The flow below provides a clear explanation of how file sharing occurs using the quantum protocols Kyber and Dilithium.
+
+<img src="./resources/file-uploading-flow.jpg" alt="File Uploading Flow" width="600">
 
 ## Snapshots of UI
 
