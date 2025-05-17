@@ -1,7 +1,6 @@
 import numpy as np
 
 from typing import List, Tuple
-
 from .parameters import N, Q, Q_K
 
 

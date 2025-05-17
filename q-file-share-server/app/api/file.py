@@ -1,3 +1,5 @@
+import json
+
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
 from fastapi.responses import JSONResponse, StreamingResponse
 from typing import Dict, List
@@ -73,9 +75,6 @@ async def upload_files(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="An unexpected error occurred.",
         )
-
-
-import json
 
 
 @router.post("/download", response_class=StreamingResponse)

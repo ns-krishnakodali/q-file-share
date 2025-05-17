@@ -3,7 +3,6 @@ import hashlib
 import secrets
 
 from typing import List
-
 from .parameters import N, Q_K, TAU
 
 SEED_LENGTH = 32
