@@ -16,8 +16,8 @@ source venv/bin/activate
 # Windows
 venv\Scripts\activate
 
-# Install FastAPI, SQLAlchemy and other packages
-pip install "fastapi[standard]" sqlalchemy psycopg2 python-dotenv pyjwt bcrypt pydantic numpy cryptography
+# Install the packages
+pip install -r requirements.txt
 ```
 
 ---

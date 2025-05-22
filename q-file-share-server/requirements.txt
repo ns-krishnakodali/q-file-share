@@ -1,0 +1,9 @@
+fastapi[standard]
+sqlalchemy
+psycopg2
+python-dotenv
+pyjwt
+bcrypt
+pydantic
+numpy
+cryptography
